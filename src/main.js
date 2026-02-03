@@ -26,21 +26,51 @@ const OBJECTS = [
 ];
 
 let currentCategory = 'all';
+let currentItemName = '';
 const displayArea = document.getElementById('display-area');
 const nextBtn = document.getElementById('next-btn');
 const categoryBtns = document.querySelectorAll('.category-btn');
+
+// --- Speech Synthesis Setup ---
+const synth = window.speechSynthesis;
+let viVoice = null;
+
+function loadVoices() {
+  const voices = synth.getVoices();
+  viVoice = voices.find(v => v.lang.startsWith('vi')) || voices[0];
+}
+
+if (synth.onvoiceschanged !== undefined) {
+  synth.onvoiceschanged = loadVoices;
+}
+loadVoices();
+
+function speak(text) {
+  if (synth.speaking) synth.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.voice = viVoice;
+  utter.rate = 0.9;
+  utter.pitch = 1.1;
+  
+  const speakBtn = document.querySelector('.speak-btn');
+  utter.onstart = () => speakBtn?.classList.add('playing');
+  utter.onend = () => speakBtn?.classList.remove('playing');
+  
+  synth.speak(utter);
+}
+// --- End Speech Synthesis ---
 
 function getRandomItem() {
   let pool = [];
   
   if (currentCategory === 'all' || currentCategory === 'letters') {
-    pool = pool.concat(LETTERS.map(l => ({ type: 'letter', value: l })));
+    pool = pool.concat(LETTERS.map(l => ({ type: 'letter', value: l, speak: l })));
   }
   if (currentCategory === 'all' || currentCategory === 'numbers') {
-    pool = pool.concat(NUMBERS.map(n => ({ type: 'number', value: n })));
+    pool = pool.concat(NUMBERS.map(n => ({ type: 'number', value: n, speak: n })));
   }
   if (currentCategory === 'all' || currentCategory === 'objects') {
-    pool = pool.concat(OBJECTS.map(o => ({ type: 'object', value: o })));
+    pool = pool.concat(OBJECTS.map(o => ({ type: 'object', value: o, speak: o.name })));
   }
 
   const randomIndex = Math.floor(Math.random() * pool.length);
@@ -49,6 +79,7 @@ function getRandomItem() {
 
 function updateDisplay() {
   const item = getRandomItem();
+  currentItemName = item.speak;
   displayArea.innerHTML = '';
   
   const container = document.createElement('div');
@@ -79,7 +110,21 @@ function updateDisplay() {
     container.appendChild(text);
   }
 
+  // Add Speak Button
+  const speakBtn = document.createElement('button');
+  speakBtn.className = 'speak-btn';
+  speakBtn.innerHTML = '🔊';
+  speakBtn.title = 'Phát âm';
+  speakBtn.onclick = (e) => {
+    e.stopPropagation();
+    speak(currentItemName);
+  };
+  container.appendChild(speakBtn);
+
   displayArea.appendChild(container);
+
+  // Optional: Auto-speak on change (good for speech delay practice)
+  // speak(currentItemName); 
 }
 
 // Event Listeners

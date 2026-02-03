@@ -139,6 +139,52 @@ h1 {
   /* Slightly smaller than letters to match visual weight */
 }
 
+.speak-btn {
+  margin-top: 1rem;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  background: white;
+  color: var(--primary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+  z-index: 10;
+}
+
+.speak-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.speak-btn:active {
+  transform: scale(0.9);
+}
+
+.speak-btn.playing {
+  animation: pulse 0.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px var(--primary);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
 .object-image {
   width: 100%;
   max-width: clamp(150px, 40vw, 300px);
