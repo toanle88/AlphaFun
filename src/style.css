@@ -40,11 +40,13 @@ body {
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: var(--radius);
-  padding: clamp(1.5rem, 5vw, 3rem);
+  padding: clamp(1rem, 3vw, 2rem);
+  /* Reduced padding */
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
-  gap: clamp(1rem, 4vw, 2rem);
+  gap: clamp(0.75rem, 3vw, 1.5rem);
+  /* Reduced gap */
   transition: transform 0.3s ease;
   min-height: auto;
 }
@@ -125,8 +127,8 @@ h1 {
 }
 
 .display-area {
-  height: clamp(380px, 60vh, 450px);
-  /* Adjusted for stable 200px image height + text + buttons */
+  height: clamp(300px, 50vh, 420px);
+  /* Reduced height for better fitting */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -203,12 +205,12 @@ h1 {
 }
 
 .color-swatch {
-  width: 200px;
-  height: 200px;
+  width: clamp(140px, 25vh, 200px);
+  height: clamp(140px, 25vh, 200px);
   border-radius: 40px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   border: 8px solid white;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.51rem;
 }
 
 @keyframes pulse {
@@ -228,8 +230,8 @@ h1 {
 
 .object-image {
   width: auto;
-  height: 200px;
-  /* Enforced fixed height */
+  height: clamp(140px, 25vh, 200px);
+  /* Responsive fixed height */
   object-fit: contain;
   border-radius: 12px;
 }
@@ -243,12 +245,12 @@ h1 {
 }
 
 .next-btn {
-  padding: 1.2rem 3rem;
+  padding: 1rem 2rem;
   width: 100%;
   max-width: 320px;
-  min-height: 64px;
-  /* Large touch target for kids */
-  font-size: 1.5rem;
+  min-height: 56px;
+  /* Slightly reduced height */
+  font-size: clamp(1.2rem, 4vw, 1.5rem);
   font-weight: 800;
   color: white;
   background: var(--primary);
