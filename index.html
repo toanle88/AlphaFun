@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AlphaFun - Bé Tập Nói Thật Vui!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800;900&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+        <header>
+          <h1>AlphaFun</h1>
+          <p>Cùng bé tập nói nào!</p>
+        </header>
+
+        <nav class="controls">
+          <button class="category-btn active" data-category="all">Tất cả</button>
+          <button class="category-btn" data-category="letters">Chữ cái</button>
+          <button class="category-btn" data-category="numbers">Chữ số</button>
+          <button class="category-btn" data-category="objects">Đồ vật</button>
+        </nav>
+
+        <main id="display-area" class="display-area">
+          <div class="display-item">
+            <span class="big-text">?</span>
+          </div>
+        </main>
+
+        <footer>
+          <button id="next-btn" class="next-btn">TIẾP THEO</button>
+        </footer>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

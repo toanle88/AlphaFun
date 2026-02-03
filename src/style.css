@@ -1,0 +1,170 @@
+:root {
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --card-bg: rgba(255, 255, 255, 0.7);
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --radius: 24px;
+  --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-gradient);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-main);
+  overflow-x: hidden;
+}
+
+#app {
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.container {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius);
+  padding: 3rem 2rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  transition: transform 0.3s ease;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(to right, #6366f1, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.category-btn {
+  padding: 0.6rem 1.2rem;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background: white;
+  color: var(--text-muted);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.category-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.category-btn.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.display-area {
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.display-item {
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.big-text {
+  font-size: 10rem;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--primary);
+  text-shadow: 4px 4px 0px rgba(0,0,0,0.05);
+}
+
+.object-image {
+  max-width: 250px;
+  max-height: 250px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.object-name {
+  margin-top: 1.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: var(--text-main);
+}
+
+.next-btn {
+  padding: 1.2rem 3rem;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+  background: var(--primary);
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+}
+
+.next-btn:hover {
+  background: var(--primary-hover);
+  transform: scale(1.05);
+  box-shadow: 0 12px 20px -3px rgba(99, 102, 241, 0.5);
+}
+
+.next-btn:active {
+  transform: scale(0.95);
+}
+
+/* Confetti particles if you decide to add them */
+.confetti {
+  display: none;
+  /* Add styling for confetti if used */
+}
+
+@media (max-width: 480px) {
+  .big-text {
+    font-size: 7rem;
+  }
+  .object-image {
+    max-width: 200px;
+    max-height: 200px;
+  }
+}
