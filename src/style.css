@@ -94,7 +94,8 @@ h1 {
 }
 
 .display-area {
-  min-height: clamp(250px, 50vh, 400px);
+  height: clamp(350px, 55vh, 500px);
+  /* Changed from min-height to fixed height for stability */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -103,7 +104,7 @@ h1 {
   border-radius: 20px;
   position: relative;
   overflow: hidden;
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
 .display-item {
