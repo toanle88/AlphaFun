@@ -63,8 +63,7 @@ function updateDisplay() {
       container.appendChild(img);
     } else {
       const emoji = document.createElement('span');
-      emoji.className = 'big-text'; // Reuse big-text for emoji
-      emoji.style.fontSize = '8rem';
+      emoji.className = 'big-text emoji-text';
       emoji.textContent = item.value.emoji;
       container.appendChild(emoji);
     }
