@@ -58,7 +58,6 @@ const VERBS = [
 
 const UI_TEXT = {
   vi: {
-    subtitle: 'Cùng bé tập nói nào!',
     all: 'Tất cả',
     letters: 'Chữ cái',
     numbers: 'Chữ số',
@@ -68,7 +67,6 @@ const UI_TEXT = {
     next: 'TIẾP THEO'
   },
   en: {
-    subtitle: "Let's practice speaking!",
     all: 'All',
     letters: 'Letters',
     numbers: 'Numbers',
@@ -87,7 +85,6 @@ let lastItemValue = null; // Track the value of the last item shown
 
 const displayArea = document.getElementById('display-area');
 const nextBtn = document.getElementById('next-btn');
-const subtitle = document.getElementById('subtitle');
 const categoryBtns = document.querySelectorAll('.category-btn');
 const langBtns = document.querySelectorAll('.lang-btn');
 
@@ -165,7 +162,6 @@ function getRandomItem() {
 
 function updateUI() {
   const t = UI_TEXT[currentLang];
-  subtitle.textContent = t.subtitle;
   nextBtn.textContent = t.next;
   categoryBtns.forEach(btn => {
     btn.textContent = t[btn.dataset.category];
