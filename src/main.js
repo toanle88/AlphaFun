@@ -25,6 +25,20 @@ const OBJECTS = [
   { name: { vi: 'Cái ghế', en: 'Chair' }, emoji: '🪑' },
 ];
 
+const COLORS = [
+  { name: { vi: 'Màu đỏ', en: 'Red' }, hex: '#ef4444' },
+  { name: { vi: 'Màu xanh lá', en: 'Green' }, hex: '#22c55e' },
+  { name: { vi: 'Màu xanh dương', en: 'Blue' }, hex: '#3b82f6' },
+  { name: { vi: 'Màu vàng', en: 'Yellow' }, hex: '#eab308' },
+  { name: { vi: 'Màu cam', en: 'Orange' }, hex: '#f97316' },
+  { name: { vi: 'Màu hồng', en: 'Pink' }, hex: '#ec4899' },
+  { name: { vi: 'Màu tím', en: 'Purple' }, hex: '#a855f7' },
+  { name: { vi: 'Màu nâu', en: 'Brown' }, hex: '#78350f' },
+  { name: { vi: 'Màu đen', en: 'Black' }, hex: '#000000' },
+  { name: { vi: 'Màu trắng', en: 'White' }, hex: '#ffffff' },
+  { name: { vi: 'Màu xám', en: 'Gray' }, hex: '#6b7280' },
+];
+
 const UI_TEXT = {
   vi: {
     subtitle: 'Cùng bé tập nói nào!',
@@ -32,6 +46,7 @@ const UI_TEXT = {
     letters: 'Chữ cái',
     numbers: 'Chữ số',
     objects: 'Đồ vật',
+    colors: 'Màu sắc',
     next: 'TIẾP THEO'
   },
   en: {
@@ -40,6 +55,7 @@ const UI_TEXT = {
     letters: 'Letters',
     numbers: 'Numbers',
     objects: 'Objects',
+    colors: 'Colors',
     next: 'NEXT'
   }
 };
@@ -75,7 +91,6 @@ function speak(text) {
   if (synth.speaking) synth.cancel();
   const utter = new SpeechSynthesisUtterance(text);
   
-  // Smart Fallback
   if (currentLang === 'vi') {
     utter.voice = viVoice || enVoice || null;
   } else {
@@ -84,18 +99,14 @@ function speak(text) {
   
   utter.rate = 0.9;
   utter.pitch = 1.1;
-  
   const speakBtn = document.querySelector('.speak-btn');
   utter.onstart = () => speakBtn?.classList.add('playing');
   utter.onend = () => speakBtn?.classList.remove('playing');
-  
   synth.speak(utter);
 }
-// --- End Speech Synthesis ---
 
 function getRandomItem() {
   let pool = [];
-  
   if (currentCategory === 'all' || currentCategory === 'letters') {
     pool = pool.concat(LETTERS.map(l => ({ type: 'letter', value: l, name: l })));
   }
@@ -104,6 +115,9 @@ function getRandomItem() {
   }
   if (currentCategory === 'all' || currentCategory === 'objects') {
     pool = pool.concat(OBJECTS.map(o => ({ type: 'object', value: o, name: o.name })));
+  }
+  if (currentCategory === 'all' || currentCategory === 'colors') {
+    pool = pool.concat(COLORS.map(c => ({ type: 'color', value: c, name: c.name })));
   }
 
   const randomIndex = Math.floor(Math.random() * pool.length);
@@ -114,7 +128,6 @@ function updateUI() {
   const t = UI_TEXT[currentLang];
   subtitle.textContent = t.subtitle;
   nextBtn.textContent = t.next;
-  
   categoryBtns.forEach(btn => {
     btn.textContent = t[btn.dataset.category];
   });
@@ -132,7 +145,21 @@ function updateDisplay(keepCurrentItem = false) {
   const container = document.createElement('div');
   container.className = 'display-item';
 
-  if (item.type === 'object') {
+  if (item.type === 'color') {
+    const swatch = document.createElement('div');
+    swatch.className = 'color-swatch';
+    swatch.style.backgroundColor = item.value.hex;
+    // Add subtle border for white
+    if (item.value.hex.toLowerCase() === '#ffffff') {
+      swatch.style.borderColor = '#e5e7eb';
+    }
+    container.appendChild(swatch);
+    
+    const name = document.createElement('div');
+    name.className = 'object-name';
+    name.textContent = currentItemName;
+    container.appendChild(name);
+  } else if (item.type === 'object') {
     if (item.value.image) {
       const img = document.createElement('img');
       img.src = item.value.image;
@@ -145,7 +172,6 @@ function updateDisplay(keepCurrentItem = false) {
       emoji.textContent = item.value.emoji;
       container.appendChild(emoji);
     }
-    
     const name = document.createElement('div');
     name.className = 'object-name';
     name.textContent = currentItemName;
@@ -157,12 +183,10 @@ function updateDisplay(keepCurrentItem = false) {
     container.appendChild(text);
   }
 
-  // Show Speak Button if ANY voice is found (fallback will handle logic)
   if (viVoice || enVoice) {
     const speakBtn = document.createElement('button');
     speakBtn.className = 'speak-btn';
     speakBtn.innerHTML = '🔊';
-    speakBtn.title = 'Phát âm';
     speakBtn.onclick = (e) => {
       e.stopPropagation();
       speak(currentItemName);
@@ -175,7 +199,6 @@ function updateDisplay(keepCurrentItem = false) {
 
 // Event Listeners
 nextBtn.addEventListener('click', () => updateDisplay());
-
 categoryBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     categoryBtns.forEach(b => b.classList.remove('active'));
@@ -184,17 +207,15 @@ categoryBtns.forEach(btn => {
     updateDisplay();
   });
 });
-
 langBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     langBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentLang = btn.dataset.lang;
     updateUI();
-    updateDisplay(true); // Keep current item but update its language
+    updateDisplay(true);
   });
 });
 
-// Initial load
 updateUI();
 updateDisplay();
