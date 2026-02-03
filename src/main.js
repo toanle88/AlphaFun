@@ -39,6 +39,23 @@ const COLORS = [
   { name: { vi: 'Màu xám', en: 'Gray' }, hex: '#6b7280' },
 ];
 
+const VERBS = [
+  { name: { vi: 'Nhảy', en: 'Jump' }, emoji: '🦘' },
+  { name: { vi: 'Chạy', en: 'Run' }, emoji: '🏃' },
+  { name: { vi: 'Ăn', en: 'Eat' }, emoji: '🍎' },
+  { name: { vi: 'Uống', en: 'Drink' }, emoji: '🥛' },
+  { name: { vi: 'Ngủ', en: 'Sleep' }, emoji: '😴' },
+  { name: { vi: 'Đi bộ', en: 'Walk' }, emoji: '🚶' },
+  { name: { vi: 'Cười', en: 'Laugh' }, emoji: '😄' },
+  { name: { vi: 'Khóc', en: 'Cry' }, emoji: '😢' },
+  { name: { vi: 'Đọc', en: 'Read' }, emoji: '📖' },
+  { name: { vi: 'Viết', en: 'Write' }, emoji: '✍️' },
+  { name: { vi: 'Hát', en: 'Sing' }, emoji: '🎤' },
+  { name: { vi: 'Múa', en: 'Dance' }, emoji: '💃' },
+  { name: { vi: 'Bơi', en: 'Swim' }, emoji: '🏊' },
+  { name: { vi: 'Vỗ tay', en: 'Clap' }, emoji: '👏' },
+];
+
 const UI_TEXT = {
   vi: {
     subtitle: 'Cùng bé tập nói nào!',
@@ -47,6 +64,7 @@ const UI_TEXT = {
     numbers: 'Chữ số',
     objects: 'Đồ vật',
     colors: 'Màu sắc',
+    verbs: 'Hành động',
     next: 'TIẾP THEO'
   },
   en: {
@@ -56,6 +74,7 @@ const UI_TEXT = {
     numbers: 'Numbers',
     objects: 'Objects',
     colors: 'Colors',
+    verbs: 'Actions',
     next: 'NEXT'
   }
 };
@@ -71,7 +90,6 @@ const subtitle = document.getElementById('subtitle');
 const categoryBtns = document.querySelectorAll('.category-btn');
 const langBtns = document.querySelectorAll('.lang-btn');
 
-// --- Speech Synthesis Setup ---
 const synth = window.speechSynthesis;
 let viVoice = null;
 let enVoice = null;
@@ -90,13 +108,11 @@ loadVoices();
 function speak(text) {
   if (synth.speaking) synth.cancel();
   const utter = new SpeechSynthesisUtterance(text);
-  
   if (currentLang === 'vi') {
     utter.voice = viVoice || enVoice || null;
   } else {
     utter.voice = enVoice || viVoice || null;
   }
-  
   utter.rate = 0.9;
   utter.pitch = 1.1;
   const speakBtn = document.querySelector('.speak-btn');
@@ -118,6 +134,9 @@ function getRandomItem() {
   }
   if (currentCategory === 'all' || currentCategory === 'colors') {
     pool = pool.concat(COLORS.map(c => ({ type: 'color', value: c, name: c.name })));
+  }
+  if (currentCategory === 'all' || currentCategory === 'verbs') {
+    pool = pool.concat(VERBS.map(v => ({ type: 'verb', value: v, name: v.name })));
   }
 
   const randomIndex = Math.floor(Math.random() * pool.length);
@@ -149,17 +168,11 @@ function updateDisplay(keepCurrentItem = false) {
     const swatch = document.createElement('div');
     swatch.className = 'color-swatch';
     swatch.style.backgroundColor = item.value.hex;
-    // Add subtle border for white
     if (item.value.hex.toLowerCase() === '#ffffff') {
       swatch.style.borderColor = '#e5e7eb';
     }
     container.appendChild(swatch);
-    
-    const name = document.createElement('div');
-    name.className = 'object-name';
-    name.textContent = currentItemName;
-    container.appendChild(name);
-  } else if (item.type === 'object') {
+  } else if (item.type === 'object' || item.type === 'verb') {
     if (item.value.image) {
       const img = document.createElement('img');
       img.src = item.value.image;
@@ -172,15 +185,19 @@ function updateDisplay(keepCurrentItem = false) {
       emoji.textContent = item.value.emoji;
       container.appendChild(emoji);
     }
-    const name = document.createElement('div');
-    name.className = 'object-name';
-    name.textContent = currentItemName;
-    container.appendChild(name);
   } else {
     const text = document.createElement('span');
     text.className = 'big-text';
     text.textContent = item.value;
     container.appendChild(text);
+  }
+  
+  // Show text for objects, colors, and verbs
+  if (item.type !== 'letter' && item.type !== 'number') {
+    const nameLabel = document.createElement('div');
+    nameLabel.className = 'object-name';
+    nameLabel.textContent = currentItemName;
+    container.appendChild(nameLabel);
   }
 
   if (viVoice || enVoice) {
@@ -197,7 +214,6 @@ function updateDisplay(keepCurrentItem = false) {
   displayArea.appendChild(container);
 }
 
-// Event Listeners
 nextBtn.addEventListener('click', () => updateDisplay());
 categoryBtns.forEach(btn => {
   btn.addEventListener('click', () => {
