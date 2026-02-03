@@ -40,20 +40,20 @@ const COLORS = [
 ];
 
 const VERBS = [
-  { name: { vi: 'Nhảy', en: 'Jump' }, emoji: '🦘' },
-  { name: { vi: 'Chạy', en: 'Run' }, emoji: '🏃' },
-  { name: { vi: 'Ăn', en: 'Eat' }, emoji: '🍎' },
-  { name: { vi: 'Uống', en: 'Drink' }, emoji: '🥛' },
-  { name: { vi: 'Ngủ', en: 'Sleep' }, emoji: '😴' },
-  { name: { vi: 'Đi bộ', en: 'Walk' }, emoji: '🚶' },
-  { name: { vi: 'Cười', en: 'Laugh' }, emoji: '😄' },
-  { name: { vi: 'Khóc', en: 'Cry' }, emoji: '😢' },
-  { name: { vi: 'Đọc', en: 'Read' }, emoji: '📖' },
-  { name: { vi: 'Viết', en: 'Write' }, emoji: '✍️' },
-  { name: { vi: 'Hát', en: 'Sing' }, emoji: '🎤' },
-  { name: { vi: 'Múa', en: 'Dance' }, emoji: '💃' },
-  { name: { vi: 'Bơi', en: 'Swim' }, emoji: '🏊' },
-  { name: { vi: 'Vỗ tay', en: 'Clap' }, emoji: '👏' },
+  { name: { vi: 'Nhảy', en: 'Jump' }, image: '/images/jump.png' },
+  { name: { vi: 'Chạy', en: 'Run' }, image: '/images/run.png' },
+  { name: { vi: 'Ăn', en: 'Eat' }, image: '/images/eat.png' },
+  { name: { vi: 'Uống', en: 'Drink' }, image: '/images/drink.png' },
+  { name: { vi: 'Ngủ', en: 'Sleep' }, image: '/images/sleep.png' },
+  { name: { vi: 'Đi bộ', en: 'Walk' }, image: '/images/walk.png' },
+  { name: { vi: 'Cười', en: 'Laugh' }, image: '/images/laugh.png' },
+  { name: { vi: 'Khóc', en: 'Cry' }, image: '/images/cry.png' },
+  { name: { vi: 'Đọc', en: 'Read' }, image: '/images/read.png' },
+  { name: { vi: 'Viết', en: 'Write' }, image: '/images/write.png' },
+  { name: { vi: 'Hát', en: 'Sing' }, image: '/images/sing.png' },
+  { name: { vi: 'Múa', en: 'Dance' }, image: '/images/dance.png' },
+  { name: { vi: 'Bơi', en: 'Swim' }, image: '/images/swim.png' },
+  { name: { vi: 'Vỗ tay', en: 'Clap' }, image: '/images/clap.png' },
 ];
 
 const UI_TEXT = {
