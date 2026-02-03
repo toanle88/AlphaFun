@@ -83,6 +83,7 @@ let currentLang = 'vi';
 let currentCategory = 'all';
 let currentItemName = '';
 let currentItem = null;
+let lastItemValue = null; // Track the value of the last item shown
 
 const displayArea = document.getElementById('display-area');
 const nextBtn = document.getElementById('next-btn');
@@ -139,8 +140,27 @@ function getRandomItem() {
     pool = pool.concat(VERBS.map(v => ({ type: 'verb', value: v, name: v.name })));
   }
 
-  const randomIndex = Math.floor(Math.random() * pool.length);
-  return pool[randomIndex];
+  // Prevent repetition
+  let filteredPool = pool;
+  if (pool.length > 1) {
+    filteredPool = pool.filter(item => {
+      // Comparison based on type and unique value
+      const itemValue = item.type === 'object' || item.type === 'color' || item.type === 'verb' 
+        ? (item.value.hex || item.value.image || item.value.emoji || item.value.name.en)
+        : item.value;
+      return itemValue !== lastItemValue;
+    });
+  }
+
+  const randomIndex = Math.floor(Math.random() * filteredPool.length);
+  const selectedItem = filteredPool[randomIndex];
+
+  // Update lastItemValue for next time
+  lastItemValue = selectedItem.type === 'object' || selectedItem.type === 'color' || selectedItem.type === 'verb' 
+    ? (selectedItem.value.hex || selectedItem.value.image || selectedItem.value.emoji || selectedItem.value.name.en)
+    : selectedItem.value;
+
+  return selectedItem;
 }
 
 function updateUI() {
