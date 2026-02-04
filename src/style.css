@@ -258,12 +258,31 @@ h1 {
   }
 }
 
-.object-image {
+.object-image,
+.shape-svg {
   width: auto;
   height: clamp(140px, 25vh, 200px);
-  /* Responsive fixed height */
   object-fit: contain;
   border-radius: 12px;
+}
+
+.color-swatch {
+  width: clamp(140px, 25vh, 200px);
+  /* Restored fixed width */
+  height: clamp(140px, 25vh, 200px);
+  border-radius: 40px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border: 8px solid white;
+}
+
+.shape-svg {
+  width: clamp(140px, 25vh, 200px);
+  /* Match height for aspect ratio */
+  height: clamp(140px, 25vh, 200px);
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.15));
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .object-name {

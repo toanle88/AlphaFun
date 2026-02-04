@@ -56,6 +56,54 @@ const VERBS = [
   { name: { vi: 'Vỗ tay', en: 'Clap' }, image: '/images/clap.png' },
 ];
 
+const SHAPES = [
+  { 
+    name: { vi: 'Hình tròn', en: 'Circle' }, 
+    color: '#ef4444', 
+    svg: '<circle cx="50" cy="50" r="45" fill="currentColor" />' 
+  },
+  { 
+    name: { vi: 'Hình vuông', en: 'Square' }, 
+    color: '#3b82f6', 
+    svg: '<rect x="10" y="10" width="80" height="80" rx="10" fill="currentColor" />' 
+  },
+  { 
+    name: { vi: 'Hình tam giác', en: 'Triangle' }, 
+    color: '#22c55e', 
+    svg: '<path d="M50 10 L90 90 L10 90 Z" fill="currentColor" />' 
+  },
+  { 
+    name: { vi: 'Hình ngôi sao', en: 'Star' }, 
+    color: '#eab308', 
+    svg: '<path d="M50 5 L63 40 L98 40 L70 60 L80 95 L50 75 L20 95 L30 60 L2 40 L37 40 Z" fill="currentColor" />' 
+  },
+  { 
+    name: { vi: 'Hình trái tim', en: 'Heart' }, 
+    color: '#ec4899', 
+    svg: '<path d="M50 90 C20 70 5 50 5 30 C5 15 15 5 30 5 C40 5 45 10 50 15 C55 10 60 5 70 5 C85 5 95 15 95 30 C95 50 80 70 50 90" fill="currentColor" />' 
+  },
+  { 
+    name: { vi: 'Hình chữ nhật', en: 'Rectangle' }, 
+    color: '#f97316', 
+    svg: '<rect x="5" y="25" width="90" height="50" rx="8" fill="currentColor" />' 
+  },
+  { 
+    name: { vi: 'Hình kim cương', en: 'Diamond' }, 
+    color: '#a855f7', 
+    svg: '<path d="M50 5 L90 50 L50 95 L10 50 Z" fill="currentColor" />' 
+  },
+  { 
+    name: { vi: 'Hình bầu dục', en: 'Oval' }, 
+    color: '#6b7280', 
+    svg: '<ellipse cx="50" cy="50" rx="45" ry="30" fill="currentColor" />' 
+  },
+  {
+    name: { vi: 'Hình lục giác', en: 'Hexagon' },
+    color: '#14b8a6',
+    svg: '<path d="M50 5 L90 27.5 L90 72.5 L50 95 L10 72.5 L10 27.5 Z" fill="currentColor" />'
+  }
+];
+
 const UI_TEXT = {
   vi: {
     all: 'Tất cả',
@@ -64,6 +112,7 @@ const UI_TEXT = {
     objects: 'Đồ vật',
     colors: 'Màu sắc',
     verbs: 'Hành động',
+    shapes: 'Hình khối',
     next: 'TIẾP THEO'
   },
   en: {
@@ -73,6 +122,7 @@ const UI_TEXT = {
     objects: 'Objects',
     colors: 'Colors',
     verbs: 'Actions',
+    shapes: 'Shapes',
     next: 'NEXT'
   }
 };
@@ -139,15 +189,17 @@ function getRandomItem() {
   if (currentCategory === 'all' || currentCategory === 'verbs') {
     pool = pool.concat(VERBS.map(v => ({ type: 'verb', value: v, name: v.name })));
   }
+  if (currentCategory === 'all' || currentCategory === 'shapes') {
+    pool = pool.concat(SHAPES.map(s => ({ type: 'shape', value: s, name: s.name })));
+  }
 
   // Prevent repetition
   let filteredPool = pool;
   if (pool.length > 1) {
     filteredPool = pool.filter(item => {
-      // Comparison based on type and unique value
-      const itemValue = item.type === 'object' || item.type === 'color' || item.type === 'verb' 
-        ? (item.value.hex || item.value.image || item.value.emoji || item.value.name.en)
-        : item.value;
+      const itemValue = item.type === 'letter' || item.type === 'number' 
+        ? item.value 
+        : (item.value.hex || item.value.image || item.value.emoji || item.value.svg || item.value.name.en);
       return itemValue !== lastItemValue;
     });
   }
@@ -155,10 +207,9 @@ function getRandomItem() {
   const randomIndex = Math.floor(Math.random() * filteredPool.length);
   const selectedItem = filteredPool[randomIndex];
 
-  // Update lastItemValue for next time
-  lastItemValue = selectedItem.type === 'object' || selectedItem.type === 'color' || selectedItem.type === 'verb' 
-    ? (selectedItem.value.hex || selectedItem.value.image || selectedItem.value.emoji || selectedItem.value.name.en)
-    : selectedItem.value;
+  lastItemValue = selectedItem.type === 'letter' || selectedItem.type === 'number'
+    ? selectedItem.value
+    : (selectedItem.value.hex || selectedItem.value.image || selectedItem.value.emoji || selectedItem.value.svg || selectedItem.value.name.en);
 
   return selectedItem;
 }
@@ -183,7 +234,17 @@ function updateDisplay(keepCurrentItem = false) {
   const container = document.createElement('div');
   container.className = 'display-item';
 
-  if (item.type === 'color') {
+  if (item.type === 'shape') {
+    const svgWrapper = document.createElement('div');
+    svgWrapper.className = 'shape-svg';
+    svgWrapper.style.color = item.value.color;
+    svgWrapper.innerHTML = `
+      <svg viewBox="0 0 100 100" width="100%" height="100%">
+        ${item.value.svg}
+      </svg>
+    `;
+    container.appendChild(svgWrapper);
+  } else if (item.type === 'color') {
     const swatch = document.createElement('div');
     swatch.className = 'color-swatch';
     swatch.style.backgroundColor = item.value.hex;
@@ -231,7 +292,6 @@ function updateDisplay(keepCurrentItem = false) {
 
   displayArea.appendChild(container);
 
-  // Auto-speak if in auto mode
   if (currentMode === 'auto' && !keepCurrentItem) {
     speak(currentItemName);
   }
@@ -241,7 +301,7 @@ function startAutoPlay() {
   stopAutoPlay();
   autoPlayTimer = setInterval(() => {
     updateDisplay();
-  }, 6000); // 6 seconds per item
+  }, 6000); 
 }
 
 function stopAutoPlay() {
@@ -251,10 +311,9 @@ function stopAutoPlay() {
   }
 }
 
-// Event Listeners
 nextBtn.addEventListener('click', () => {
   updateDisplay();
-  if (currentMode === 'auto') startAutoPlay(); // Reset timer on manual click
+  if (currentMode === 'auto') startAutoPlay();
 });
 
 categoryBtns.forEach(btn => {
@@ -263,7 +322,7 @@ categoryBtns.forEach(btn => {
     btn.classList.add('active');
     currentCategory = btn.dataset.category;
     updateDisplay();
-    if (currentMode === 'auto') startAutoPlay(); // Reset timer on category change
+    if (currentMode === 'auto') startAutoPlay();
   });
 });
 
@@ -284,7 +343,7 @@ modeBtns.forEach(btn => {
     currentMode = btn.dataset.mode;
     
     if (currentMode === 'auto') {
-      speak(currentItemName); // Speak current first
+      speak(currentItemName);
       startAutoPlay();
     } else {
       stopAutoPlay();
