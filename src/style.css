@@ -175,7 +175,8 @@ h1 {
 }
 
 .lang-switch,
-.mode-switch {
+.mode-switch,
+.order-switch {
   display: flex;
   background: #f3f4f6;
   padding: 4px;
@@ -184,7 +185,8 @@ h1 {
 }
 
 .lang-btn,
-.mode-btn {
+.mode-btn,
+.order-btn {
   padding: 6px 12px;
   flex: 1;
   border: none;
@@ -196,6 +198,13 @@ h1 {
   color: var(--text-muted);
   transition: all 0.2s;
   white-space: nowrap;
+}
+
+.lang-btn.active,
+.mode-btn.active,
+.order-btn.active {
+  background: var(--primary);
+  color: white;
 }
 
 

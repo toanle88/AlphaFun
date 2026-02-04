@@ -130,6 +130,8 @@ const UI_TEXT = {
 let currentLang = 'vi';
 let currentCategory = 'all';
 let currentMode = 'manual'; // 'manual' or 'auto'
+let currentOrder = 'random'; // 'random' or 'sequential'
+let sequentialIndex = 0;
 let currentItemName = '';
 let currentItem = null;
 let lastItemValue = null; 
@@ -140,6 +142,7 @@ const nextBtn = document.getElementById('next-btn');
 const categoryBtns = document.querySelectorAll('.category-btn');
 const langBtns = document.querySelectorAll('.lang-btn');
 const modeBtns = document.querySelectorAll('.mode-btn');
+const orderBtns = document.querySelectorAll('.order-btn');
 
 const settingsToggle = document.getElementById('settings-toggle');
 const settingsPanel = document.getElementById('settings-panel');
@@ -182,7 +185,7 @@ function speak(text) {
   synth.speak(utter);
 }
 
-function getRandomItem() {
+function getPool() {
   let pool = [];
   if (currentCategory === 'all' || currentCategory === 'letters') {
     pool = pool.concat(LETTERS.map(l => ({ type: 'letter', value: l, name: l })));
@@ -202,8 +205,19 @@ function getRandomItem() {
   if (currentCategory === 'all' || currentCategory === 'shapes') {
     pool = pool.concat(SHAPES.map(s => ({ type: 'shape', value: s, name: s.name })));
   }
+  return pool;
+}
 
-  // Prevent repetition
+function getRandomItem() {
+  const pool = getPool();
+  
+  if (currentOrder === 'sequential') {
+    const item = pool[sequentialIndex % pool.length];
+    sequentialIndex++;
+    return item;
+  }
+
+  // Prevent repetition in random mode
   let filteredPool = pool;
   if (pool.length > 1) {
     filteredPool = pool.filter(item => {
@@ -372,6 +386,7 @@ categoryBtns.forEach(btn => {
     categoryBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentCategory = btn.dataset.category;
+    sequentialIndex = 0; // Reset index on category change
     updateDisplay();
     if (currentMode === 'auto') startAutoPlay();
   });
@@ -399,6 +414,17 @@ modeBtns.forEach(btn => {
     } else {
       stopAutoPlay();
     }
+  });
+});
+
+orderBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    orderBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentOrder = btn.dataset.order;
+    sequentialIndex = 0; // Reset to start of sequence
+    updateDisplay();
+    if (currentMode === 'auto') startAutoPlay();
   });
 });
 
