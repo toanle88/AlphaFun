@@ -1,7 +1,7 @@
 import './style.css'
 
 const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-const NUMBERS = '0123456789'.split('');
+const NUMBERS = '123456789'.split('');
 const OBJECTS = [
   { name: { vi: 'Quả táo', en: 'Apple' }, image: '/images/apple.png' },
   { name: { vi: 'Xe hơi', en: 'Car' }, image: '/images/car.png' },
