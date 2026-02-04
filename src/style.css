@@ -99,20 +99,97 @@ h1 {
   color: white;
 }
 
-.mode-switch {
-  display: flex;
-  background: rgba(255, 255, 255, 0.5);
-  padding: 4px;
-  border-radius: 12px;
-  gap: 4px;
-  margin-left: 8px;
+.settings-hub {
+  position: relative;
+  z-index: 100;
 }
 
+.settings-toggle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s;
+}
+
+.settings-toggle:hover {
+  transform: rotate(45deg);
+  background: #f3f4f6;
+}
+
+.settings-panel {
+  display: none;
+  /* Hidden by default */
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: white;
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  min-width: 180px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  animation: slideDown 0.2s ease-out;
+}
+
+.settings-panel.show {
+  display: block;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.setting-group {
+  margin-bottom: 0.75rem;
+}
+
+.setting-group:last-child {
+  margin-bottom: 0;
+}
+
+.setting-group label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+  letter-spacing: 0.05em;
+  text-align: left;
+}
+
+.lang-switch,
+.mode-switch {
+  display: flex;
+  background: #f3f4f6;
+  padding: 4px;
+  border-radius: 10px;
+  gap: 2px;
+}
+
+.lang-btn,
 .mode-btn {
-  padding: 4px 10px;
+  padding: 6px 12px;
+  flex: 1;
   border: none;
   background: transparent;
-  border-radius: 8px;
+  border-radius: 7px;
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
@@ -120,6 +197,7 @@ h1 {
   transition: all 0.2s;
   white-space: nowrap;
 }
+
 
 .controls {
   display: flex;

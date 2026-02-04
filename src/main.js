@@ -141,6 +141,9 @@ const categoryBtns = document.querySelectorAll('.category-btn');
 const langBtns = document.querySelectorAll('.lang-btn');
 const modeBtns = document.querySelectorAll('.mode-btn');
 
+const settingsToggle = document.getElementById('settings-toggle');
+const settingsPanel = document.getElementById('settings-panel');
+
 const synth = window.speechSynthesis;
 let viVoice = null;
 let enVoice = null;
@@ -350,6 +353,20 @@ modeBtns.forEach(btn => {
     }
   });
 });
+
+// Settings Toggle Logic
+settingsToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  settingsPanel.classList.toggle('show');
+});
+
+document.addEventListener('click', (e) => {
+  if (!settingsHub.contains(e.target)) {
+    settingsPanel.classList.remove('show');
+  }
+});
+
+const settingsHub = document.querySelector('.settings-hub');
 
 updateUI();
 updateDisplay();

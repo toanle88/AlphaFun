@@ -15,13 +15,24 @@
         <header>
           <div class="header-top">
             <h1>AlphaFun</h1>
-            <div class="lang-switch">
-              <button class="lang-btn active" data-lang="vi">VN</button>
-              <button class="lang-btn" data-lang="en">EN</button>
-            </div>
-            <div class="mode-switch">
-              <button class="mode-btn active" data-mode="manual">Bé bấm</button>
-              <button class="mode-btn" data-mode="auto">Tự động</button>
+            <div class="settings-hub">
+              <button id="settings-toggle" class="settings-toggle" title="Cài đặt">⚙️</button>
+              <div id="settings-panel" class="settings-panel">
+                <div class="setting-group">
+                  <label>Ngôn ngữ</label>
+                  <div class="lang-switch">
+                    <button class="lang-btn active" data-lang="vi">VN</button>
+                    <button class="lang-btn" data-lang="en">EN</button>
+                  </div>
+                </div>
+                <div class="setting-group">
+                  <label>Chế độ</label>
+                  <div class="mode-switch">
+                    <button class="mode-btn active" data-mode="manual">Bé bấm</button>
+                    <button class="mode-btn" data-mode="auto">Tự động</button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </header>
