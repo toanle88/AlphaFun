@@ -148,6 +148,13 @@ const synth = window.speechSynthesis;
 let viVoice = null;
 let enVoice = null;
 
+// Recording State
+let mediaRecorder = null;
+let audioChunks = [];
+let audioBlob = null;
+let audioUrl = null;
+let isRecording = false;
+
 function loadVoices() {
   const voices = synth.getVoices();
   viVoice = voices.find(v => v.lang.startsWith('vi'));
@@ -282,18 +289,59 @@ function updateDisplay(keepCurrentItem = false) {
     container.appendChild(nameLabel);
   }
 
+  // Voice Interaction Controls (Speak, Record, Playback)
+  const voiceControls = document.createElement('div');
+  voiceControls.className = 'voice-controls';
+
   if (viVoice || enVoice) {
     const speakBtn = document.createElement('button');
     speakBtn.className = 'speak-btn';
     speakBtn.innerHTML = '🔊';
+    speakBtn.title = 'Phát âm mẫu';
     speakBtn.onclick = (e) => {
       e.stopPropagation();
       speak(currentItemName);
     };
-    container.appendChild(speakBtn);
+    voiceControls.appendChild(speakBtn);
   }
 
+  const recordBtn = document.createElement('button');
+  recordBtn.className = 'record-btn';
+  recordBtn.innerHTML = '🎤';
+  recordBtn.title = 'Bắt đầu ghi âm';
+  
+  const playbackBtn = document.createElement('button');
+  playbackBtn.className = 'playback-btn';
+  playbackBtn.innerHTML = '▶️';
+  playbackBtn.title = 'Nghe lại';
+
+  recordBtn.onclick = async (e) => {
+    e.stopPropagation();
+    if (!isRecording) {
+      await startRecording(recordBtn, playbackBtn);
+    } else {
+      stopRecording(recordBtn, playbackBtn);
+    }
+  };
+
+  playbackBtn.onclick = (e) => {
+    e.stopPropagation();
+    if (audioUrl) {
+      const audio = new Audio(audioUrl);
+      audio.play();
+    }
+  };
+
+  voiceControls.appendChild(recordBtn);
+  voiceControls.appendChild(playbackBtn);
+  container.appendChild(voiceControls);
+
   displayArea.appendChild(container);
+
+  // Clear previous recording on new item
+  if (!keepCurrentItem) {
+    cleanupRecording();
+  }
 
   if (currentMode === 'auto' && !keepCurrentItem) {
     speak(currentItemName);
@@ -367,6 +415,56 @@ document.addEventListener('click', (e) => {
 });
 
 const settingsHub = document.querySelector('.settings-hub');
+
+async function startRecording(btn, playBtn) {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
+
+    mediaRecorder.ondataavailable = (event) => {
+      audioChunks.push(event.data);
+    };
+
+    mediaRecorder.onstop = () => {
+      audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+      audioUrl = URL.createObjectURL(audioBlob);
+      playBtn.classList.add('visible');
+    };
+
+    mediaRecorder.start();
+    isRecording = true;
+    btn.classList.add('recording');
+    btn.innerHTML = '⏹️';
+    playBtn.classList.remove('visible');
+  } catch (err) {
+    console.error('Microphone access denied:', err);
+    alert('Vui lòng cho phép truy cập micro để sử dụng tính năng này.');
+  }
+}
+
+function stopRecording(btn, playBtn) {
+  if (mediaRecorder && isRecording) {
+    mediaRecorder.stop();
+    mediaRecorder.stream.getTracks().forEach(track => track.stop());
+    isRecording = false;
+    btn.classList.remove('recording');
+    btn.innerHTML = '🎤';
+  }
+}
+
+function cleanupRecording() {
+  if (audioUrl) {
+    URL.revokeObjectURL(audioUrl);
+    audioUrl = null;
+    audioBlob = null;
+  }
+  isRecording = false;
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop();
+    mediaRecorder.stream.getTracks().forEach(track => track.stop());
+  }
+}
 
 updateUI();
 updateDisplay();
