@@ -49,6 +49,11 @@ body {
   /* Reduced gap */
   transition: transform 0.3s ease;
   min-height: auto;
+  user-select: none;
+  /* Disable text selection */
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  /* Disable mobile tap highlight */
 }
 
 .header-top {
