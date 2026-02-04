@@ -9,7 +9,7 @@ const OBJECTS = [
   { name: { vi: 'Con chim', en: 'Bird' }, image: '/images/bird.png' },
   { name: { vi: 'Mặt trời', en: 'Sun' }, image: '/images/sun.png' },
   { name: { vi: 'Quả chuối', en: 'Banana' }, image: '/images/banana.png' },
-  { name: { vi: 'Con mèo', en: 'Cat' }, emoji: '🐱' },
+  { name: { vi: 'Con mèo', en: 'Cat' }, image: '/images/cat.png' },
   { name: { vi: 'Ngôi nhà', en: 'House' }, emoji: '🏠' },
   { name: { vi: 'Quả bóng', en: 'Ball' }, emoji: '⚽' },
   { name: { vi: 'Bông hoa', en: 'Flower' }, emoji: '🌸' },
