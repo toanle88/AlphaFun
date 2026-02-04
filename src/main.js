@@ -79,14 +79,17 @@ const UI_TEXT = {
 
 let currentLang = 'vi';
 let currentCategory = 'all';
+let currentMode = 'manual'; // 'manual' or 'auto'
 let currentItemName = '';
 let currentItem = null;
-let lastItemValue = null; // Track the value of the last item shown
+let lastItemValue = null; 
+let autoPlayTimer = null;
 
 const displayArea = document.getElementById('display-area');
 const nextBtn = document.getElementById('next-btn');
 const categoryBtns = document.querySelectorAll('.category-btn');
 const langBtns = document.querySelectorAll('.lang-btn');
+const modeBtns = document.querySelectorAll('.mode-btn');
 
 const synth = window.speechSynthesis;
 let viVoice = null;
@@ -208,7 +211,6 @@ function updateDisplay(keepCurrentItem = false) {
     container.appendChild(text);
   }
   
-  // Show text for objects, colors, and verbs
   if (item.type !== 'letter' && item.type !== 'number') {
     const nameLabel = document.createElement('div');
     nameLabel.className = 'object-name';
@@ -228,17 +230,43 @@ function updateDisplay(keepCurrentItem = false) {
   }
 
   displayArea.appendChild(container);
+
+  // Auto-speak if in auto mode
+  if (currentMode === 'auto' && !keepCurrentItem) {
+    speak(currentItemName);
+  }
 }
 
-nextBtn.addEventListener('click', () => updateDisplay());
+function startAutoPlay() {
+  stopAutoPlay();
+  autoPlayTimer = setInterval(() => {
+    updateDisplay();
+  }, 6000); // 6 seconds per item
+}
+
+function stopAutoPlay() {
+  if (autoPlayTimer) {
+    clearInterval(autoPlayTimer);
+    autoPlayTimer = null;
+  }
+}
+
+// Event Listeners
+nextBtn.addEventListener('click', () => {
+  updateDisplay();
+  if (currentMode === 'auto') startAutoPlay(); // Reset timer on manual click
+});
+
 categoryBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     categoryBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentCategory = btn.dataset.category;
     updateDisplay();
+    if (currentMode === 'auto') startAutoPlay(); // Reset timer on category change
   });
 });
+
 langBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     langBtns.forEach(b => b.classList.remove('active'));
@@ -246,6 +274,21 @@ langBtns.forEach(btn => {
     currentLang = btn.dataset.lang;
     updateUI();
     updateDisplay(true);
+  });
+});
+
+modeBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    modeBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentMode = btn.dataset.mode;
+    
+    if (currentMode === 'auto') {
+      speak(currentItemName); // Speak current first
+      startAutoPlay();
+    } else {
+      stopAutoPlay();
+    }
   });
 });
 
