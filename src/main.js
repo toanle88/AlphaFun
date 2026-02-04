@@ -430,6 +430,10 @@ async function startRecording(btn, playBtn) {
       audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
       audioUrl = URL.createObjectURL(audioBlob);
       playBtn.classList.add('visible');
+      
+      // Auto-playback immediately after stopping
+      const audio = new Audio(audioUrl);
+      audio.play();
     };
 
     mediaRecorder.start();
