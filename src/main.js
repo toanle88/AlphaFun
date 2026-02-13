@@ -137,6 +137,16 @@ let currentItem = null;
 let lastItemValue = null; 
 let autoPlayTimer = null;
 
+const CATEGORY_THEMES = {
+  all: { primary: '#FF6B6B', dark: '#E05656', secondary: '#4ECDC4' },
+  letters: { primary: '#FF9F43', dark: '#E67E22', secondary: '#54A0FF' },
+  numbers: { primary: '#54A0FF', dark: '#2E86DE', secondary: '#FF9F43' },
+  objects: { primary: '#4ECDC4', dark: '#3DBdb4', secondary: '#FF6B6B' },
+  colors: { primary: '#FF6B6B', dark: '#E05656', secondary: '#FFE66D' },
+  verbs: { primary: '#5FA052', dark: '#468936', secondary: '#C4E538' },
+  shapes: { primary: '#A29BFE', dark: '#6C5CE7', secondary: '#81ECEC' }
+};
+
 const displayArea = document.getElementById('display-area');
 const nextBtn = document.getElementById('next-btn');
 const categoryBtns = document.querySelectorAll('.category-btn');
@@ -386,6 +396,7 @@ categoryBtns.forEach(btn => {
     categoryBtns.forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     currentCategory = btn.dataset.category;
+    updateTheme(); // Apply new theme
     sequentialIndex = 0; // Reset index on category change
     updateDisplay();
     if (currentMode === 'auto') startAutoPlay();
@@ -495,6 +506,17 @@ function cleanupRecording() {
     mediaRecorder.stream.getTracks().forEach(track => track.stop());
   }
 }
+
+function updateTheme() {
+  const theme = CATEGORY_THEMES[currentCategory];
+  const root = document.documentElement;
+  root.style.setProperty('--primary', theme.primary);
+  root.style.setProperty('--primary-dark', theme.dark);
+  root.style.setProperty('--secondary', theme.secondary);
+}
+
+// Initial Theme Update
+updateTheme();
 
 updateUI();
 updateDisplay();
