@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B6B;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FF9F43;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="15" result="blur"/>
+      <feOffset in="blur" dx="5" dy="10" result="offsetBlur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode in="offsetBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <rect width="512" height="512" rx="100" fill="white" />
+  
+  <g filter="url(#shadow)">
+    <!-- Main A Body -->
+    <path d="M256 100 L380 400 L320 400 L290 320 L222 320 L192 400 L132 400 Z" 
+          fill="url(#grad1)" stroke="#E05656" stroke-width="15" stroke-linejoin="round" />
+    <!-- A Hole -->
+    <path d="M256 180 L275 270 L237 270 Z" fill="white" />
+  </g>
+  
+  <!-- Decorative Dots -->
+  <circle cx="150" cy="150" r="30" fill="#4ECDC4" />
+  <circle cx="380" cy="350" r="25" fill="#FFE66D" />
+  <circle cx="400" cy="120" r="20" fill="#a855f7" />
+</svg>
