@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #FF6B6B;
+  --primary-dark: #E05656;
+  --secondary: #4ECDC4;
+  --secondary-dark: #3DBdb4;
+  --accent: #FFE66D;
+  --accent-dark: #E6D050;
+
+  --bg-color: #F7FFF7;
+  --card-bg: #FFFFFF;
+  --text-main: #2D3436;
+  --text-muted: #636E72;
+
+  --radius: 30px;
+  --border-width: 4px;
+  --shadow-depth: 6px;
+
+  --font-main: 'Fredoka', 'Nunito', sans-serif;
+}
+
+@layer base {
+  * {
+    @apply box-border m-0 p-0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply min-h-screen flex justify-center items-center overflow-x-hidden antialiased;
+    font-family: var(--font-main);
+    background-color: var(--bg-color);
+    background-image:
+      radial-gradient(var(--secondary) 2px, transparent 2px),
+      radial-gradient(var(--primary) 2px, transparent 2px);
+    background-size: 40px 40px;
+    background-position: 0 0, 20px 20px;
+    color: var(--text-main);
+  }
+}
+
+@layer components {
+  .neo-btn {
+    @apply transition-all duration-100 transform translate-y-0 active:translate-y-1;
+  }
+
+  .big-text {
+    @apply font-main font-bold;
+    font-size: clamp(5rem, 28vw, 9rem);
+    text-shadow: 4px 4px 0px var(--text-main);
+    -webkit-text-stroke: 2px var(--text-main);
+  }
+
+  .emoji-text {
+    font-size: clamp(4rem, 25vw, 8.5rem);
+  }
+}
+
+@keyframes popIn {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-pop-in {
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes recordPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.animate-record-pulse {
+  animation: recordPulse 1.5s infinite;
+}

@@ -1,71 +1,16 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/alphafun-icon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AlphaFun - Bé Tập Nói Thật Vui!</title>
-    <meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>AlphaFun - Learning is Fun!</title>
+    <meta name="description" content="A playful and interactive way for kids to learn letters, numbers, objects, and more!" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div id="app">
-      <div class="container">
-        <header>
-          <div class="header-top">
-            <h1>AlphaFun</h1>
-            <div class="settings-hub">
-              <button id="settings-toggle" class="settings-toggle" title="Cài đặt">⚙️</button>
-              <div id="settings-panel" class="settings-panel">
-                <div class="setting-group">
-                  <label>Ngôn ngữ</label>
-                  <div class="lang-switch">
-                    <button class="lang-btn active" data-lang="vi">VN</button>
-                    <button class="lang-btn" data-lang="en">EN</button>
-                  </div>
-                </div>
-                <div class="setting-group">
-                  <label>Chế độ</label>
-                  <div class="mode-switch">
-                    <button class="mode-btn active" data-mode="manual">Bé bấm</button>
-                    <button class="mode-btn" data-mode="auto">Tự động</button>
-                  </div>
-                </div>
-                <div class="setting-group">
-                  <label>Thứ tự</label>
-                  <div class="order-switch">
-                    <button class="order-btn active" data-order="random">Ngẫu nhiên</button>
-                    <button class="order-btn" data-order="sequential">Tuần tự</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </header>
-
-        <nav class="controls">
-          <button class="category-btn active" data-category="all">Tất cả</button>
-          <button class="category-btn" data-category="letters">Chữ cái</button>
-          <button class="category-btn" data-category="numbers">Chữ số</button>
-          <button class="category-btn" data-category="objects">Đồ vật</button>
-          <button class="category-btn" data-category="colors">Màu sắc</button>
-          <button class="category-btn" data-category="verbs">Hành động</button>
-          <button class="category-btn" data-category="shapes">Hình khối</button>
-        </nav>
-
-        <main id="display-area" class="display-area">
-          <div class="display-item">
-            <span class="big-text">?</span>
-          </div>
-        </main>
-
-        <footer>
-          <button id="next-btn" class="next-btn">TIẾP THEO</button>
-        </footer>
-      </div>
-    </div>
-    <script type="module" src="/src/main.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

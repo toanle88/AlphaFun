@@ -1,16 +1,20 @@
+/// <reference types="vitest" />
 import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
+    react(),
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
       manifest: {
-        name: 'AlphaFun - Bé Tập Nói Thật Vui!',
+        name: 'AlphaFun',
         short_name: 'AlphaFun',
-        description: 'Ứng dụng giúp bé tập nói thẻ từ sinh động',
-        theme_color: '#ffffff',
+        description: 'Learning is fun!',
+        theme_color: '#FF6B6B',
         icons: [
           {
             src: 'pwa-192x192.png',
@@ -25,5 +29,10 @@ export default defineConfig({
         ]
       }
     })
-  ]
+  ],
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    setupFiles: './src/test/setup.ts',
+  },
 })
