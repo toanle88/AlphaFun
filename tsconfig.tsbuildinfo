@@ -1,1 +1,1 @@
-{"root":["./src/app.extended.test.tsx","./src/app.test.tsx","./src/app.tsx","./src/main.tsx","./src/components/displayarea.tsx","./src/constants/data.ts","./src/hooks/userecording.ts","./src/hooks/usespeech.ts","./src/test/setup.ts","./src/types/index.ts"],"version":"5.9.3"}
+{"root":["./src/app.extended.test.tsx","./src/app.test.tsx","./src/app.tsx","./src/shapesbug.test.tsx","./src/main.tsx","./src/components/displayarea.tsx","./src/constants/data.ts","./src/hooks/userecording.ts","./src/hooks/usespeech.ts","./src/test/setup.ts","./src/types/index.ts"],"version":"5.9.3"}
