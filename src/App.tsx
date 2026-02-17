@@ -58,9 +58,12 @@ const App: React.FC = () => {
             let filteredPool = pool;
             if (currentItem && pool.length > 1) {
                 filteredPool = pool.filter(p => {
-                    const val = typeof p.value === 'string' ? p.value : (p.value as Record<string, unknown>).hex || (p.value as Record<string, unknown>).image;
-                    const currVal = typeof currentItem.value === 'string' ? currentItem.value : (currentItem.value as Record<string, unknown>).hex || (currentItem.value as Record<string, unknown>).image;
-                    return val !== currVal;
+                    const getIdentifier = (item: AppItem) => {
+                        if (typeof item.value === 'string') return item.value;
+                        const v = item.value as any;
+                        return v.hex || v.image || v.svg || v.emoji;
+                    };
+                    return getIdentifier(p) !== getIdentifier(currentItem);
                 });
             }
             const randomIdx = Math.floor(Math.random() * filteredPool.length);
