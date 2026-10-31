@@ -63,15 +63,7 @@ export interface ShapeItem extends BaseItem {
 }
 
 export type ShapeKind =
-  | 'circle'
-  | 'square'
-  | 'triangle'
-  | 'star'
-  | 'heart'
-  | 'rectangle'
-  | 'diamond'
-  | 'oval'
-  | 'hexagon'
+  'circle' | 'square' | 'triangle' | 'star' | 'heart' | 'rectangle' | 'diamond' | 'oval' | 'hexagon'
 
 export type AppItem = LetterItem | NumberItem | ObjectItem | ColorItem | VerbItem | ShapeItem
 
