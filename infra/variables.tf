@@ -1,19 +1,14 @@
-variable "subscription_id" {
-  type    = string
-  default = "546c1bbf-5b8d-41b3-b231-6f529740428c"
-}
-
 variable "resource_group_name" {
-  type    = string
-  default = "alphafun-rg"
+  type        = string
+  description = "Name of the Azure resource group managed by this stack."
 }
 
 variable "resource_group_location" {
-  type    = string
-  default = "East Asia"
+  type        = string
+  description = "Azure region for the managed resource group."
 }
 
 variable "tag_environment" {
-  type    = string
-  default = "pro"
+  type        = string
+  description = "Environment tag applied to managed resources."
 }

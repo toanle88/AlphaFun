@@ -34,11 +34,52 @@ pull-request previews.
 
 ## Infrastructure deployment
 
-Changes under `infra/` use `.github/workflows/infrastructure.yml`. Terraform
-plan runs first, and the production apply is protected by the GitHub
-`production` environment approval. Required Azure and backend values are
-provided through GitHub Actions secrets and OIDC; never add them to the
-repository.
+Changes under `infra/` use `.github/workflows/infrastructure.yml`. Every
+infrastructure pull request runs formatting, backend-free validation, TFLint,
+and Checkov. A pull request from this repository also gets a backend-backed
+Terraform plan in the workflow summary and a short-lived plan artifact.
+
+Fork pull requests intentionally do not receive Azure OIDC or Terraform state
+access. Their backend-free checks still run. This keeps untrusted pull-request
+code outside the state and cloud credential trust boundary; a trusted branch
+must produce the plan used for deployment.
+
+For pushes to `main` or a manually dispatched run, the workflow saves one
+binary plan, uploads it with the run ID in its name, and waits for the protected
+GitHub `production` environment. After approval, the deploy job downloads that
+same artifact and applies it by filename. It does not create a second plan.
+Required Azure and backend values are provided through GitHub Actions secrets
+and OIDC; never add them to the repository.
+
+### Terraform backend bootstrap and recovery
+
+The state storage account is a pre-existing bootstrap dependency and is not
+managed by this stack. An infrastructure maintainer creates an Azure resource
+group and storage account, enables storage encryption, blob versioning, and a
+retention policy, and creates the state container before the first workflow
+run. Configure these GitHub secrets: `TF_STATE_RESOURCE_GROUP_NAME`,
+`TF_STATE_STORAGE_ACCOUNT_NAME`, `TF_STATE_CONTAINER_NAME`, and
+`TF_STATE_KEY`. Configure `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, and
+`AZURE_SUBSCRIPTION_ID` for the federated GitHub OIDC identity. The identity
+needs least-privilege access to the state container (read, write, and lease
+management for locking) and only the resource permissions required by the
+Terraform stack.
+
+Set the non-secret repository or environment variables
+`TF_RESOURCE_GROUP_NAME`, `TF_RESOURCE_GROUP_LOCATION`, and
+`TF_TAG_ENVIRONMENT`; the Terraform configuration has no environment-specific
+defaults. Do not put state-account credentials or identifiers in `.tf` files.
+
+To inspect state safely, use a read-only, authenticated `terraform state list`
+or `terraform state show` against a copy of the backend configuration. Never
+edit the state JSON by hand, disable locking, or delete the state container.
+If state is lost or corrupted, stop deployments, preserve the affected blob
+versions, and involve the infrastructure maintainers. Restore the newest
+known-good blob version to the configured state key, verify the lock and
+backend access, run a refresh-free plan for review, and only then approve the
+saved plan. If no recoverable version exists, import resources into a new
+state only under an approved incident/recovery change; record the incident and
+all state operations.
 
 ## Rollback
 
