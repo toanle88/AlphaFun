@@ -32,10 +32,10 @@ describe('release metadata contract', () => {
   })
 
   it('records the verified publication decision for the initial release', () => {
-    expect(releaseProcess).toContain('canonical repository has no `v0.1.0` tag')
+    expect(releaseProcess).toContain('canonical repository currently has no `v0.1.0` tag')
     expect(releaseProcess).toContain('`0.1.0` remains unreleased')
-    expect(changelog).toContain('it remains')
-    expect(changelog).toContain('`v0.1.0` tag and GitHub release will be created')
+    expect(changelog).toContain('It remains unreleased until the')
+    expect(changelog).toContain('`v0.1.0` tag and GitHub release will be')
   })
 
   it('automates exact package-to-tag and dated-release-note validation', () => {
