@@ -21,8 +21,11 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, 
         if (autoPlay) {
             speak(itemName);
         }
+    }, [lang, autoPlay, speak, itemName]);
+
+    React.useEffect(() => {
         cleanupRecording();
-    }, [item, lang, autoPlay, speak, itemName, cleanupRecording]);
+    }, [item, cleanupRecording]);
 
     return (
         <section className="learning-card" aria-label="Learning card">
