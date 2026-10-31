@@ -33,8 +33,11 @@ a pull request:
 pnpm type-check
 pnpm format:check
 pnpm lint
-pnpm test -- --run
+pnpm test:coverage
 pnpm build
+pnpm check:asset-size
+pnpm exec playwright install --with-deps chromium
+pnpm test:e2e
 ```
 
 When changing a production dependency, also run
