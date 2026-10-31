@@ -40,6 +40,32 @@ describe('deployment security configuration', () => {
     expect(infrastructureWorkflow.match(/^\s{6}id-token:\s{1,}write$/gm)).toHaveLength(2)
   })
 
+  it('validates and promotes one exact Terraform plan', () => {
+    expect(infrastructureWorkflow).toContain('pull_request:')
+    expect(infrastructureWorkflow).toContain('terraform fmt -check -recursive')
+    expect(infrastructureWorkflow).toContain('terraform validate -no-color')
+    expect(infrastructureWorkflow).toContain('tflint --format compact')
+    expect(infrastructureWorkflow).toContain('checkov --directory . --quiet')
+    expect(infrastructureWorkflow).toContain('terraform plan -input=false -no-color -out=tfplan')
+    expect(infrastructureWorkflow).toContain('GITHUB_STEP_SUMMARY')
+    expect(infrastructureWorkflow).toContain('Comment plan on pull request')
+    expect(infrastructureWorkflow).toContain('tfplan-summary.txt')
+    expect(infrastructureWorkflow).toContain('(redacted)')
+    expect(infrastructureWorkflow).toContain('name: terraform-plan-${{ github.run_id }}')
+    expect(infrastructureWorkflow).toContain('terraform apply -input=false plan-artifact/tfplan')
+    expect(infrastructureWorkflow).not.toContain('terraform apply -auto-approve')
+  })
+
+  it('keeps Terraform backend and environment settings out of source defaults', () => {
+    expect(infrastructureWorkflow).toContain('TF_STATE_RESOURCE_GROUP_NAME')
+    expect(infrastructureWorkflow).toContain('TF_STATE_STORAGE_ACCOUNT_NAME')
+    expect(infrastructureWorkflow).toContain('TF_STATE_CONTAINER_NAME')
+    expect(infrastructureWorkflow).toContain('TF_STATE_KEY')
+    expect(infrastructureWorkflow).toContain('TF_VAR_resource_group_name')
+    expect(infrastructureWorkflow).not.toContain('toanle88sharedsa')
+    expect(infrastructureWorkflow).not.toContain('shared-rg')
+  })
+
   it('defines the required Static Web Apps security headers', () => {
     const headers = staticWebAppConfig.globalHeaders
 

@@ -3,23 +3,82 @@ name: '01 - Infrastructure (Terraform)'
 run-name: "🏗️ Infra: ${{ github.ref_name }} | @${{ github.actor }}"
 
 on:
-  workflow_dispatch:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - 'infra/**'
+      - '.github/workflows/infrastructure.yml'
   push:
     paths:
       - 'infra/**'
-    branches: [ "main" ]
+      - '.github/workflows/infrastructure.yml'
+    branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+concurrency:
+  group: terraform-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  TF_IN_AUTOMATION: true
+  TF_INPUT: false
+
 jobs:
-  # JOB 1: Preview the changes (Automatic)
+  terraform_validate:
+    name: "✅ Terraform: Validate, lint, and scan"
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./infra
+
+    steps:
+      - name: "📂 Checkout Code"
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: "⚙️ Setup Terraform"
+        uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v3.1.2
+        with:
+          terraform_wrapper: false
+
+      - name: "🧹 Check Terraform formatting"
+        run: terraform fmt -check -recursive
+
+      - name: "📥 Initialize without backend"
+        run: terraform init -backend=false -input=false
+
+      - name: "✅ Validate Terraform"
+        run: terraform validate -no-color
+
+      - name: "🔧 Install TFLint"
+        run: |
+          go install github.com/terraform-linters/tflint@v0.55.1
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      - name: "🔍 Run TFLint"
+        run: |
+          tflint --init
+          tflint --format compact
+
+      - name: "🛡️ Install Checkov"
+        run: python -m pip install --disable-pip-version-check --no-warn-script-location checkov==3.2.310
+
+      - name: "🛡️ Run Checkov"
+        run: checkov --directory . --quiet
+
   terraform_plan:
     name: "🔍 Terraform: Plan"
+    needs: terraform_validate
+    # Azure state and OIDC are intentionally unavailable to fork PRs. The
+    # backend-free validation job above still runs for every pull request.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: read
       id-token: write
+      pull-requests: write
     defaults:
       run:
         working-directory: ./infra
@@ -28,6 +87,9 @@ jobs:
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       ARM_USE_OIDC: true
+      TF_VAR_resource_group_name: ${{ vars.TF_RESOURCE_GROUP_NAME }}
+      TF_VAR_resource_group_location: ${{ vars.TF_RESOURCE_GROUP_LOCATION }}
+      TF_VAR_tag_environment: ${{ vars.TF_TAG_ENVIRONMENT }}
 
     steps:
       - name: "📂 Checkout Code"
@@ -39,30 +101,91 @@ jobs:
           terraform_wrapper: false
 
       - name: "📥 Initialize"
-        run: terraform init -backend-config="storage_account_name=${{ secrets.STORAGE_ACCOUNT_NAME }}"
+        run: >-
+          terraform init -input=false
+          -backend-config="resource_group_name=${{ secrets.TF_STATE_RESOURCE_GROUP_NAME }}"
+          -backend-config="storage_account_name=${{ secrets.TF_STATE_STORAGE_ACCOUNT_NAME }}"
+          -backend-config="container_name=${{ secrets.TF_STATE_CONTAINER_NAME }}"
+          -backend-config="key=${{ secrets.TF_STATE_KEY }}"
 
-      - name: "🔍 Run Plan"
-        run: terraform plan -input=false
+      - name: "🔍 Create saved plan"
+        run: terraform plan -input=false -no-color -out=tfplan
 
-  # JOB 2: Apply the changes (Requires Approval)
+      - name: "📝 Publish plan summary"
+        run: |
+          terraform show -no-color tfplan > tfplan.txt
+          sed -E \
+            -e 's/((client[_-]?secret|password|token|api[_-]?key|access[_-]?key)[[:space:]]*=[[:space:]]*).*/\1(redacted)/I' \
+            tfplan.txt > tfplan-summary.txt
+          {
+            echo "## Terraform plan"
+            echo
+            echo '```terraform'
+            head -c 60000 tfplan-summary.txt
+            echo
+            echo '```'
+            echo
+            echo "The sanitized summary and binary plan are retained as the \\`terraform-plan-${{ github.run_id }}\\` artifact."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: "💬 Comment plan on pull request"
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          {
+            echo '### Terraform plan'
+            echo '<!-- alphafun-terraform-plan -->'
+            echo
+            echo '```terraform'
+            head -c 60000 tfplan-summary.txt
+            echo
+            echo '```'
+          } > plan-comment.md
+          comment_id="$(gh api --paginate \
+            "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+            --jq '.[] | select(.body | contains("<!-- alphafun-terraform-plan -->")) | .id' | head -n 1)"
+          if [ -n "$comment_id" ]; then
+            gh api --method PATCH \
+              "repos/${GITHUB_REPOSITORY}/issues/comments/${comment_id}" \
+              -F body="@plan-comment.md"
+          else
+            gh api --method POST \
+              "repos/${GITHUB_REPOSITORY}/issues/${PR_NUMBER}/comments" \
+              -F body="@plan-comment.md"
+          fi
+
+      - name: "📦 Upload saved plan"
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: terraform-plan-${{ github.run_id }}
+          path: |
+            infra/tfplan
+            infra/tfplan-summary.txt
+          if-no-files-found: error
+          retention-days: 5
+
   terraform_deploy:
-    name: "🚀 Terraform: Deploy"
-    needs: terraform_plan # Only runs if Plan succeeds
+    name: "🚀 Terraform: Deploy exact plan"
+    needs: terraform_plan
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
-    environment: production # This triggers the manual approval button
+    environment: production
     permissions:
       contents: read
       id-token: write
-    
     defaults:
       run:
         working-directory: ./infra
-
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       ARM_USE_OIDC: true
+      TF_VAR_resource_group_name: ${{ vars.TF_RESOURCE_GROUP_NAME }}
+      TF_VAR_resource_group_location: ${{ vars.TF_RESOURCE_GROUP_LOCATION }}
+      TF_VAR_tag_environment: ${{ vars.TF_TAG_ENVIRONMENT }}
 
     steps:
       - name: "📂 Checkout Code"
@@ -73,8 +196,19 @@ jobs:
         with:
           terraform_wrapper: false
 
-      - name: "📥 Initialize"
-        run: terraform init -backend-config="storage_account_name=${{ secrets.STORAGE_ACCOUNT_NAME }}"
+      - name: "📥 Download exact saved plan"
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          name: terraform-plan-${{ github.run_id }}
+          path: infra/plan-artifact
 
-      - name: "🚀 Execute Apply"
-        run: terraform apply -auto-approve -input=false
+      - name: "📥 Initialize"
+        run: >-
+          terraform init -input=false
+          -backend-config="resource_group_name=${{ secrets.TF_STATE_RESOURCE_GROUP_NAME }}"
+          -backend-config="storage_account_name=${{ secrets.TF_STATE_STORAGE_ACCOUNT_NAME }}"
+          -backend-config="container_name=${{ secrets.TF_STATE_CONTAINER_NAME }}"
+          -backend-config="key=${{ secrets.TF_STATE_KEY }}"
+
+      - name: "🚀 Apply exact approved plan"
+        run: terraform apply -input=false plan-artifact/tfplan

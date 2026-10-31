@@ -1,4 +1,6 @@
 terraform {
+  required_version = ">= 1.3.0, < 2.0.0"
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
@@ -6,13 +8,10 @@ terraform {
     }
   }
 
-  # This tells Terraform to store its memory (state) in Azure
+  # Backend settings are supplied by the trusted workflow at init time. Keep
+  # environment and state-account identifiers out of the repository.
   backend "azurerm" {
-    resource_group_name  = "shared-rg"
-    storage_account_name = "toanle88sharedsa" # Put your unique name here
-    container_name       = "alphafun-tfstate"
-    key                  = "alphafun.terraform.alphafun-tfstate"
-    use_oidc             = true # Enables passwordless login for GitHub
+    use_oidc = true
   }
 }
 
