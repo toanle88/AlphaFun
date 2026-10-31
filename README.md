@@ -101,4 +101,11 @@ The application is deployed as an Azure Static Web App through `.github/workflow
 
 ## License
 
-This project is private.
+AlphaFun source code is released under the [MIT License](LICENSE). The bundled
+illustrations and PWA icons have unresolved provenance and are excluded from
+that license; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) before
+redistributing the application or its visual assets. Externally sourced fonts
+and dependencies are also listed there.
+
+The initial public release is version `0.1.0`, documented by the Git tag
+`v0.1.0`.
