@@ -33,10 +33,11 @@ describe('useRecording', () => {
     TestMediaRecorder.instances = []
     vi.stubGlobal('MediaRecorder', TestMediaRecorder)
     vi.stubGlobal('URL', { createObjectURL, revokeObjectURL })
-    vi.stubGlobal(
-      'Audio',
-      vi.fn(() => ({ play })),
-    )
+    class TestAudio {
+      play = play
+    }
+
+    vi.stubGlobal('Audio', TestAudio)
     vi.mocked(navigator.mediaDevices.getUserMedia).mockResolvedValue({
       getTracks: () => tracks,
     } as unknown as MediaStream)
