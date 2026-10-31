@@ -4,8 +4,24 @@ import ciWorkflow from '../.github/workflows/ci.yml?raw'
 import deployWorkflow from '../.github/workflows/deploy.yml?raw'
 import infrastructureWorkflow from '../.github/workflows/infrastructure.yml?raw'
 import previewWorkflow from '../.github/workflows/preview.yml?raw'
+import dependencyReviewWorkflow from '../.github/workflows/dependency-review.yml?raw'
+import codeqlWorkflow from '../.github/workflows/codeql.yml?raw'
+import workflowSecurityWorkflow from '../.github/workflows/workflow-security.yml?raw'
+import repositorySecurityWorkflow from '../.github/workflows/repository-security.yml?raw'
+import dependabotConfig from '../.github/dependabot.yml?raw'
+import codeowners from '../.github/CODEOWNERS?raw'
+import eslintConfig from '../eslint.config.js?raw'
 
-const workflows = [ciWorkflow, deployWorkflow, infrastructureWorkflow, previewWorkflow]
+const workflows = [
+  ciWorkflow,
+  deployWorkflow,
+  infrastructureWorkflow,
+  previewWorkflow,
+  dependencyReviewWorkflow,
+  codeqlWorkflow,
+  workflowSecurityWorkflow,
+  repositorySecurityWorkflow,
+]
 
 describe('deployment security configuration', () => {
   it('pins every third-party action to a full commit SHA', () => {
@@ -27,6 +43,12 @@ describe('deployment security configuration', () => {
     expect(deployWorkflow).toContain('run: pnpm format:check')
   })
 
+  it('does not lint generated test and browser output', () => {
+    expect(eslintConfig).toContain("'coverage'")
+    expect(eslintConfig).toContain("'playwright-report'")
+    expect(eslintConfig).toContain("'test-results'")
+  })
+
   it('keeps production and preview Azure credentials separate', () => {
     expect(deployWorkflow).toContain('secrets.AZURE_STATIC_WEB_APPS_API_TOKEN')
     expect(previewWorkflow).toContain('secrets.AZURE_STATIC_WEB_APPS_PREVIEW_API_TOKEN')
@@ -45,6 +67,60 @@ describe('deployment security configuration', () => {
   it('scopes OIDC write permission to Terraform jobs', () => {
     expect(infrastructureWorkflow).not.toMatch(/^\s{2}id-token:\s{1,}write$/m)
     expect(infrastructureWorkflow.match(/^\s{6}id-token:\s{1,}write$/gm)).toHaveLength(2)
+  })
+
+  it('reviews dependency changes on pull requests', () => {
+    expect(dependencyReviewWorkflow).toContain('pull_request:')
+    expect(dependencyReviewWorkflow).toContain('actions/dependency-review-action@')
+    expect(dependencyReviewWorkflow).toContain('fail-on-severity: high')
+  })
+
+  it('runs CodeQL for JavaScript and TypeScript', () => {
+    expect(codeqlWorkflow).toContain('pull_request:')
+    expect(codeqlWorkflow).toContain('push:')
+    expect(codeqlWorkflow).toContain('schedule:')
+    expect(codeqlWorkflow).toContain('languages: javascript-typescript')
+    expect(codeqlWorkflow).toContain('security-events: write')
+  })
+
+  it('checks workflow action pins as a supply-chain control', () => {
+    expect(workflowSecurityWorkflow).toContain('pull_request:')
+    expect(workflowSecurityWorkflow).toContain('Require full commit SHA action pins')
+    expect(workflowSecurityWorkflow).toContain('contents: read')
+    expect(workflowSecurityWorkflow).not.toContain('id-token: write')
+  })
+
+  it('audits repository security settings and gates lockfile reviews', () => {
+    expect(repositorySecurityWorkflow).toContain('pull_request_review:')
+    expect(repositorySecurityWorkflow).toContain('pnpm-lock\\.yaml')
+    expect(repositorySecurityWorkflow).toContain('infra/\\.terraform\\.lock\\.hcl')
+    expect(repositorySecurityWorkflow).toContain('secret_scanning_push_protection')
+    expect(repositorySecurityWorkflow).toContain('require_code_owner_reviews')
+    expect(repositorySecurityWorkflow).toContain('A lockfile change requires an approving review')
+  })
+
+  it('configures dependency monitoring for every supported ecosystem', () => {
+    expect(dependabotConfig).toContain('package-ecosystem: npm')
+    expect(dependabotConfig).toContain('package-ecosystem: github-actions')
+    expect(dependabotConfig).toContain('package-ecosystem: terraform')
+    expect(dependabotConfig).toContain('directory: /infra')
+    expect(dependabotConfig).toContain('package-ecosystem: devcontainers')
+  })
+
+  it('requires maintainer review for dependency and security configuration', () => {
+    expect(codeowners).toContain('/package.json @alphafun/maintainers')
+    expect(codeowners).toContain('/pnpm-lock.yaml @alphafun/maintainers')
+    expect(codeowners).toContain('/infra/.terraform.lock.hcl @alphafun/maintainers')
+    expect(codeowners).toContain('/.devcontainer/ @alphafun/maintainers')
+    expect(codeowners).toContain('/.github/workflows/ @alphafun/maintainers')
+  })
+
+  it('keeps dependency installs and privileged Terraform plans safe for PRs', () => {
+    expect(ciWorkflow).toContain('pnpm install --frozen-lockfile')
+    expect(infrastructureWorkflow).toContain('terraform init -backend=false')
+    expect(infrastructureWorkflow).toContain(
+      'github.event.pull_request.head.repo.full_name == github.repository',
+    )
   })
 
   it('validates and promotes one exact Terraform plan', () => {
