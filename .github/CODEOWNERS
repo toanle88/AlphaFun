@@ -5,3 +5,9 @@
 # Deployment and infrastructure changes need maintainer review.
 /.github/ @alphafun/maintainers
 /infra/ @alphafun/maintainers
+/package.json @alphafun/maintainers
+/pnpm-lock.yaml @alphafun/maintainers
+/.devcontainer/ @alphafun/maintainers
+/infra/.terraform.lock.hcl @alphafun/maintainers
+/.github/dependabot.yml @alphafun/maintainers
+/.github/workflows/ @alphafun/maintainers

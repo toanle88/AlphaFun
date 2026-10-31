@@ -39,3 +39,41 @@ The deployed app is a static client application. Reports involving microphone
 permissions, browser speech behavior, third-party fonts, Azure Static Web Apps,
 GitHub Actions, or Terraform are in scope when AlphaFun's configuration or
 code creates the risk.
+
+## Security alert review and closure
+
+The maintainer team owns alerts in the repository's Security tab. Maintainers
+review new Dependabot, dependency-review, CodeQL, secret-scanning, and
+workflow-pinning alerts at least weekly and triage them as follows:
+
+- Critical and high severity alerts are acknowledged immediately and assigned
+  an owner. The owner records the affected package, workflow, or file; the
+  vulnerable version; exploitability in AlphaFun; and the planned mitigation.
+- Moderate and low severity alerts are reviewed during the next weekly
+  maintenance pass. False positives are closed only after the maintainer
+  records why the vulnerable code is unreachable, not shipped, or otherwise
+  mitigated.
+- Fixes are made through reviewed pull requests. Dependency updates must keep
+  `pnpm-lock.yaml` and `infra/.terraform.lock.hcl` consistent; CI's frozen
+  install and Terraform validation are required checks. Changes to workflows,
+  dependency configuration, lockfiles, and devcontainer definitions require
+  CODEOWNERS review.
+- An accepted temporary exception must name an owner, affected alert, reason,
+  compensating control, and expiry date. Expired exceptions are re-triaged;
+  exceptions are never used to suppress secret-scanning findings without
+  documented administrator approval.
+- An alert is closed only after the remediation or exception is recorded and
+  the relevant scanner has passed on the default branch. Reopened alerts are
+  treated as new alerts.
+
+Repository administrators must enable GitHub secret scanning and push
+protection in the repository or organization settings, where the plan supports
+those features. Push protection bypasses require a documented reason and
+maintainer review. The `Security - Repository settings` workflow audits these
+settings weekly or when manually dispatched and fails when they are disabled.
+The default branch must also require CODEOWNERS review for the protected paths
+listed above. The lockfile-review job provides a pull-request gate for
+`pnpm-lock.yaml` and `infra/.terraform.lock.hcl`; configure that job as a
+required status check after enabling branch protection. These settings cannot
+be enabled by a repository file, so an administrator must configure them before
+the workflow can pass.
