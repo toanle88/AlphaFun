@@ -143,9 +143,8 @@ Infrastructure changes are handled separately by
 ## License
 
 AlphaFun source code and the bundled illustrations and PWA icons are released
-under the [MIT License](LICENSE). The visual assets are original AlphaFun
-artwork authored by [`scripts/generate-original-art.mjs`](scripts/generate-original-art.mjs);
-their exact hashes and rasterization notes are recorded in
+under the [MIT License](LICENSE). The visual assets are attributed to AlphaFun
+contributors; their exact hashes and provenance records are in
 [`asset-provenance.json`](asset-provenance.json). Externally sourced fonts and
 dependencies are listed in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 

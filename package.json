@@ -10,7 +10,6 @@
     "build": "tsc -b && vite build",
     "format:check": "prettier --check .",
     "preview": "vite preview",
-    "generate:original-art": "node scripts/generate-original-art.mjs",
     "lint": "oxlint .",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
