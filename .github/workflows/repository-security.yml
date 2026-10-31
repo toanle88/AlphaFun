@@ -1,6 +1,11 @@
 name: 'Security - Repository settings'
 
 on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, synchronize]
+  pull_request_review:
+    types: [submitted, dismissed]
   schedule:
     - cron: '37 3 * * 1'
   workflow_dispatch:
@@ -14,6 +19,37 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  lockfile-review:
+    name: '🔒 Require lockfile review'
+    if: github.event_name == 'pull_request' || github.event_name == 'pull_request_review'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check lockfile approval
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+
+          changed_lockfiles="$(gh api --paginate \
+            "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/files" \
+            --jq '.[].filename' | grep -E '^(pnpm-lock\.yaml|infra/\.terraform\.lock\.hcl)$' || true)"
+          if [ -z "${changed_lockfiles}" ]; then
+            echo 'No supported lockfile changed.'
+            exit 0
+          fi
+
+          echo "Lockfile(s) changed: ${changed_lockfiles}"
+          approved_reviewers="$(gh api --paginate \
+            "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/reviews" |
+            jq -s -r 'add // [] | group_by(.user.login) | map(.[-1] | select(.state == "APPROVED") | .user.login) | .[]' || true)"
+          if [ -z "${approved_reviewers}" ]; then
+            echo 'A lockfile change requires an approving review before merge.' >&2
+            exit 1
+          fi
+
+          echo "Approved by: ${approved_reviewers}"
+
   repository-settings:
     name: '🛡️ Verify GitHub security settings'
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'

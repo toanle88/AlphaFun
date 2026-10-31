@@ -89,13 +89,15 @@ describe('deployment security configuration', () => {
     expect(workflowSecurityWorkflow).not.toContain('id-token: write')
   })
 
-  it('audits repository security settings and gates lockfile reviews', () => {
-    expect(repositorySecurityWorkflow).toContain('pull_request_review:')
-    expect(repositorySecurityWorkflow).toContain('pnpm-lock\\.yaml')
-    expect(repositorySecurityWorkflow).toContain('infra/\\.terraform\\.lock\\.hcl')
+  it('audits repository security settings without a lockfile approval gate', () => {
+    expect(repositorySecurityWorkflow).not.toContain('pull_request_review:')
+    expect(repositorySecurityWorkflow).not.toContain('pnpm-lock\\.yaml')
+    expect(repositorySecurityWorkflow).not.toContain('infra/\\.terraform\\.lock\\.hcl')
     expect(repositorySecurityWorkflow).toContain('secret_scanning_push_protection')
     expect(repositorySecurityWorkflow).toContain('require_code_owner_reviews')
-    expect(repositorySecurityWorkflow).toContain('A lockfile change requires an approving review')
+    expect(repositorySecurityWorkflow).not.toContain(
+      'A lockfile change requires an approving review',
+    )
   })
 
   it('configures dependency monitoring for every supported ecosystem', () => {
