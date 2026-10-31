@@ -6,6 +6,8 @@
 
 AlphaFun is a colorful, interactive flashcard PWA that helps young children learn to speak. It includes letters, numbers, objects, colors, actions, and shapes in Vietnamese and English.
 
+Try the deployed app: [AlphaFun](https://gray-forest-04a2fc200.2.azurestaticapps.net)
+
 ## Features
 
 - Six learning categories: letters, numbers, objects, colors, actions, and shapes
