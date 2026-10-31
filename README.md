@@ -46,7 +46,11 @@ pnpm type-check
 pnpm format:check
 pnpm lint
 pnpm test -- --run
+pnpm test:coverage
 pnpm build
+pnpm check:asset-size
+pnpm exec playwright install --with-deps chromium
+pnpm test:e2e
 ```
 
 The production build is written to `dist/`. Preview it locally with:
@@ -111,6 +115,13 @@ AlphaFun/
 ```
 
 The image migration and before/after byte counts are recorded in [`docs/image-optimization.md`](docs/image-optimization.md).
+
+Vitest coverage uses the V8 provider with minimum thresholds of 70% for lines,
+functions, and statements, and 60% for branches. The Playwright suite runs
+against the production preview and checks startup, navigation, settings,
+mobile layout, axe accessibility, manifest metadata, service-worker control,
+and offline app-shell loading. `pnpm check:asset-size` keeps generated JS,
+CSS, and HTML below a 750 KiB total budget.
 
 ## Deployment
 

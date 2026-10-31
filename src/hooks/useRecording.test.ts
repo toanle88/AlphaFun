@@ -43,6 +43,7 @@ describe('useRecording', () => {
   })
 
   afterEach(() => {
+    vi.restoreAllMocks()
     vi.unstubAllGlobals()
   })
 
@@ -110,5 +111,58 @@ describe('useRecording', () => {
     expect(TestMediaRecorder.instances[0].stop).toHaveBeenCalledOnce()
     expect(tracks[0].stop).toHaveBeenCalledOnce()
     expect(createObjectURL).not.toHaveBeenCalled()
+  })
+
+  it('handles microphone permission denial without leaving recording active', async () => {
+    const denied = new DOMException('Permission denied', 'NotAllowedError')
+    vi.mocked(navigator.mediaDevices.getUserMedia).mockRejectedValueOnce(denied)
+    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => undefined)
+    const { result } = renderHook(() => useRecording())
+
+    await act(async () => {
+      await result.current.startRecording()
+    })
+
+    expect(result.current.isRecording).toBe(false)
+    expect(alertSpy).toHaveBeenCalledWith(
+      'Vui lòng cho phép truy cập micro để sử dụng tính năng này.',
+    )
+  })
+
+  it('handles browsers without MediaRecorder support', async () => {
+    vi.stubGlobal('MediaRecorder', undefined)
+    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => undefined)
+    const { result } = renderHook(() => useRecording())
+
+    await act(async () => {
+      await result.current.startRecording()
+    })
+
+    expect(result.current.isRecording).toBe(false)
+    expect(tracks[0].stop).toHaveBeenCalled()
+    expect(alertSpy).toHaveBeenCalled()
+  })
+
+  it('handles browsers without microphone APIs', async () => {
+    const originalMediaDevices = navigator.mediaDevices
+    Object.defineProperty(navigator, 'mediaDevices', {
+      value: undefined,
+      configurable: true,
+    })
+    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => undefined)
+    const { result } = renderHook(() => useRecording())
+
+    await act(async () => {
+      await result.current.startRecording()
+    })
+
+    expect(result.current.isRecording).toBe(false)
+    expect(alertSpy).toHaveBeenCalledWith(
+      'Vui lòng cho phép truy cập micro để sử dụng tính năng này.',
+    )
+    Object.defineProperty(navigator, 'mediaDevices', {
+      value: originalMediaDevices,
+      configurable: true,
+    })
   })
 })
