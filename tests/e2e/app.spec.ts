@@ -48,6 +48,8 @@ test.describe('AlphaFun production browser smoke tests', () => {
     expect(appResults.violations).toEqual([])
 
     await page.getByRole('button', { name: 'Open settings' }).click()
+    const settingsPanel = page.locator('#settings-panel')
+    await expect(settingsPanel).toHaveCSS('opacity', '1')
     const dialogResults = await new AxeBuilder({ page }).include('#settings-panel').analyze()
     expect(dialogResults.violations).toEqual([])
   })
