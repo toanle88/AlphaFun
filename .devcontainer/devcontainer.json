@@ -2,7 +2,7 @@
   "name": "AlphaFun Dev Container",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {
+    "ghcr.io/devcontainers/features/node:2": {
       "version": "24"
     },
     "ghcr.io/devcontainers/features/terraform:1": {
