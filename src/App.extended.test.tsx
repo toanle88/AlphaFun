@@ -15,7 +15,7 @@ describe('App Component Extended Tests', () => {
         render(<App />)
 
         // Switch to sequential mode
-        const settingsBtn = screen.getByRole('button', { name: '' })
+        const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
         fireEvent.click(settingsBtn)
         const sequentialBtn = screen.getByText('Normal')
         fireEvent.click(sequentialBtn)
@@ -37,7 +37,7 @@ describe('App Component Extended Tests', () => {
         render(<App />)
 
         // Enable auto mode
-        const settingsBtn = screen.getByRole('button', { name: '' })
+        const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
         fireEvent.click(settingsBtn)
         const autoBtn = screen.getByText('Auto')
         fireEvent.click(autoBtn)
