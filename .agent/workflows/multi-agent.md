@@ -5,6 +5,7 @@ description: Multi-Agent Orchestration (Coder -> Tester -> Security -> Performan
 This workflow orchestrates a full development cycle using the defined personas: Coder, Tester, Security Engineer, Performance Engineer, and Reviewer.
 
 ### Phase 1: The Coder (Implementation)
+
 1. **Persona**: Senior Software Engineer.
 2. **Goal**: Convert requirements into functional, modular code.
 3. **Constraints**:
@@ -13,6 +14,7 @@ This workflow orchestrates a full development cycle using the defined personas: 
 4. **Action**: Create or modify the target files.
 
 ### Phase 2: The Tester (Quality Gate)
+
 1. **Persona**: QA Automation Engineer.
 2. **Goal**: Break the Coder's work.
 3. **Action**:
@@ -23,6 +25,7 @@ This workflow orchestrates a full development cycle using the defined personas: 
 4. **Output**: Produce a "Test Report" artifact summarizing coverage and bugs.
 
 ### Phase 3: The Security Engineer (Safety Audit)
+
 1. **Persona**: Senior Security Researcher.
 2. **Goal**: Identify vulnerabilities and enforce secure coding practices.
 3. **Action**:
@@ -31,6 +34,7 @@ This workflow orchestrates a full development cycle using the defined personas: 
 4. **Output**: A "Security Audit" artifact detailing risks and remediation.
 
 ### Phase 4: The Performance Engineer (Optimization)
+
 1. **Persona**: Performance Specialist.
 2. **Goal**: Ensure scalability and efficiency.
 3. **Action**:
@@ -39,6 +43,7 @@ This workflow orchestrates a full development cycle using the defined personas: 
 4. **Output**: A "Performance Report" artifact with benchmarks or optimization suggestions.
 
 ### Phase 5: The Reviewer (Final Approval)
+
 1. **Persona**: Principal Architect.
 2. **Goal**: Final audit and project-wide compliance.
 3. **Action**:

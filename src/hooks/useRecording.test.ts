@@ -33,7 +33,10 @@ describe('useRecording', () => {
     TestMediaRecorder.instances = []
     vi.stubGlobal('MediaRecorder', TestMediaRecorder)
     vi.stubGlobal('URL', { createObjectURL, revokeObjectURL })
-    vi.stubGlobal('Audio', vi.fn(() => ({ play })))
+    vi.stubGlobal(
+      'Audio',
+      vi.fn(() => ({ play })),
+    )
     vi.mocked(navigator.mediaDevices.getUserMedia).mockResolvedValue({
       getTracks: () => tracks,
     } as unknown as MediaStream)
@@ -51,7 +54,9 @@ describe('useRecording', () => {
       await result.current.startRecording()
     })
     act(() => {
-      TestMediaRecorder.instances[0].ondataavailable?.({ data: new Blob(['audio'], { type: 'audio/webm' }) } as BlobEvent)
+      TestMediaRecorder.instances[0].ondataavailable?.({
+        data: new Blob(['audio'], { type: 'audio/webm' }),
+      } as BlobEvent)
       result.current.stopRecording()
     })
     rerender()

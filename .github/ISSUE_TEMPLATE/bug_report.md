@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Report a reproducible problem with AlphaFun
-title: "[Bug] "
+title: '[Bug] '
 labels: bug
 assignees: ''
 ---

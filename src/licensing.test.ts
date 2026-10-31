@@ -32,7 +32,7 @@ describe('public release licensing metadata', () => {
     expect(thirdPartyNotices).toContain('lucide-react')
     expect(thirdPartyNotices).toContain('ISC')
     expect(thirdPartyNotices).toContain('34 WebP learning illustrations')
-    expect(thirdPartyNotices).toContain('excluded from AlphaFun\'s MIT license')
+    expect(thirdPartyNotices).toContain("excluded from AlphaFun's MIT license")
     expect(thirdPartyNotices).toContain('redistribution rights cannot be verified')
     expect(thirdPartyNotices).toContain('Learning content audit')
     expect(thirdPartyNotices).toContain('absence does not establish ownership')

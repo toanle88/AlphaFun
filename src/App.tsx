@@ -1,53 +1,46 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { ChevronRight, Settings } from 'lucide-react';
-import { CategoryNav } from './components/CategoryNav';
-import { DisplayArea } from './components/DisplayArea';
-import { SettingsPanel } from './components/SettingsPanel';
-import { useCategoryTheme } from './hooks/useCategoryTheme';
-import { useLearningNavigation } from './hooks/useLearningNavigation';
-import { Language, Mode } from './types';
-import { UI_TEXT } from './constants/data';
+import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { ChevronRight, Settings } from 'lucide-react'
+import { CategoryNav } from './components/CategoryNav'
+import { DisplayArea } from './components/DisplayArea'
+import { SettingsPanel } from './components/SettingsPanel'
+import { useCategoryTheme } from './hooks/useCategoryTheme'
+import { useLearningNavigation } from './hooks/useLearningNavigation'
+import { Language, Mode } from './types'
+import { UI_TEXT } from './constants/data'
 
 const App: React.FC = () => {
-  const [lang, setLang] = useState<Language>('vi');
-  const [mode, setMode] = useState<Mode>('manual');
-  const [showSettings, setShowSettings] = useState(false);
-  const settingsButtonRef = useRef<HTMLButtonElement>(null);
-  const firstSettingsControlRef = useRef<HTMLButtonElement>(null);
-  const settingsWasOpenRef = useRef(false);
-  const {
-    category,
-    currentItem,
-    order,
-    progress,
-    selectNextItem,
-    setCategory,
-    setOrder,
-  } = useLearningNavigation({
-    initialCategory: 'all',
-    initialOrder: 'random',
-    mode,
-  });
+  const [lang, setLang] = useState<Language>('vi')
+  const [mode, setMode] = useState<Mode>('manual')
+  const [showSettings, setShowSettings] = useState(false)
+  const settingsButtonRef = useRef<HTMLButtonElement>(null)
+  const firstSettingsControlRef = useRef<HTMLButtonElement>(null)
+  const settingsWasOpenRef = useRef(false)
+  const { category, currentItem, order, progress, selectNextItem, setCategory, setOrder } =
+    useLearningNavigation({
+      initialCategory: 'all',
+      initialOrder: 'random',
+      mode,
+    })
 
-  useCategoryTheme(category);
+  useCategoryTheme(category)
 
   const closeSettings = useCallback(() => {
-    setShowSettings(false);
-  }, []);
+    setShowSettings(false)
+  }, [])
 
   useEffect(() => {
     if (showSettings) {
-      settingsWasOpenRef.current = true;
+      settingsWasOpenRef.current = true
     } else if (settingsWasOpenRef.current) {
-      settingsButtonRef.current?.focus();
-      settingsWasOpenRef.current = false;
+      settingsButtonRef.current?.focus()
+      settingsWasOpenRef.current = false
     }
-  }, [showSettings]);
+  }, [showSettings])
 
-  const t = UI_TEXT[lang];
+  const t = UI_TEXT[lang]
 
   if (!currentItem) {
-    return null;
+    return null
   }
 
   return (
@@ -88,14 +81,15 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        <CategoryNav
-          category={category}
-          lang={lang}
-          onCategoryChange={setCategory}
-        />
+        <CategoryNav category={category} lang={lang} onCategoryChange={setCategory} />
 
         <main className="learning-main">
-          <DisplayArea item={currentItem} lang={lang} autoPlay={mode === 'auto'} progress={progress} />
+          <DisplayArea
+            item={currentItem}
+            lang={lang}
+            autoPlay={mode === 'auto'}
+            progress={progress}
+          />
 
           <button
             type="button"
@@ -108,7 +102,7 @@ const App: React.FC = () => {
         </main>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

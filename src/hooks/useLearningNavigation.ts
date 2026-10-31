@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { Category, Mode, Order } from '../types';
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Category, Mode, Order } from '../types'
 import {
   advanceNavigation,
   buildPool,
@@ -7,12 +7,12 @@ import {
   NavigationState,
   resetNavigation,
   resetNavigationToFirst,
-} from '../utils/navigation';
+} from '../utils/navigation'
 
 interface UseLearningNavigationOptions {
-  initialCategory: Category;
-  initialOrder: Order;
-  mode: Mode;
+  initialCategory: Category
+  initialOrder: Order
+  mode: Mode
 }
 
 export const useLearningNavigation = ({
@@ -20,37 +20,37 @@ export const useLearningNavigation = ({
   initialOrder,
   mode,
 }: UseLearningNavigationOptions) => {
-  const [category, setCategoryState] = useState(initialCategory);
-  const [order, setOrderState] = useState(initialOrder);
-  const pool = useMemo(() => buildPool(category), [category]);
-  const [navigation, setNavigation] = useState<NavigationState>(() => (
-    resetNavigation(buildPool(initialCategory), initialOrder)
-  ));
+  const [category, setCategoryState] = useState(initialCategory)
+  const [order, setOrderState] = useState(initialOrder)
+  const pool = useMemo(() => buildPool(category), [category])
+  const [navigation, setNavigation] = useState<NavigationState>(() =>
+    resetNavigation(buildPool(initialCategory), initialOrder),
+  )
 
   const setCategory = useCallback((nextCategory: Category) => {
-    setCategoryState(nextCategory);
-    setNavigation(resetNavigationToFirst(buildPool(nextCategory)));
-  }, []);
+    setCategoryState(nextCategory)
+    setNavigation(resetNavigationToFirst(buildPool(nextCategory)))
+  }, [])
 
   const setOrder = useCallback((nextOrder: Order) => {
-    setOrderState(nextOrder);
-  }, []);
+    setOrderState(nextOrder)
+  }, [])
 
   const selectNextItem = useCallback(() => {
-    setNavigation((previous) => advanceNavigation(pool, order, previous));
-  }, [order, pool]);
+    setNavigation((previous) => advanceNavigation(pool, order, previous))
+  }, [order, pool])
 
   useEffect(() => {
     if (mode !== 'auto') {
-      return undefined;
+      return undefined
     }
 
-    const timer = window.setInterval(selectNextItem, 6000);
-    return () => window.clearInterval(timer);
-  }, [mode, selectNextItem]);
+    const timer = window.setInterval(selectNextItem, 6000)
+    return () => window.clearInterval(timer)
+  }, [mode, selectNextItem])
 
-  const currentItem = pool.find((item) => item.id === navigation.currentItemId) ?? null;
-  const currentPosition = getItemPosition(pool, navigation.currentItemId);
+  const currentItem = pool.find((item) => item.id === navigation.currentItemId) ?? null
+  const currentPosition = getItemPosition(pool, navigation.currentItemId)
 
   return {
     category,
@@ -61,5 +61,5 @@ export const useLearningNavigation = ({
     selectNextItem,
     setCategory,
     setOrder,
-  };
-};
+  }
+}

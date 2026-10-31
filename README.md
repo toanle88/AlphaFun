@@ -43,6 +43,7 @@ Run the same checks used by the application deployment workflow:
 
 ```bash
 pnpm type-check
+pnpm format:check
 pnpm lint
 pnpm test -- --run
 pnpm build
@@ -53,6 +54,14 @@ The production build is written to `dist/`. Preview it locally with:
 ```bash
 pnpm preview
 ```
+
+Formatting is enforced with Prettier. Run `pnpm exec prettier --write .` while
+working, then use `pnpm format:check` to verify the repository. Generated
+artifacts—including `dist/`, the PWA manifest and service worker, TypeScript
+build-info files, and compiled Vite config output—are ignored and must not be
+committed. ESLint keeps its current TypeScript and React Hooks rules; the
+project's accessibility and Testing Library behavior is covered by the
+existing automated tests rather than additional ESLint plugins.
 
 Use `pnpm test` without `--run` for Vitest watch mode.
 

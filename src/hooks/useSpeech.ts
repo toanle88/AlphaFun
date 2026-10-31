@@ -1,47 +1,50 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Language } from '../types';
+import { useState, useEffect, useCallback } from 'react'
+import { Language } from '../types'
 
 export const useSpeech = (lang: Language) => {
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
+  const [isSpeaking, setIsSpeaking] = useState(false)
 
   useEffect(() => {
     const loadVoices = () => {
-      setVoices(window.speechSynthesis.getVoices());
-    };
-    window.speechSynthesis.onvoiceschanged = loadVoices;
-    loadVoices();
+      setVoices(window.speechSynthesis.getVoices())
+    }
+    window.speechSynthesis.onvoiceschanged = loadVoices
+    loadVoices()
     return () => {
-      window.speechSynthesis.onvoiceschanged = null;
-    };
-  }, []);
-
-  const speak = useCallback((text: string) => {
-    if (window.speechSynthesis.speaking) {
-      window.speechSynthesis.cancel();
+      window.speechSynthesis.onvoiceschanged = null
     }
+  }, [])
 
-    const utterance = new SpeechSynthesisUtterance(text);
-    const viVoice = voices.find(v => v.lang.startsWith('vi'));
-    const enVoice = voices.find(v => v.lang.startsWith('en'));
+  const speak = useCallback(
+    (text: string) => {
+      if (window.speechSynthesis.speaking) {
+        window.speechSynthesis.cancel()
+      }
 
-    if (lang === 'vi') {
-      utterance.lang = 'vi-VN';
-      utterance.voice = viVoice || null;
-    } else {
-      utterance.lang = 'en-US';
-      utterance.voice = enVoice || null;
-    }
+      const utterance = new SpeechSynthesisUtterance(text)
+      const viVoice = voices.find((v) => v.lang.startsWith('vi'))
+      const enVoice = voices.find((v) => v.lang.startsWith('en'))
 
-    utterance.rate = 0.9;
-    utterance.pitch = 1.1;
+      if (lang === 'vi') {
+        utterance.lang = 'vi-VN'
+        utterance.voice = viVoice || null
+      } else {
+        utterance.lang = 'en-US'
+        utterance.voice = enVoice || null
+      }
 
-    utterance.onstart = () => setIsSpeaking(true);
-    utterance.onend = () => setIsSpeaking(false);
-    utterance.onerror = () => setIsSpeaking(false);
+      utterance.rate = 0.9
+      utterance.pitch = 1.1
 
-    window.speechSynthesis.speak(utterance);
-  }, [voices, lang]);
+      utterance.onstart = () => setIsSpeaking(true)
+      utterance.onend = () => setIsSpeaking(false)
+      utterance.onerror = () => setIsSpeaking(false)
 
-  return { speak, isSpeaking };
-};
+      window.speechSynthesis.speak(utterance)
+    },
+    [voices, lang],
+  )
+
+  return { speak, isSpeaking }
+}

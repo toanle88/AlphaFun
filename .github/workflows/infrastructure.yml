@@ -1,10 +1,10 @@
 name: '01 - Infrastructure (Terraform)'
 
-run-name: "🏗️ Infra: ${{ github.ref_name }} | @${{ github.actor }}"
+run-name: '🏗️ Infra: ${{ github.ref_name }} | @${{ github.actor }}'
 
 on:
   pull_request:
-    branches: ["main"]
+    branches: ['main']
     paths:
       - 'infra/**'
       - '.github/workflows/infrastructure.yml'
@@ -12,7 +12,7 @@ on:
     paths:
       - 'infra/**'
       - '.github/workflows/infrastructure.yml'
-    branches: ["main"]
+    branches: ['main']
   workflow_dispatch:
 
 permissions:
@@ -28,48 +28,48 @@ env:
 
 jobs:
   terraform_validate:
-    name: "✅ Terraform: Validate, lint, and scan"
+    name: '✅ Terraform: Validate, lint, and scan'
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ./infra
 
     steps:
-      - name: "📂 Checkout Code"
+      - name: '📂 Checkout Code'
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: "⚙️ Setup Terraform"
+      - name: '⚙️ Setup Terraform'
         uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v3.1.2
         with:
           terraform_wrapper: false
 
-      - name: "🧹 Check Terraform formatting"
+      - name: '🧹 Check Terraform formatting'
         run: terraform fmt -check -recursive
 
-      - name: "📥 Initialize without backend"
+      - name: '📥 Initialize without backend'
         run: terraform init -backend=false -input=false
 
-      - name: "✅ Validate Terraform"
+      - name: '✅ Validate Terraform'
         run: terraform validate -no-color
 
-      - name: "🔧 Install TFLint"
+      - name: '🔧 Install TFLint'
         run: |
           go install github.com/terraform-linters/tflint@v0.55.1
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
-      - name: "🔍 Run TFLint"
+      - name: '🔍 Run TFLint'
         run: |
           tflint --init
           tflint --format compact
 
-      - name: "🛡️ Install Checkov"
+      - name: '🛡️ Install Checkov'
         run: python -m pip install --disable-pip-version-check --no-warn-script-location checkov==3.2.310
 
-      - name: "🛡️ Run Checkov"
+      - name: '🛡️ Run Checkov'
         run: checkov --directory . --quiet
 
   terraform_plan:
-    name: "🔍 Terraform: Plan"
+    name: '🔍 Terraform: Plan'
     needs: terraform_validate
     # Azure state and OIDC are intentionally unavailable to fork PRs. The
     # backend-free validation job above still runs for every pull request.
@@ -92,15 +92,15 @@ jobs:
       TF_VAR_tag_environment: ${{ vars.TF_TAG_ENVIRONMENT }}
 
     steps:
-      - name: "📂 Checkout Code"
+      - name: '📂 Checkout Code'
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: "⚙️ Setup Terraform"
+      - name: '⚙️ Setup Terraform'
         uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v3.1.2
         with:
           terraform_wrapper: false
 
-      - name: "📥 Initialize"
+      - name: '📥 Initialize'
         run: >-
           terraform init -input=false
           -backend-config="resource_group_name=${{ secrets.TF_STATE_RESOURCE_GROUP_NAME }}"
@@ -108,10 +108,10 @@ jobs:
           -backend-config="container_name=${{ secrets.TF_STATE_CONTAINER_NAME }}"
           -backend-config="key=${{ secrets.TF_STATE_KEY }}"
 
-      - name: "🔍 Create saved plan"
+      - name: '🔍 Create saved plan'
         run: terraform plan -input=false -no-color -out=tfplan
 
-      - name: "📝 Publish plan summary"
+      - name: '📝 Publish plan summary'
         run: |
           terraform show -no-color tfplan > tfplan.txt
           sed -E \
@@ -128,7 +128,7 @@ jobs:
             echo "The sanitized summary and binary plan are retained as the \\`terraform-plan-${{ github.run_id }}\\` artifact."
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: "💬 Comment plan on pull request"
+      - name: '💬 Comment plan on pull request'
         if: github.event_name == 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -156,7 +156,7 @@ jobs:
               -F body="@plan-comment.md"
           fi
 
-      - name: "📦 Upload saved plan"
+      - name: '📦 Upload saved plan'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: terraform-plan-${{ github.run_id }}
@@ -167,7 +167,7 @@ jobs:
           retention-days: 5
 
   terraform_deploy:
-    name: "🚀 Terraform: Deploy exact plan"
+    name: '🚀 Terraform: Deploy exact plan'
     needs: terraform_plan
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
@@ -188,21 +188,21 @@ jobs:
       TF_VAR_tag_environment: ${{ vars.TF_TAG_ENVIRONMENT }}
 
     steps:
-      - name: "📂 Checkout Code"
+      - name: '📂 Checkout Code'
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
-      - name: "⚙️ Setup Terraform"
+      - name: '⚙️ Setup Terraform'
         uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v3.1.2
         with:
           terraform_wrapper: false
 
-      - name: "📥 Download exact saved plan"
+      - name: '📥 Download exact saved plan'
         uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
         with:
           name: terraform-plan-${{ github.run_id }}
           path: infra/plan-artifact
 
-      - name: "📥 Initialize"
+      - name: '📥 Initialize'
         run: >-
           terraform init -input=false
           -backend-config="resource_group_name=${{ secrets.TF_STATE_RESOURCE_GROUP_NAME }}"
@@ -210,5 +210,5 @@ jobs:
           -backend-config="container_name=${{ secrets.TF_STATE_CONTAINER_NAME }}"
           -backend-config="key=${{ secrets.TF_STATE_KEY }}"
 
-      - name: "🚀 Apply exact approved plan"
+      - name: '🚀 Apply exact approved plan'
         run: terraform apply -input=false plan-artifact/tfplan

@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
-import { Language, Mode, Order } from '../types';
+import React, { useEffect } from 'react'
+import { Language, Mode, Order } from '../types'
 
 interface SettingsPanelProps {
-  lang: Language;
-  mode: Mode;
-  order: Order;
-  firstControlRef: React.RefObject<HTMLButtonElement>;
-  onLanguageChange: (language: Language) => void;
-  onModeChange: (mode: Mode) => void;
-  onOrderChange: (order: Order) => void;
-  onClose: () => void;
+  lang: Language
+  mode: Mode
+  order: Order
+  firstControlRef: React.RefObject<HTMLButtonElement>
+  onLanguageChange: (language: Language) => void
+  onModeChange: (mode: Mode) => void
+  onOrderChange: (order: Order) => void
+  onClose: () => void
 }
 
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({
@@ -23,17 +23,17 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   onClose,
 }) => {
   useEffect(() => {
-    firstControlRef.current?.focus();
+    firstControlRef.current?.focus()
 
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
-        onClose();
+        onClose()
       }
-    };
+    }
 
-    document.addEventListener('keydown', closeOnEscape);
-    return () => document.removeEventListener('keydown', closeOnEscape);
-  }, [firstControlRef, onClose]);
+    document.addEventListener('keydown', closeOnEscape)
+    return () => document.removeEventListener('keydown', closeOnEscape)
+  }, [firstControlRef, onClose])
 
   return (
     <div
@@ -46,11 +46,15 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
     >
       <div className="settings-heading">
         <span id="settings-title">Learning settings</span>
-        <span id="settings-hint" className="settings-hint">Tap to change</span>
+        <span id="settings-hint" className="settings-hint">
+          Tap to change
+        </span>
       </div>
 
       <div className="settings-group" role="group" aria-labelledby="language-label">
-        <span id="language-label" className="settings-label">Ngôn ngữ / Language</span>
+        <span id="language-label" className="settings-label">
+          Ngôn ngữ / Language
+        </span>
         <div className="segmented-control">
           <button
             type="button"
@@ -73,7 +77,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
       </div>
 
       <div className="settings-group" role="group" aria-labelledby="mode-label">
-        <span id="mode-label" className="settings-label">Chế độ / Mode</span>
+        <span id="mode-label" className="settings-label">
+          Chế độ / Mode
+        </span>
         <div className="segmented-control">
           <button
             type="button"
@@ -95,7 +101,9 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
       </div>
 
       <div className="settings-group" role="group" aria-labelledby="order-label">
-        <span id="order-label" className="settings-label">Thứ tự / Order</span>
+        <span id="order-label" className="settings-label">
+          Thứ tự / Order
+        </span>
         <div className="segmented-control">
           <button
             type="button"
@@ -116,5 +124,5 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
         </div>
       </div>
     </div>
-  );
-};
+  )
+}

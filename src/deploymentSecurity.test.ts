@@ -1,4 +1,5 @@
 import staticWebAppConfig from '../public/staticwebapp.config.json'
+import packageJson from '../package.json'
 import ciWorkflow from '../.github/workflows/ci.yml?raw'
 import deployWorkflow from '../.github/workflows/deploy.yml?raw'
 import infrastructureWorkflow from '../.github/workflows/infrastructure.yml?raw'
@@ -20,6 +21,12 @@ describe('deployment security configuration', () => {
     })
   })
 
+  it('enforces formatting in package scripts and application validation workflows', () => {
+    expect(packageJson.scripts['format:check']).toBe('prettier --check .')
+    expect(ciWorkflow).toContain('run: pnpm format:check')
+    expect(deployWorkflow).toContain('run: pnpm format:check')
+  })
+
   it('keeps production and preview Azure credentials separate', () => {
     expect(deployWorkflow).toContain('secrets.AZURE_STATIC_WEB_APPS_API_TOKEN')
     expect(previewWorkflow).toContain('secrets.AZURE_STATIC_WEB_APPS_PREVIEW_API_TOKEN')
@@ -32,7 +39,7 @@ describe('deployment security configuration', () => {
     expect(deployWorkflow).toContain('fetch-depth: 0')
     expect(deployWorkflow).toContain('checked_out_sha="$(git rev-parse HEAD)"')
     expect(deployWorkflow).toContain('git merge-base --is-ancestor "${SOURCE_REF}" origin/main')
-    expect(deployWorkflow).toContain('source_ref != \'\'')
+    expect(deployWorkflow).toContain("source_ref != ''")
   })
 
   it('scopes OIDC write permission to Terraform jobs', () => {

@@ -1,8 +1,8 @@
-import React from 'react';
+import React from 'react'
 
 interface LearningCardProps {
-  progress: string;
-  children: React.ReactNode;
+  progress: string
+  children: React.ReactNode
 }
 
 export const LearningCard: React.FC<LearningCardProps> = ({ progress, children }) => (
@@ -13,4 +13,4 @@ export const LearningCard: React.FC<LearningCardProps> = ({ progress, children }
     </div>
     {children}
   </section>
-);
+)

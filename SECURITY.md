@@ -6,10 +6,10 @@ Only the latest patch release in the `0.1.x` line is currently supported with
 security fixes. The initial release is `0.1.0`; versions older than `0.1.x`
 are not supported.
 
-| Version | Supported |
-| --- | --- |
-| `0.1.x` (latest patch) | Yes |
-| `< 0.1.0` | No |
+| Version                | Supported |
+| ---------------------- | --------- |
+| `0.1.x` (latest patch) | Yes       |
+| `< 0.1.0`              | No        |
 
 ## Reporting a vulnerability
 
