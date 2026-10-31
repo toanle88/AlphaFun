@@ -9,6 +9,7 @@ export interface LocalizedName {
 }
 
 export interface BaseItem {
+  id: string;
   type: string;
   name: LocalizedName | string;
 }
@@ -53,9 +54,20 @@ export interface ShapeItem extends BaseItem {
   value: {
     name: LocalizedName;
     color: string;
-    svg: string;
+    kind: ShapeKind;
   };
 }
+
+export type ShapeKind =
+  | 'circle'
+  | 'square'
+  | 'triangle'
+  | 'star'
+  | 'heart'
+  | 'rectangle'
+  | 'diamond'
+  | 'oval'
+  | 'hexagon';
 
 export type AppItem = LetterItem | NumberItem | ObjectItem | ColorItem | VerbItem | ShapeItem;
 
