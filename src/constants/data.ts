@@ -347,11 +347,11 @@ export const UI_TEXT = {
 }
 
 export const CATEGORY_THEMES: Record<Category, CategoryTheme> = {
-  all: { primary: '#FF6B6B', dark: '#E05656', secondary: '#4ECDC4' },
-  letters: { primary: '#FF9F43', dark: '#E67E22', secondary: '#54A0FF' },
-  numbers: { primary: '#54A0FF', dark: '#2E86DE', secondary: '#FF9F43' },
-  objects: { primary: '#4ECDC4', dark: '#3DBdb4', secondary: '#FF6B6B' },
-  colors: { primary: '#FF6B6B', dark: '#E05656', secondary: '#FFE66D' },
-  verbs: { primary: '#5FA052', dark: '#468936', secondary: '#C4E538' },
-  shapes: { primary: '#A29BFE', dark: '#6C5CE7', secondary: '#81ECEC' },
+  all: { primary: '#B83F3F', dark: '#9F3333', secondary: '#4ECDC4' },
+  letters: { primary: '#A85400', dark: '#7F3F00', secondary: '#54A0FF' },
+  numbers: { primary: '#1666B1', dark: '#0E4B8A', secondary: '#FF9F43' },
+  objects: { primary: '#0D766F', dark: '#075C56', secondary: '#FF6B6B' },
+  colors: { primary: '#B83F3F', dark: '#9F3333', secondary: '#FFE66D' },
+  verbs: { primary: '#327A32', dark: '#245C24', secondary: '#C4E538' },
+  shapes: { primary: '#5B45B5', dark: '#44338C', secondary: '#81ECEC' },
 }

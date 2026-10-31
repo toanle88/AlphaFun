@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --primary: #ff6b6b;
-  --primary-dark: #e05656;
+  --primary: #b83f3f;
+  --primary-dark: #9f3333;
   --secondary: #4ecdc4;
   --accent: #ffe66d;
 
   --bg-color: #f8fbfa;
   --card-bg: #ffffff;
   --text-main: #263238;
-  --text-muted: #64747b;
+  --text-muted: #43545c;
   --line: #dce8e5;
   --soft-surface: #f1f7f5;
   --focus-ring: #147d77;
@@ -355,8 +355,8 @@
 
   .audio-button.is-recording {
     color: #fff;
-    background: #e76f70;
-    border-color: #e76f70;
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
   }
 
   .next-button {
