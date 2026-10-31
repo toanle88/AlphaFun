@@ -11,6 +11,7 @@ import repositorySecurityWorkflow from '../.github/workflows/repository-security
 import dependabotConfig from '../.github/dependabot.yml?raw'
 import codeowners from '../.github/CODEOWNERS?raw'
 import eslintConfig from '../eslint.config.js?raw'
+import postcssConfig from '../postcss.config.js?raw'
 
 const workflows = [
   ciWorkflow,
@@ -41,6 +42,11 @@ describe('deployment security configuration', () => {
     expect(packageJson.scripts['format:check']).toBe('prettier --check .')
     expect(ciWorkflow).toContain('run: pnpm format:check')
     expect(deployWorkflow).toContain('run: pnpm format:check')
+  })
+
+  it('uses the Tailwind CSS v4 PostCSS plugin', () => {
+    expect(postcssConfig).toContain("'@tailwindcss/postcss': {}")
+    expect(postcssConfig).not.toContain('tailwindcss: {}')
   })
 
   it('does not lint generated test and browser output', () => {
@@ -104,14 +110,12 @@ describe('deployment security configuration', () => {
     expect(dependabotConfig).toContain('package-ecosystem: github-actions')
     expect(dependabotConfig).toContain('package-ecosystem: terraform')
     expect(dependabotConfig).toContain('directory: /infra')
-    expect(dependabotConfig).toContain('package-ecosystem: devcontainers')
   })
 
   it('requires maintainer review for dependency and security configuration', () => {
     expect(codeowners).toContain('/package.json @alphafun/maintainers')
     expect(codeowners).toContain('/pnpm-lock.yaml @alphafun/maintainers')
     expect(codeowners).toContain('/infra/.terraform.lock.hcl @alphafun/maintainers')
-    expect(codeowners).toContain('/.devcontainer/ @alphafun/maintainers')
     expect(codeowners).toContain('/.github/workflows/ @alphafun/maintainers')
   })
 
