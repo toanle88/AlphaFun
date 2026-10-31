@@ -26,10 +26,16 @@ Object.defineProperty(window, 'SpeechSynthesisUtterance', {
 })
 
 class MockMediaRecorder {
-  start = vi.fn()
-  stop = vi.fn()
-  ondataavailable = null
-  onstop = null
+  mimeType = 'audio/webm'
+  start = vi.fn(() => {
+    this.state = 'recording'
+  })
+  stop = vi.fn(() => {
+    this.state = 'inactive'
+    this.onstop?.(new Event('stop'))
+  })
+  ondataavailable: ((event: BlobEvent) => void) | null = null
+  onstop: ((event: Event) => void) | null = null
   state = 'inactive'
   stream = {
     getTracks: () => [{ stop: vi.fn() }]
@@ -37,7 +43,9 @@ class MockMediaRecorder {
 }
 
 Object.defineProperty(window, 'MediaRecorder', {
-  value: MockMediaRecorder
+  value: MockMediaRecorder,
+  configurable: true,
+  writable: true
 })
 
 Object.defineProperty(navigator, 'mediaDevices', {

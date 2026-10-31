@@ -26,9 +26,11 @@ export const useSpeech = (lang: Language) => {
     const enVoice = voices.find(v => v.lang.startsWith('en'));
 
     if (lang === 'vi') {
-      utterance.voice = viVoice || enVoice || null;
+      utterance.lang = 'vi-VN';
+      utterance.voice = viVoice || null;
     } else {
-      utterance.voice = enVoice || viVoice || null;
+      utterance.lang = 'en-US';
+      utterance.voice = enVoice || null;
     }
 
     utterance.rate = 0.9;
