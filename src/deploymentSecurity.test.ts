@@ -96,9 +96,7 @@ describe('deployment security configuration', () => {
     expect(repositorySecurityWorkflow).toContain('infra/\\.terraform\\.lock\\.hcl')
     expect(repositorySecurityWorkflow).toContain('secret_scanning_push_protection')
     expect(repositorySecurityWorkflow).toContain('require_code_owner_reviews')
-    expect(repositorySecurityWorkflow).toContain(
-      'A lockfile change requires an approving review',
-    )
+    expect(repositorySecurityWorkflow).toContain('A lockfile change requires an approving review')
   })
 
   it('configures dependency monitoring for every supported ecosystem', () => {
@@ -120,9 +118,7 @@ describe('deployment security configuration', () => {
   it('keeps dependency installs and privileged Terraform plans safe for PRs', () => {
     expect(ciWorkflow).toContain('pnpm install --frozen-lockfile')
     expect(infrastructureWorkflow).toContain('terraform init -backend=false')
-    expect(infrastructureWorkflow).toContain(
-      'github.event.pull_request.head.repo.full_name == github.repository',
-    )
+    expect(infrastructureWorkflow).toContain('github.event.pull_request.head.repo.full_name == github.repository')
   })
 
   it('validates and promotes one exact Terraform plan', () => {
