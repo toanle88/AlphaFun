@@ -1,115 +1,104 @@
 # 🎓 AlphaFun — Bé Tập Nói Thật Vui!
 
-A colorful, interactive flashcard PWA that helps young children learn to speak — featuring letters, numbers, objects, colors, actions, and shapes in both **Vietnamese** and **English**.
+AlphaFun is a colorful, interactive flashcard PWA that helps young children learn to speak. It includes letters, numbers, objects, colors, actions, and shapes in Vietnamese and English.
 
-## ✨ Features
+## Features
 
-- **6 Learning Categories** — Letters (A–Z), Numbers (1–9), Objects (20 items), Colors (11), Actions (14 verbs), and Shapes (9)
-- **Bilingual** — Full Vietnamese 🇻🇳 / English 🇬🇧 support with one-tap switching
-- **Text-to-Speech** — Native pronunciation using the Web Speech API
-- **Voice Recording** — Kids can record themselves and play it back
-- **Auto-play Mode** — Automatically cycles through flashcards with spoken audio
-- **Sequential / Random Order** — Choose how items are presented
-- **Dynamic Themes** — Each category has its own vibrant color palette
-- **PWA** — Installable on mobile devices for an app-like experience
-- **Fully Offline** — Works without an internet connection once installed
+- Six learning categories: letters, numbers, objects, colors, actions, and shapes
+- Vietnamese and English labels and pronunciation
+- Text-to-speech with language and available-voice selection
+- Voice recording with replay
+- Manual or auto-play navigation in sequential or random order
+- Category-specific themes and responsive mobile navigation
+- Installable PWA with production asset precaching
 
-## 📱 Responsive design states
+## Tech stack
 
-- **Mobile (<768px):** The learning card stays central and dominant. Categories remain a single, touch-friendly horizontal rail so long translations do not force a crowded wrap. Settings opens beside its 48px control and all controls use at least 44px touch targets.
-- **Desktop (≥768px):** The app uses a centered, wider frame; category choices wrap into a calm row above the card, while the next action remains directly below the learning content.
+- React 18 and TypeScript
+- Vite and `vite-plugin-pwa`
+- Tailwind CSS with project-specific styles in `src/index.css`
+- Vitest and Testing Library
+- pnpm
+- Terraform and GitHub Actions for Azure Static Web Apps deployment
 
-The visual hierarchy is intentional: category selection is quiet, the learning card is the primary surface, audio controls are secondary actions within it, and the next button is the single primary action.
-
-## 🖼️ Content
-
-| Category | Items |
-|----------|-------|
-| Chữ cái / Letters | A–Z (26) |
-| Chữ số / Numbers | 1–9 (9) |
-| Đồ vật / Objects | Apple, Car, Dog, Bird, Sun, Banana, Cat, House, Ball, Flower, Fish, Tree, Book, Hat, Orange, Rabbit, Moon, Star, Table, Chair |
-| Màu sắc / Colors | Red, Green, Blue, Yellow, Orange, Pink, Purple, Brown, Black, White, Gray |
-| Hành động / Actions | Jump, Run, Eat, Drink, Sleep, Walk, Laugh, Cry, Read, Write, Sing, Dance, Swim, Clap |
-| Hình khối / Shapes | Circle, Square, Triangle, Star, Heart, Rectangle, Diamond, Oval, Hexagon |
-
-## 🛠️ Tech Stack
-
-- **Vite** — Lightning-fast dev server & build tool
-- **Vanilla JS + CSS** — Zero framework overhead
-- **Web Speech API** — Text-to-speech & voice recording
-- **vite-plugin-pwa** — Service worker & manifest generation
-- **Terraform** — Azure Static Web Apps infrastructure
-- **GitHub Actions** — CI/CD deployment pipeline
-
-## 🚀 Getting Started
+## Getting started
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v24)
-- [pnpm](https://pnpm.io/) (v9.15.9; enabled automatically through the `packageManager` field)
+- Node.js 24 (or a current Node.js release supported by the project)
+- pnpm 9.15.9, enabled automatically through the `packageManager` field
 
-### Install & Run
+Install dependencies and start the development server:
 
 ```bash
-# Install dependencies
 pnpm install
-
-# Start the dev server
 pnpm dev
 ```
 
-The app will be available at `http://localhost:5173`.
+The app is available at `http://localhost:5173`.
 
-### Build for Production
+### Validation and production preview
 
-```bash
-pnpm build
-pnpm preview   # preview the production build locally
-```
-
-Run the fast validation checks before opening a pull request:
+Run the same checks used by the application deployment workflow:
 
 ```bash
+pnpm type-check
 pnpm lint
 pnpm test -- --run
 pnpm build
 ```
 
-## 📁 Project Structure
+The production build is written to `dist/`. Preview it locally with:
 
+```bash
+pnpm preview
 ```
+
+Use `pnpm test` without `--run` for Vitest watch mode.
+
+## Browser support and platform limitations
+
+AlphaFun targets current browsers with support for ES modules, CSS flex/grid, service workers, `MediaRecorder`, and the Web Speech API. The exact voice list and PWA installation UI vary by browser and operating system.
+
+- Voice recording requires microphone permission and a secure context: HTTPS in deployment or `localhost` during development. The feature is unavailable when `MediaRecorder` or microphone access is not supported, denied, or blocked by browser policy.
+- Speech uses the browser's Web Speech API. Available voices, pronunciation quality, and offline speech support are browser/OS dependent; the app cannot guarantee that a requested voice exists or that speech works without network access.
+- The app does not request camera, location, or other permissions.
+
+## PWA installation and offline behavior
+
+The production Vite build generates the PWA manifest and service worker. Workbox precaches the generated JavaScript, CSS, HTML, SVG, and bundled flashcard image assets, so the installed app can load its core interface and local content after a successful online visit and service-worker update.
+
+Installability depends on browser support and deployment over HTTPS (with `localhost` allowed for development). Use the browser's install command or prompt when it is offered. External Google Fonts are not part of the local precache, and microphone access, speech synthesis, and browser voice data are not guaranteed to work offline.
+
+## Project structure
+
+```text
 AlphaFun/
-├── index.html              # App shell & UI markup
-├── vite.config.js          # Vite + PWA plugin config
-├── package.json
-├── public/
-│   ├── alphafun-icon.svg   # App icon
-│   ├── alphafun-icon.svg   # PWA icon
-│   └── images/             # Flashcard images (objects & verbs)
+├── index.html                 # Document shell and font metadata
+├── package.json               # Scripts and dependencies
+├── vite.config.ts             # Vite, Vitest, and PWA configuration
+├── public/                    # PWA icons and flashcard image assets
 ├── src/
-│   ├── main.js             # Core app logic & data
-│   └── style.css           # All styles & animations
-├── infra/                  # Terraform IaC for Azure
-│   ├── main.tf
-│   ├── providers.tf
-│   └── variables.tf
-└── .github/workflows/
-    ├── deploy.yml           # CI/CD to Azure Static Web Apps
-    └── infrastructure.yml   # Terraform provisioning
+│   ├── main.tsx               # React entry point
+│   ├── App.tsx                # Application composition and settings state
+│   ├── components/            # Category navigation, card, display, and settings UI
+│   ├── constants/              # Learning data and localized UI text
+│   ├── hooks/                  # Theme, navigation, recording, and speech hooks
+│   ├── utils/                  # Navigation pool/state helpers
+│   ├── types/                  # Shared TypeScript types
+│   ├── test/                   # Vitest and browser API setup
+│   └── *.test.ts(x)            # Unit, integration, accessibility, and responsive tests
+├── docs/                      # Asset and project documentation
+├── infra/                     # Terraform configuration for Azure
+└── .github/workflows/         # Application and infrastructure automation
 ```
 
-The image migration and before/after byte counts are recorded in
-[`docs/image-optimization.md`](docs/image-optimization.md).
+The image migration and before/after byte counts are recorded in [`docs/image-optimization.md`](docs/image-optimization.md).
 
-## ☁️ Deployment
+## Deployment
 
-The app is deployed as an **Azure Static Web App** via GitHub Actions.
+The application is deployed as an Azure Static Web App through `.github/workflows/deploy.yml`. That workflow installs the locked dependencies, runs type-checking, linting, the test suite, and the production build, then deploys `dist/`. Infrastructure changes are handled separately by `.github/workflows/infrastructure.yml`.
 
-| Workflow | Trigger | Purpose |
-|----------|---------|---------|
-| `deploy.yml` | Push / PR | Build & deploy to Azure Static Web Apps |
-| `infrastructure.yml` | Manual | Provision Azure resources via Terraform |
-
-## 📄 License
+## License
 
 This project is private.

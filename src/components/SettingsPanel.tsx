@@ -40,6 +40,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
       id="settings-panel"
       className="settings-panel"
       role="dialog"
+      aria-modal="true"
       aria-labelledby="settings-title"
       aria-describedby="settings-hint"
     >

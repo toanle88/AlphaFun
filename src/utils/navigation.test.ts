@@ -69,4 +69,27 @@ describe('learning navigation', () => {
     expect(next.currentItemId).toBe('letter:B');
     expect(afterCategoryChange.currentItemId).toBe('letter:A');
   });
+
+  it('returns an empty state for empty pools in every navigation operation', () => {
+    const emptyState = { currentItemId: null, sequentialIndex: 0 };
+
+    expect(resetNavigation([], 'random', () => 0)).toEqual(emptyState);
+    expect(resetNavigationToFirst([])).toEqual(emptyState);
+    expect(advanceNavigation([], 'sequential', {
+      currentItemId: 'missing',
+      sequentialIndex: 4,
+    })).toEqual(emptyState);
+  });
+
+  it('keeps a single-item pool stable in sequential and random modes', () => {
+    const singleItem = buildPool('numbers').slice(0, 1);
+
+    const sequential = resetNavigation(singleItem, 'sequential');
+    expect(sequential).toEqual({ currentItemId: 'number:1', sequentialIndex: 0 });
+    expect(advanceNavigation(singleItem, 'sequential', sequential)).toEqual(sequential);
+
+    const random = resetNavigation(singleItem, 'random', () => 0);
+    expect(random).toEqual({ currentItemId: 'number:1', sequentialIndex: 0 });
+    expect(advanceNavigation(singleItem, 'random', random, () => 0)).toEqual(random);
+  });
 });

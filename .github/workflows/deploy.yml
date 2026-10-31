@@ -29,9 +29,20 @@ jobs:
           node-version: '24'
           cache: pnpm
 
-      - name: Install & Build
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type-check
+        run: pnpm type-check
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Test
+        run: pnpm test -- --run
+
+      - name: Production build
         run: |
-          pnpm install --frozen-lockfile
           pnpm build
 
       - name: Deploy to Azure
