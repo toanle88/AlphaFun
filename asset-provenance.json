@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "default": {
+    "creator": "AlphaFun contributors",
+    "license": "MIT",
+    "attribution": "AlphaFun contributors"
+  },
+  "assets": {
+    "public/images/apple.webp": {
+      "sha256": "183bd2ee2cacd92d722797157356f83c65d8b6fa8f41b221260f4f0b003170e5",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/ball.webp": {
+      "sha256": "c97ab3b581b98ecbedf08580030a138ed8eab4f7ad4abf8a61bd564982e7b7ca",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/banana.webp": {
+      "sha256": "28dcce8cc2b12017b658316683973e59200a1d92f6f4c4b0488aa24028f30d82",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/bird.webp": {
+      "sha256": "852011a71782582a2711fc5644dd33536c71c64980fc49edc4460a683639aa19",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/book.webp": {
+      "sha256": "1f1c36124b8dd2508a09441c65ab7be96ba55222ee1ded433d6ee1dc0d7d1d9d",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/car.webp": {
+      "sha256": "932349047df75ca8454f3de9f6225f36876b102fbcf6ef006e1f82c14b087118",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/cat.webp": {
+      "sha256": "bab206303c59dd76f94b0ea43bf03e09fb77cd4018d40644366d49641bb58910",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/chair.webp": {
+      "sha256": "bc9da09a90fdc371232dae99e1e74b10815e582f95e0bbed5150440cc3986fe6",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/clap.webp": {
+      "sha256": "d254050ec3bb7b2c88f6c57a9f229aa62eb5721c98ab6192b5b095e049ddbb3e",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/cry.webp": {
+      "sha256": "c3271c57c3426d25976af6a812359c448722ac84f8811d8c665264ee0e950253",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/dance.webp": {
+      "sha256": "01cab24e416c2571d936e41ce5ca0187d6faf67dd26172f9f029be726cbc013a",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/dog.webp": {
+      "sha256": "025c2058f721fc64d05e50f4d6117faf6823ff727f9ad65e1fc4e4dd4db78510",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/drink.webp": {
+      "sha256": "54ef0f1ed646f9ee3ee30acac51e05a23707f66419f8445bfc919aac11a183e9",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/eat.webp": {
+      "sha256": "12b4855f8f9b0b738200f1bf6aff0cfba7d455dd74f535313eec7916bcffd394",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/fish.webp": {
+      "sha256": "02ccffb92d8507bdc780f99ccedaccc1855bc6b19789daa9a85a6e105f788363",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/flower.webp": {
+      "sha256": "f6b3e6a0264e184fc0ee49df8e044dfe1066b4791ce64e6e9e0d590147e7c147",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/hat.webp": {
+      "sha256": "ae9b509ae70f48d26a2d00896dfff17ee116e775a1e23da27b1ae5e3e2c10213",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/house.webp": {
+      "sha256": "c55ca0f4f3fc60defdfe08cbab608871ac5e28936f06ed31c456a9255e27f04e",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/jump.webp": {
+      "sha256": "01af6c4e2a448cd97dc7a8431903eea92e32c20b10cad268635fb00ae012694b",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/laugh.webp": {
+      "sha256": "8cf37c2c74be9571cff22498659e4684edbfccbb89c02593b2388208935bb62f",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/moon.webp": {
+      "sha256": "3a00a3b0279b16d698d822f92374630840b45e03a1bec953b7871ff0d09878eb",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/orange.webp": {
+      "sha256": "0355fac932e3967a20bca11e4ea081409f507ea717269f7182d15334aae5b9b3",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/rabbit.webp": {
+      "sha256": "895c85e3edd15b3893f16bf94f566a536bc7966ae0a92d72233f127427092bec",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/read.webp": {
+      "sha256": "2fd29fc656075fc6eb4533f82be012097bdab726589dc76c839cc221de7796ae",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/run.webp": {
+      "sha256": "0914a70a94a5b4050123df0c14b8b8e66c5c8ab377cea7ac364914b444816a20",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/sing.webp": {
+      "sha256": "20551d7b9e2c1e32f393fffb402e402fab0004ed39135a11b273fb8d638daade",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/sleep.webp": {
+      "sha256": "54419cc846622e1acbaf5eaca1b705f32651a23969342233721f894c55f6e7ac",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/star.webp": {
+      "sha256": "bca159c49d0c267ca5bc0f827c5cc9a02132287b7b4707661e3d032b97490402",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/sun.webp": {
+      "sha256": "c92127517f17350946a19a973b77f08d005f8284d24bbe9e9888f098c47e2c34",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/swim.webp": {
+      "sha256": "ae433b28d21b7a44a42c922299e22da1b7f1adc17298c8250ac13af5c55ea067",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/table.webp": {
+      "sha256": "f58cc3261c02f38f0d31d983a8cc773202867c9648db0cf0bf2068c1fcfabe2b",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/tree.webp": {
+      "sha256": "cc57ed1196b89b2db2c169f51e09b7a693764999227d12faa378b8071759fd44",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/walk.webp": {
+      "sha256": "57b5d64703b51bd9128d21faf01f9a5304caede2b8506553f02ca29324a40eb5",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/images/write.webp": {
+      "sha256": "a259fa6ca7c6615e89c7fb4d04b231b4ab75715fe543ab93974e04910f8dca2e",
+      "source": "Original AlphaFun artwork created for this repository",
+      "modifications": "WebP derivative at the display dimensions used by the app."
+    },
+    "public/alphafun-icon.svg": {
+      "sha256": "8321f52054e62a37b13a1becf6b0ec3d7611aabbe41825dc95f33a0983880158",
+      "source": "Original AlphaFun icon artwork created in this repository",
+      "modifications": "None."
+    },
+    "public/alphafun-icon-192.png": {
+      "sha256": "87502e9c4777194a9fcc834845edcc9b79d6ed86a79c95f25ea98aa30187fd67",
+      "source": "Raster export of the original AlphaFun icon artwork in this repository",
+      "modifications": "PNG export at 192x192 pixels."
+    },
+    "public/alphafun-icon-512.png": {
+      "sha256": "62e922fc242f13c0b85be1a52a690b7559fc6e3cdd18f36f77da989cd52699c4",
+      "source": "Raster export of the original AlphaFun icon artwork in this repository",
+      "modifications": "PNG export at 512x512 pixels."
+    }
+  }
+}

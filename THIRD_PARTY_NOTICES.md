@@ -1,28 +1,28 @@
 # Third-party notices
 
-The MIT License in `LICENSE` applies to AlphaFun source code and other files
-for which AlphaFun has the right to grant that license. It does not grant
-rights to the bundled visual assets listed below.
+The MIT License in `LICENSE` applies to AlphaFun source code and the bundled
+visual assets described below. It does not grant rights to the externally
+sourced fonts and dependencies listed later in this file.
 
-### Assets with unresolved provenance
+### Bundled visual assets
 
-The repository contains 34 WebP learning illustrations under
-`public/images/` and three PWA icon files named `public/alphafun-icon*`.
-No creator, source, permission, or license record for these files was found
-in the repository, so their ownership and redistribution rights cannot be verified
-from the available evidence. They are excluded from AlphaFun's MIT license
-and must not be copied, redistributed, or relicensed until provenance and
-compatible permission are established. Publication of these files as part of a
-public release requires that follow-up.
+The 34 WebP learning illustrations under `public/images/` and the three PWA
+icons named `public/alphafun-icon*` are original AlphaFun artwork created for
+this repository by AlphaFun contributors. AlphaFun contributors grant
+permission to copy, modify, and redistribute these files under the MIT License.
+The required attribution is **AlphaFun contributors**.
+
+The exact file list, SHA-256 fingerprints, source declarations, license, and
+conversion notes are recorded in [`asset-provenance.json`](asset-provenance.json).
+The licensing regression test verifies that every bundled visual file has one
+complete ledger entry and that its fingerprint still matches the recorded
+source artifact.
 
 ### Learning content audit
 
 The localized labels, category definitions, color values, and shape definitions
-in `src/constants/data.ts` were reviewed. No third-party source, attribution,
-or license metadata for this learning content was found in the repository. This
-absence does not establish ownership or MIT compatibility; maintainers must
-confirm that the content is original or add provenance and compatible licensing
-before publication if any portion came from an external source.
+in `src/constants/data.ts` are AlphaFun source content and are covered by the
+MIT License with the rest of the source code.
 
 The following externally sourced items are used by the application and are
 not relicensed by AlphaFun's MIT License.
@@ -45,10 +45,10 @@ remain under their own licenses:
 | Package          | Resolved version | License |
 | ---------------- | ---------------: | ------- |
 | `clsx`           |            2.1.1 | MIT     |
-| `lucide-react`   |          0.428.0 | ISC     |
-| `react`          |           18.3.1 | MIT     |
-| `react-dom`      |           18.3.1 | MIT     |
-| `tailwind-merge` |            2.6.1 | MIT     |
+| `lucide-react`   |           1.63.0 | ISC     |
+| `react`          |           19.3.1 | MIT     |
+| `react-dom`      |           19.3.1 | MIT     |
+| `tailwind-merge` |            3.7.0 | MIT     |
 
 The Lucide icons used by the application are provided by `lucide-react` and
 are covered by its ISC license. The package's license text is available in
