@@ -39,7 +39,7 @@ The app is available at `http://localhost:5173`.
 
 ### Validation and production preview
 
-Run the same checks used by the application deployment workflow:
+Run the checks used across pull-request validation and production deployment:
 
 ```bash
 pnpm type-check
@@ -139,6 +139,7 @@ Infrastructure changes are handled separately by
 - [Security policy](SECURITY.md)
 - [Architecture, browser, accessibility, and privacy notes](docs/architecture.md)
 - [Deployment and rollback runbook](docs/deployment.md)
+- [SemVer release process](docs/release-process.md)
 
 ## License
 
@@ -148,5 +149,6 @@ contributors; their exact hashes and provenance records are in
 [`asset-provenance.json`](asset-provenance.json). Externally sourced fonts and
 dependencies are listed in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 
-The initial public release is version `0.1.0`, documented by the Git tag
-`v0.1.0`.
+The initial public release target is version `0.1.0`, which remains unreleased
+as of 2026-10-31. The canonical `v0.1.0` tag and GitHub release will be created
+from the exact merged commit; see the [SemVer release process](docs/release-process.md).

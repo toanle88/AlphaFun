@@ -89,7 +89,7 @@ const parseNoticeDependencies = (): NoticeDependency[] =>
   }))
 
 describe('public release licensing metadata', () => {
-  it('declares the MIT license and initial public release', () => {
+  it('declares the MIT license and initial release target', () => {
     expect(packageJson.license).toBe('MIT')
     expect(packageJson.version).toBe('0.1.0')
     expect(packageJson.private).not.toBe(true)
@@ -98,10 +98,10 @@ describe('public release licensing metadata', () => {
     expect(licenseText).toContain('THE SOFTWARE IS PROVIDED "AS IS"')
   })
 
-  it('documents the license, release tag, and third-party audit', () => {
+  it('documents the license, release target, and third-party audit', () => {
     expect(readme).toContain('[MIT License](LICENSE)')
     expect(readme).toContain('`0.1.0`')
-    expect(readme).toContain('`v0.1.0`')
+    expect(readme).toContain('initial public release target')
     expect(existsSync('THIRD_PARTY_NOTICES.md')).toBe(true)
     expect(thirdPartyNotices).toContain('Fredoka')
     expect(thirdPartyNotices).toContain('Nunito')

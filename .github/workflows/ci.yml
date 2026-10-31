@@ -35,6 +35,9 @@ jobs:
       - name: Check third-party notices
         run: pnpm check:third-party-notices
 
+      - name: Check release metadata
+        run: pnpm check:release
+
       - name: Type-check
         run: pnpm type-check
 

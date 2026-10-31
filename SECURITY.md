@@ -3,8 +3,9 @@
 ## Supported versions
 
 Only the latest patch release in the `0.1.x` line is currently supported with
-security fixes. The initial release is `0.1.0`; versions older than `0.1.x`
-are not supported.
+security fixes. The current package baseline is `0.1.0`; the GitHub publication
+status is maintained in the [SemVer release process](docs/release-process.md).
+Versions older than `0.1.x` are not supported.
 
 | Version                | Supported |
 | ---------------------- | --------- |

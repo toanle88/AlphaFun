@@ -78,6 +78,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check third-party notices
+        run: pnpm check:third-party-notices
+
+      - name: Check release metadata
+        run: pnpm check:release
+
       - name: Type-check
         run: pnpm type-check
 
@@ -87,11 +93,14 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Test
-        run: pnpm test -- --run
+      - name: Unit tests with coverage
+        run: pnpm test:coverage
 
       - name: Production build
         run: pnpm build
+
+      - name: Check bundle and asset budget
+        run: pnpm check:asset-size
 
       - name: Upload production artifact
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
