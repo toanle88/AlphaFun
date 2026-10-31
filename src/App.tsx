@@ -7,12 +7,24 @@ import {
 } from './constants/data';
 import { DisplayArea } from './components/DisplayArea';
 import { Settings, ChevronRight } from 'lucide-react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
 
-function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
-}
+const CATEGORIES: Category[] = ['all', 'letters', 'numbers', 'objects', 'colors', 'verbs', 'shapes'];
+
+const getItemIdentifier = (item: AppItem) => {
+    switch (item.type) {
+        case 'letter':
+        case 'number':
+            return `${item.type}:${item.value}`;
+        case 'color':
+            return `${item.type}:${item.value.hex}`;
+        case 'object':
+            return `${item.type}:${item.value.image || item.value.emoji || item.value.name.en}`;
+        case 'verb':
+            return `${item.type}:${item.value.image}`;
+        case 'shape':
+            return `${item.type}:${item.value.svg}`;
+    }
+};
 
 const App: React.FC = () => {
     const [lang, setLang] = useState<Language>('vi');
@@ -57,14 +69,7 @@ const App: React.FC = () => {
         } else {
             let filteredPool = pool;
             if (currentItem && pool.length > 1) {
-                filteredPool = pool.filter(p => {
-                    const getIdentifier = (item: AppItem) => {
-                        if (typeof item.value === 'string') return item.value;
-                        const v = item.value as { hex?: string; image?: string; svg?: string; emoji?: string };
-                        return v.hex || v.image || v.svg || v.emoji;
-                    };
-                    return getIdentifier(p) !== getIdentifier(currentItem);
-                });
+                filteredPool = pool.filter(p => getItemIdentifier(p) !== getItemIdentifier(currentItem));
             }
             const randomIdx = Math.floor(Math.random() * filteredPool.length);
             setCurrentItem(filteredPool[randomIdx]);
@@ -95,81 +100,117 @@ const App: React.FC = () => {
         root.style.setProperty('--secondary', theme.secondary);
     }, [category]);
 
+    useEffect(() => {
+        if (!showSettings) return;
+
+        const closeOnEscape = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') setShowSettings(false);
+        };
+
+        document.addEventListener('keydown', closeOnEscape);
+        return () => document.removeEventListener('keydown', closeOnEscape);
+    }, [showSettings]);
+
     const t = UI_TEXT[lang];
+    const currentPosition = currentItem
+        ? pool.findIndex(item => getItemIdentifier(item) === getItemIdentifier(currentItem)) + 1
+        : 1;
+    const progress = `${Math.max(currentPosition, 1)} / ${pool.length}`;
 
     if (!currentItem) return null;
 
     return (
-        <div id="app" className="w-screen h-screen flex justify-center items-center p-4">
-            <div className="container bg-card border-4 border-text-main rounded-3xl p-6 shadow-neo flex flex-col gap-4 max-w-[600px] w-full">
-                <header className="flex justify-between items-center mb-2 px-2">
-                    <h1 className="font-main font-bold text-[clamp(2rem,6vw,2.8rem)] text-primary drop-shadow-sm select-none">
-                        AlphaFun
-                    </h1>
+        <div id="app" className="app-shell">
+            <div className="app-frame">
+                <header className="app-header">
+                    <div>
+                        <p className="eyebrow">Learn through play</p>
+                        <h1 className="app-title">AlphaFun</h1>
+                    </div>
 
-                    <div className="relative">
+                    <div className="settings-wrap">
                         <button
-                            className="w-12 h-12 rounded-full border-2 border-text-muted bg-white flex justify-center items-center shadow-[0_4px_0_var(--text-muted)] hover:rotate-45 active:translate-y-[2px] active:shadow-[0_2px_0_var(--text-muted)] transition-all"
+                            type="button"
+                            className="icon-button"
                             onClick={() => setShowSettings(!showSettings)}
+                            aria-label={showSettings ? 'Close settings' : 'Open settings'}
+                            aria-expanded={showSettings}
+                            aria-controls="settings-panel"
+                            aria-haspopup="dialog"
                         >
-                            <Settings className="w-6 h-6 text-text-muted" />
+                            <Settings className="icon-button-icon" aria-hidden="true" />
                         </button>
 
                         {showSettings && (
-                            <div className="absolute top-14 right-0 bg-white rounded-2xl p-5 border-4 border-text-main shadow-lg min-w-[220px] z-50 animate-pop-in">
-                                <div className="flex flex-col gap-4">
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest text-left">Ngôn ngữ / Language</label>
-                                        <div className="flex bg-gray-100 p-1 rounded-xl gap-1">
-                                            <button
-                                                className={cn("flex-1 py-1.5 rounded-lg text-xs font-bold transition-all", lang === 'vi' ? "bg-primary text-white" : "text-text-muted")}
-                                                onClick={() => setLang('vi')}
-                                            >
-                                                Tiếng Việt
-                                            </button>
-                                            <button
-                                                className={cn("flex-1 py-1.5 rounded-lg text-xs font-bold transition-all", lang === 'en' ? "bg-primary text-white" : "text-text-muted")}
-                                                onClick={() => setLang('en')}
-                                            >
-                                                English
-                                            </button>
-                                        </div>
-                                    </div>
+                            <div id="settings-panel" className="settings-panel" role="dialog" aria-label="Learning settings">
+                                <div className="settings-heading">
+                                    <span>Settings</span>
+                                    <span className="settings-hint">Tap to change</span>
+                                </div>
 
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest text-left">Chế độ / Mode</label>
-                                        <div className="flex bg-gray-100 p-1 rounded-xl gap-1">
-                                            <button
-                                                className={cn("flex-1 py-1.5 rounded-lg text-xs font-bold transition-all", mode === 'manual' ? "bg-primary text-white" : "text-text-muted")}
-                                                onClick={() => setMode('manual')}
-                                            >
-                                                Manual
-                                            </button>
-                                            <button
-                                                className={cn("flex-1 py-1.5 rounded-lg text-xs font-bold transition-all", mode === 'auto' ? "bg-primary text-white" : "text-text-muted")}
-                                                onClick={() => setMode('auto')}
-                                            >
-                                                Auto
-                                            </button>
-                                        </div>
+                                <div className="settings-group" role="group" aria-labelledby="language-label">
+                                    <span id="language-label" className="settings-label">Ngôn ngữ / Language</span>
+                                    <div className="segmented-control">
+                                        <button
+                                            type="button"
+                                            className={`segment-button ${lang === 'vi' ? 'is-selected' : ''}`}
+                                            onClick={() => setLang('vi')}
+                                            aria-pressed={lang === 'vi'}
+                                        >
+                                            Tiếng Việt
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={`segment-button ${lang === 'en' ? 'is-selected' : ''}`}
+                                            onClick={() => setLang('en')}
+                                            aria-pressed={lang === 'en'}
+                                        >
+                                            English
+                                        </button>
                                     </div>
+                                </div>
 
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-[10px] font-bold text-text-muted uppercase tracking-widest text-left">Thứ tự / Order</label>
-                                        <div className="flex bg-gray-100 p-1 rounded-xl gap-1">
-                                            <button
-                                                className={cn("flex-1 py-1.5 rounded-lg text-xs font-bold transition-all", order === 'random' ? "bg-primary text-white" : "text-text-muted")}
-                                                onClick={() => setOrder('random')}
-                                            >
-                                                Random
-                                            </button>
-                                            <button
-                                                className={cn("flex-1 py-1.5 rounded-lg text-xs font-bold transition-all", order === 'sequential' ? "bg-primary text-white" : "text-text-muted")}
-                                                onClick={() => setOrder('sequential')}
-                                            >
-                                                Normal
-                                            </button>
-                                        </div>
+                                <div className="settings-group" role="group" aria-labelledby="mode-label">
+                                    <span id="mode-label" className="settings-label">Chế độ / Mode</span>
+                                    <div className="segmented-control">
+                                        <button
+                                            type="button"
+                                            className={`segment-button ${mode === 'manual' ? 'is-selected' : ''}`}
+                                            onClick={() => setMode('manual')}
+                                            aria-pressed={mode === 'manual'}
+                                        >
+                                            Manual
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={`segment-button ${mode === 'auto' ? 'is-selected' : ''}`}
+                                            onClick={() => setMode('auto')}
+                                            aria-pressed={mode === 'auto'}
+                                        >
+                                            Auto
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="settings-group" role="group" aria-labelledby="order-label">
+                                    <span id="order-label" className="settings-label">Thứ tự / Order</span>
+                                    <div className="segmented-control">
+                                        <button
+                                            type="button"
+                                            className={`segment-button ${order === 'random' ? 'is-selected' : ''}`}
+                                            onClick={() => setOrder('random')}
+                                            aria-pressed={order === 'random'}
+                                        >
+                                            Random
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={`segment-button ${order === 'sequential' ? 'is-selected' : ''}`}
+                                            onClick={() => setOrder('sequential')}
+                                            aria-pressed={order === 'sequential'}
+                                        >
+                                            Normal
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -177,29 +218,31 @@ const App: React.FC = () => {
                     </div>
                 </header>
 
-                <nav className="flex justify-center gap-3 flex-wrap p-2">
-                    {(['all', 'letters', 'numbers', 'objects', 'colors', 'verbs', 'shapes'] as Category[]).map(cat => (
+                <nav className="category-nav" aria-label={lang === 'vi' ? 'Chọn chủ đề' : 'Choose a category'}>
+                    {CATEGORIES.map(cat => (
                         <button
+                            type="button"
                             key={cat}
-                            className={cn(
-                                "px-5 py-2.5 min-w-[90px] rounded-full border-2 border-text-muted bg-white text-text-muted font-main font-semibold text-sm shadow-[0_4px_0_var(--text-muted)] hover:-translate-y-0.5 hover:shadow-[0_6px_0_var(--text-muted)] active:translate-y-[2px] active:shadow-[0_2px_0_var(--text-muted)] transition-all",
-                                category === cat && "bg-primary text-white border-primary-dark shadow-[0_4px_0_var(--primary-dark)] hover:shadow-[0_6px_0_var(--primary-dark)] active:shadow-[0_2px_0_var(--primary-dark)]"
-                            )}
+                            className={`category-button ${category === cat ? 'is-selected' : ''}`}
                             onClick={() => setCategory(cat)}
+                            aria-pressed={category === cat}
                         >
                             {t[cat]}
                         </button>
                     ))}
                 </nav>
 
-                <DisplayArea item={currentItem} lang={lang} autoPlay={mode === 'auto'} />
+                <main className="learning-main">
+                    <DisplayArea item={currentItem} lang={lang} autoPlay={mode === 'auto'} progress={progress} />
 
-                <button
-                    className="mt-2 py-4 px-8 w-full max-w-[320px] mx-auto rounded-full border-4 border-primary-dark bg-primary text-white font-main font-bold text-xl shadow-[0_6px_0_var(--primary-dark)] hover:-translate-y-0.5 hover:shadow-[0_8px_0_var(--primary-dark)] active:translate-y-[4px] active:shadow-[0_2px_0_var(--primary-dark)] flex items-center justify-center gap-2 uppercase tracking-wide"
-                    onClick={() => selectNextItem()}
-                >
-                    {t.next} <ChevronRight className="w-6 h-6" />
-                </button>
+                    <button
+                        type="button"
+                        className="next-button"
+                        onClick={() => selectNextItem()}
+                    >
+                        {t.next} <ChevronRight className="next-icon" aria-hidden="true" />
+                    </button>
+                </main>
             </div>
         </div>
     );

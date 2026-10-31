@@ -14,6 +14,13 @@ A colorful, interactive flashcard PWA that helps young children learn to speak �
 - **PWA** — Installable on mobile devices for an app-like experience
 - **Fully Offline** — Works without an internet connection once installed
 
+## 📱 Responsive design states
+
+- **Mobile (<768px):** The learning card stays central and dominant. Categories remain a single, touch-friendly horizontal rail so long translations do not force a crowded wrap. Settings opens beside its 48px control and all controls use at least 44px touch targets.
+- **Desktop (≥768px):** The app uses a centered, wider frame; category choices wrap into a calm row above the card, while the next action remains directly below the learning content.
+
+The visual hierarchy is intentional: category selection is quiet, the learning card is the primary surface, audio controls are secondary actions within it, and the next button is the single primary action.
+
 ## 🖼️ Content
 
 | Category | Items |

@@ -2,20 +2,16 @@ import React from 'react';
 import { AppItem, Language } from '../types';
 import { useSpeech } from '../hooks/useSpeech';
 import { useRecording } from '../hooks/useRecording';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-function cn(...inputs: ClassValue[]) {
-    return twMerge(clsx(inputs));
-}
+import { Mic, Play, Square, Volume2 } from 'lucide-react';
 
 interface DisplayAreaProps {
     item: AppItem;
     lang: Language;
     autoPlay: boolean;
+    progress: string;
 }
 
-export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay }) => {
+export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, progress }) => {
     const { speak, isSpeaking } = useSpeech(lang);
     const { isRecording, audioUrl, startRecording, stopRecording, playRecording, cleanupRecording } = useRecording();
 
@@ -29,17 +25,21 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay }
     }, [item, lang, autoPlay, speak, itemName, cleanupRecording]);
 
     return (
-        <div className="h-[clamp(300px,50vh,450px)] flex flex-col justify-center items-center bg-white border-4 border-text-main rounded-3xl relative overflow-hidden p-8 shadow-neo-inset">
+        <section className="learning-card" aria-label="Learning card">
+            <div className="card-progress" role="status" aria-label={`Progress ${progress}`}>
+                <span>Progress</span>
+                <strong data-testid="progress">{progress}</strong>
+            </div>
             <div data-testid="display-item" className="animate-pop-in flex flex-col items-center w-full">
                 {item.type === 'shape' ? (
                     <div
-                        className="w-[clamp(150px,30vh,250px)] h-[clamp(150px,30vh,250px)] flex justify-center items-center hover:scale-110 hover:rotate-6 transition-transform duration-300 drop-shadow-xl"
+                        className="w-[clamp(150px,30vh,250px)] h-[clamp(150px,30vh,250px)] flex justify-center items-center hover:scale-105 hover:rotate-3 transition-transform duration-300 drop-shadow-md"
                         style={{ color: item.value.color }}
                         dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 100 100" width="100%" height="100%">${item.value.svg}</svg>` }}
                     />
                 ) : item.type === 'color' ? (
                     <div
-                        className="w-[clamp(150px,30vh,250px)] h-[clamp(150px,30vh,250px)] rounded-full border-4 border-white shadow-lg hover:scale-110 hover:-rotate-6 transition-transform duration-300"
+                        className="w-[clamp(150px,30vh,250px)] h-[clamp(150px,30vh,250px)] rounded-full border-2 border-white shadow-sm hover:scale-105 hover:-rotate-3 transition-transform duration-300"
                         style={{ backgroundColor: item.value.hex }}
                     />
                 ) : item.type === 'object' || item.type === 'verb' ? (
@@ -47,7 +47,7 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay }
                         <img
                             src={item.value.image}
                             alt={itemName}
-                            className="h-[clamp(150px,30vh,250px)] object-contain drop-shadow-xl hover:scale-110 hover:rotate-6 transition-transform duration-300"
+                            className="h-[clamp(150px,30vh,250px)] object-contain drop-shadow-md hover:scale-105 hover:rotate-3 transition-transform duration-300"
                         />
                     ) : (item.type === 'object' && 'emoji' in item.value) ? (
                         <span className="big-text emoji-text">{item.value.emoji}</span>
@@ -64,40 +64,40 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay }
                     </div>
                 )}
 
-                <div className="flex gap-4 mt-6 justify-center items-center w-full">
+                <div className="audio-controls" aria-label="Audio controls">
                     <button
-                        className={cn(
-                            "w-16 h-16 rounded-full border-4 border-text-muted bg-white flex justify-center items-center shadow-neo neo-btn text-2xl",
-                            isSpeaking && "animate-pulse shadow-[0_0_15px_var(--primary)]"
-                        )}
+                        type="button"
+                        className={`audio-button ${isSpeaking ? 'is-speaking' : ''}`}
                         onClick={() => speak(itemName)}
-                        title="Phát âm mẫu"
+                        aria-label="Play pronunciation"
+                        title="Play pronunciation"
                     >
-                        🔊
+                        <Volume2 aria-hidden="true" />
                     </button>
 
                     <button
-                        className={cn(
-                            "w-16 h-16 rounded-full border-4 border-text-muted bg-white flex justify-center items-center shadow-neo neo-btn text-2xl",
-                            isRecording && "bg-red-500 text-white animate-record-pulse"
-                        )}
+                        type="button"
+                        className={`audio-button ${isRecording ? 'is-recording' : ''}`}
                         onClick={isRecording ? stopRecording : startRecording}
-                        title={isRecording ? "Dừng ghi âm" : "Ghi âm"}
+                        aria-label={isRecording ? "Stop recording" : "Record your voice"}
+                        title={isRecording ? "Stop recording" : "Record your voice"}
                     >
-                        {isRecording ? '⏹️' : '🎤'}
+                        {isRecording ? <Square aria-hidden="true" /> : <Mic aria-hidden="true" />}
                     </button>
 
                     {audioUrl && (
                         <button
-                            className="w-16 h-16 rounded-full border-4 border-text-muted bg-white flex justify-center items-center shadow-neo neo-btn text-2xl text-primary"
+                            type="button"
+                            className="audio-button is-playback"
                             onClick={playRecording}
-                            title="Nghe lại"
+                            aria-label="Play recording"
+                            title="Play recording"
                         >
-                            ▶️
+                            <Play aria-hidden="true" />
                         </button>
                     )}
                 </div>
             </div>
-        </div>
+        </section>
     );
 };
