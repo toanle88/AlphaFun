@@ -61,8 +61,16 @@ Use `pnpm test` without `--run` for Vitest watch mode.
 AlphaFun targets current browsers with support for ES modules, CSS flex/grid, service workers, `MediaRecorder`, and the Web Speech API. The exact voice list and PWA installation UI vary by browser and operating system.
 
 - Voice recording requires microphone permission and a secure context: HTTPS in deployment or `localhost` during development. The feature is unavailable when `MediaRecorder` or microphone access is not supported, denied, or blocked by browser policy.
+- Recording is intentionally local and temporary: audio is held in memory as a browser object URL, is revoked when replaced or when the page is closed, and is never uploaded by AlphaFun. A parent or guardian should review the browser permission prompt and supervise a child's use; do not enter names or other identifying information into the app or share recordings from the browser.
 - Speech uses the browser's Web Speech API. Available voices, pronunciation quality, and offline speech support are browser/OS dependent; the app cannot guarantee that a requested voice exists or that speech works without network access.
 - The app does not request camera, location, or other permissions.
+
+AlphaFun is designed as a child-facing learning interface, not an account or
+social service. It does not intentionally collect child profiles, analytics,
+cookies, or recordings. Guardians remain responsible for deciding whether the
+browser, operating system speech services, and external Google Fonts are
+appropriate for their setting; those platform services may have their own
+privacy policies.
 
 ## PWA installation and offline behavior
 

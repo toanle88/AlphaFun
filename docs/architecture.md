@@ -49,3 +49,20 @@ synthesis and voice data are controlled by the browser and operating system and
 may use platform services according to their policies. Google Fonts are loaded
 from `fonts.googleapis.com` and `fonts.gstatic.com`; changes to external
 resources must be documented and reviewed for privacy impact.
+
+## Child privacy and microphone use
+
+AlphaFun is a child-facing learning tool without accounts, analytics, cookies,
+or a server-side application API. It does not intentionally collect child
+profiles or identifying information. Parents and guardians should supervise
+use, review the browser's microphone permission prompt, and avoid entering
+names or other personal information into the app.
+
+Recording uses `getUserMedia({ audio: true })` only after the user starts the
+recording control. The browser's permission and secure-context rules apply.
+The resulting audio stays in memory as a local Blob URL, is not uploaded by the
+application, and is revoked when replaced or when the component is unmounted.
+Guardians should clear the browser's site data or close the page if they want to
+remove the current local session immediately. Browser speech synthesis and
+Google Fonts are external platform resources and may be governed by their own
+privacy policies; the app does not control those services.
