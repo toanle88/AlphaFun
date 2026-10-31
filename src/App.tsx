@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
     Language, Category, Mode, Order, AppItem
 } from './types';
@@ -34,6 +34,9 @@ const App: React.FC = () => {
     const [showSettings, setShowSettings] = useState(false);
     const [sequentialIndex, setSequentialIndex] = useState(0);
     const [currentItem, setCurrentItem] = useState<AppItem | null>(null);
+    const settingsButtonRef = useRef<HTMLButtonElement>(null);
+    const firstSettingsControlRef = useRef<HTMLButtonElement>(null);
+    const settingsWasOpenRef = useRef(false);
 
     const pool = useMemo(() => {
         let items: AppItem[] = [];
@@ -111,6 +114,16 @@ const App: React.FC = () => {
         return () => document.removeEventListener('keydown', closeOnEscape);
     }, [showSettings]);
 
+    useEffect(() => {
+        if (showSettings) {
+            firstSettingsControlRef.current?.focus();
+            settingsWasOpenRef.current = true;
+        } else if (settingsWasOpenRef.current) {
+            settingsButtonRef.current?.focus();
+            settingsWasOpenRef.current = false;
+        }
+    }, [showSettings]);
+
     const t = UI_TEXT[lang];
     const currentPosition = currentItem
         ? pool.findIndex(item => getItemIdentifier(item) === getItemIdentifier(currentItem)) + 1
@@ -132,6 +145,7 @@ const App: React.FC = () => {
                         <button
                             type="button"
                             className="icon-button"
+                            ref={settingsButtonRef}
                             onClick={() => setShowSettings(!showSettings)}
                             aria-label={showSettings ? 'Close settings' : 'Open settings'}
                             aria-expanded={showSettings}
@@ -142,10 +156,16 @@ const App: React.FC = () => {
                         </button>
 
                         {showSettings && (
-                            <div id="settings-panel" className="settings-panel" role="dialog" aria-label="Learning settings">
+                            <div
+                                id="settings-panel"
+                                className="settings-panel"
+                                role="dialog"
+                                aria-labelledby="settings-title"
+                                aria-describedby="settings-hint"
+                            >
                                 <div className="settings-heading">
-                                    <span>Settings</span>
-                                    <span className="settings-hint">Tap to change</span>
+                                    <span id="settings-title">Learning settings</span>
+                                    <span id="settings-hint" className="settings-hint">Tap to change</span>
                                 </div>
 
                                 <div className="settings-group" role="group" aria-labelledby="language-label">
@@ -154,6 +174,7 @@ const App: React.FC = () => {
                                         <button
                                             type="button"
                                             className={`segment-button ${lang === 'vi' ? 'is-selected' : ''}`}
+                                            ref={firstSettingsControlRef}
                                             onClick={() => setLang('vi')}
                                             aria-pressed={lang === 'vi'}
                                         >
@@ -238,6 +259,7 @@ const App: React.FC = () => {
                     <button
                         type="button"
                         className="next-button"
+                        aria-label={lang === 'vi' ? 'Mục tiếp theo' : 'Next item'}
                         onClick={() => selectNextItem()}
                     >
                         {t.next} <ChevronRight className="next-icon" aria-hidden="true" />

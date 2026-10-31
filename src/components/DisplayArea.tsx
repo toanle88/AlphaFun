@@ -29,7 +29,7 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, 
 
     return (
         <section className="learning-card" aria-label="Learning card">
-            <div className="card-progress" role="status" aria-label={`Progress ${progress}`}>
+            <div className="card-progress" role="group" aria-label={`Progress ${progress}`}>
                 <span>Progress</span>
                 <strong data-testid="progress">{progress}</strong>
             </div>
@@ -83,6 +83,7 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, 
                         className={`audio-button ${isRecording ? 'is-recording' : ''}`}
                         onClick={isRecording ? stopRecording : startRecording}
                         aria-label={isRecording ? "Stop recording" : "Record your voice"}
+                        aria-pressed={isRecording}
                         title={isRecording ? "Stop recording" : "Record your voice"}
                     >
                         {isRecording ? <Square aria-hidden="true" /> : <Mic aria-hidden="true" />}
@@ -100,6 +101,15 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, 
                         </button>
                     )}
                 </div>
+                <p className="audio-status" role="status" aria-live="polite">
+                    {isSpeaking
+                        ? (lang === 'vi' ? 'Đang phát âm' : 'Speaking')
+                        : isRecording
+                            ? (lang === 'vi' ? 'Đang ghi âm' : 'Recording')
+                            : audioUrl
+                                ? (lang === 'vi' ? 'Bản ghi đã sẵn sàng để phát lại' : 'Recording ready to replay')
+                                : (lang === 'vi' ? 'Sẵn sàng' : 'Ready')}
+                </p>
             </div>
         </section>
     );

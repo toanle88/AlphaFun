@@ -14,7 +14,7 @@
   --text-muted: #64747b;
   --line: #dce8e5;
   --soft-surface: #f1f7f5;
-  --focus-ring: rgba(78, 205, 196, 0.35);
+  --focus-ring: #147d77;
 
   --font-main: 'Fredoka', 'Nunito', sans-serif;
 }
@@ -299,6 +299,15 @@
     gap: 0.65rem;
     width: 100%;
     margin-top: 1.5rem;
+  }
+
+  .audio-status {
+    min-height: 1.25rem;
+    margin-top: 0.55rem;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-align: center;
   }
 
   .audio-button {

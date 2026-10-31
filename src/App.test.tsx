@@ -44,6 +44,70 @@ describe('App Component', () => {
         expect(screen.getByRole('button', { name: 'Open settings' })).toHaveAttribute('aria-expanded', 'false')
     })
 
+    it('moves focus into settings and restores it after Escape or trigger dismissal', () => {
+        render(<App />)
+
+        const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
+        fireEvent.click(settingsBtn)
+        expect(screen.getByRole('button', { name: 'Tiếng Việt' })).toHaveFocus()
+
+        fireEvent.keyDown(document, { key: 'Escape' })
+        expect(screen.getByRole('button', { name: 'Open settings' })).toHaveFocus()
+
+        fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+        expect(screen.getByRole('button', { name: 'Tiếng Việt' })).toHaveFocus()
+        fireEvent.click(screen.getByRole('button', { name: 'Close settings' }))
+        expect(screen.getByRole('button', { name: 'Open settings' })).toHaveFocus()
+    })
+
+    it('exposes names and states for the main learning controls', () => {
+        render(<App />)
+
+        screen.getAllByRole('button').forEach((button) => {
+            expect(button).toHaveAccessibleName()
+        })
+        expect(screen.getByRole('button', { name: 'Tất cả' })).toHaveAttribute('aria-pressed', 'true')
+        expect(screen.getByRole('button', { name: 'Chữ cái' })).toHaveAttribute('aria-pressed', 'false')
+        expect(screen.getByRole('button', { name: 'Record your voice' })).toHaveAttribute('aria-pressed', 'false')
+        expect(screen.getByRole('status')).toHaveTextContent('Sẵn sàng')
+    })
+
+    it('announces the selected value in every settings group', () => {
+        render(<App />)
+        fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+
+        const assertPressed = (name: string, pressed: boolean) => {
+            expect(screen.getByRole('button', { name })).toHaveAttribute('aria-pressed', String(pressed))
+        }
+
+        assertPressed('Tiếng Việt', true)
+        assertPressed('English', false)
+        fireEvent.click(screen.getByRole('button', { name: 'English' }))
+        assertPressed('Tiếng Việt', false)
+        assertPressed('English', true)
+
+        assertPressed('Manual', true)
+        assertPressed('Auto', false)
+        fireEvent.click(screen.getByRole('button', { name: 'Auto' }))
+        assertPressed('Manual', false)
+        assertPressed('Auto', true)
+
+        assertPressed('Random', true)
+        assertPressed('Normal', false)
+        fireEvent.click(screen.getByRole('button', { name: 'Normal' }))
+        assertPressed('Random', false)
+        assertPressed('Normal', true)
+    })
+
+    it('keeps every main control keyboard-focusable', () => {
+        render(<App />)
+
+        screen.getAllByRole('button').forEach((button) => {
+            button.focus()
+            expect(button).toHaveFocus()
+        })
+    })
+
     it('updates the progress total when a category is selected', () => {
         render(<App />)
 
