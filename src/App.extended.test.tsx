@@ -8,6 +8,8 @@ describe('App Component Extended Tests', () => {
     })
 
     afterEach(() => {
+        vi.useRealTimers()
+        vi.unstubAllGlobals()
         vi.restoreAllMocks()
     })
 
@@ -101,5 +103,76 @@ describe('App Component Extended Tests', () => {
         fireEvent.click(nextBtn)
         const secondItem = screen.getByTestId('display-item').textContent
         expect(secondItem).not.toBe(firstItem)
+    })
+
+    it('shows a completed recording for replay and cleans it up on unmount', async () => {
+        const tracks = [{ stop: vi.fn() }]
+        const createObjectURL = vi.fn(() => 'blob:app-recording')
+        const revokeObjectURL = vi.fn()
+        const play = vi.fn(() => Promise.resolve())
+        const recorderInstances: Array<{
+            ondataavailable: ((event: BlobEvent) => void) | null
+        }> = []
+
+        class TestMediaRecorder {
+            mimeType = 'audio/webm;codecs=opus'
+            state = 'inactive'
+            stream = { getTracks: () => tracks }
+            ondataavailable: ((event: BlobEvent) => void) | null = null
+            onstop: (() => void) | null = null
+
+            constructor() {
+                recorderInstances.push(this)
+            }
+
+            start = vi.fn(() => {
+                this.state = 'recording'
+            })
+
+            stop = vi.fn(() => {
+                this.state = 'inactive'
+                this.onstop?.()
+            })
+        }
+
+        vi.stubGlobal('MediaRecorder', TestMediaRecorder)
+        vi.stubGlobal('URL', { createObjectURL, revokeObjectURL })
+        vi.stubGlobal('Audio', vi.fn(() => ({ play })))
+        vi.mocked(navigator.mediaDevices.getUserMedia).mockResolvedValue({
+            getTracks: () => tracks,
+        } as unknown as MediaStream)
+
+        const { unmount } = render(<App />)
+        await act(async () => {
+            fireEvent.click(screen.getByRole('button', { name: 'Record your voice' }))
+            await Promise.resolve()
+        })
+
+        const recorder = recorderInstances[0]
+        expect(screen.getByRole('button', { name: 'Stop recording' })).toBeInTheDocument()
+
+        act(() => {
+            recorder.ondataavailable?.({
+                data: new Blob(['recorded audio'], { type: 'audio/webm' }),
+            } as BlobEvent)
+            fireEvent.click(screen.getByRole('button', { name: 'Stop recording' }))
+        })
+
+        expect(screen.getByRole('button', { name: 'Play recording' })).toBeInTheDocument()
+        expect(screen.getByRole('status')).toHaveTextContent('Bản ghi đã sẵn sàng để phát lại')
+
+        unmount()
+        expect(revokeObjectURL).toHaveBeenCalledWith('blob:app-recording')
+    })
+
+    it('clears the auto-play interval when the app unmounts', () => {
+        const clearInterval = vi.spyOn(window, 'clearInterval')
+        const { unmount } = render(<App />)
+
+        fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+        fireEvent.click(screen.getByText('Auto'))
+        unmount()
+
+        expect(clearInterval).toHaveBeenCalled()
     })
 })

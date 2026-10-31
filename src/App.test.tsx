@@ -36,7 +36,7 @@ describe('App Component', () => {
         expect(settingsBtn).toHaveAttribute('aria-expanded', 'false')
         fireEvent.click(settingsBtn)
 
-        expect(screen.getByRole('dialog', { name: 'Learning settings' })).toBeInTheDocument()
+        expect(screen.getByRole('dialog', { name: 'Learning settings' })).toHaveAttribute('aria-modal', 'true')
         expect(screen.getByRole('button', { name: 'Close settings' })).toHaveAttribute('aria-expanded', 'true')
 
         fireEvent.keyDown(document, { key: 'Escape' })

@@ -30,4 +30,29 @@ describe('useSpeech', () => {
     expect(utterance.lang).toBe('en-US')
     expect(utterance.voice).toBeNull()
   })
+
+  it('selects an available English voice', () => {
+    const enVoice = { lang: 'en-GB', name: 'English' } as SpeechSynthesisVoice
+    vi.mocked(window.speechSynthesis.getVoices).mockReturnValue([enVoice])
+    const { result } = renderHook(() => useSpeech('en'))
+
+    act(() => result.current.speak('hello'))
+
+    const utterance = vi.mocked(window.speechSynthesis.speak).mock.calls[0][0]
+    expect(utterance.lang).toBe('en-US')
+    expect(utterance.voice).toBe(enVoice)
+  })
+
+  it('refreshes voices when the browser fires voiceschanged', () => {
+    const enVoice = { lang: 'en-US', name: 'English' } as SpeechSynthesisVoice
+    vi.mocked(window.speechSynthesis.getVoices).mockReturnValue([])
+    const { result } = renderHook(() => useSpeech('en'))
+
+    vi.mocked(window.speechSynthesis.getVoices).mockReturnValue([enVoice])
+    act(() => window.speechSynthesis.onvoiceschanged?.(new Event('voiceschanged')))
+    act(() => result.current.speak('hello'))
+
+    const utterance = vi.mocked(window.speechSynthesis.speak).mock.calls[0][0]
+    expect(utterance.voice).toBe(enVoice)
+  })
 })
