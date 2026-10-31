@@ -99,6 +99,14 @@ The image migration and before/after byte counts are recorded in [`docs/image-op
 
 The application is deployed as an Azure Static Web App through `.github/workflows/deploy.yml`. That workflow installs the locked dependencies, runs type-checking, linting, the test suite, and the production build, then deploys `dist/`. Infrastructure changes are handled separately by `.github/workflows/infrastructure.yml`.
 
+## Contributor and maintainer documentation
+
+- [Contributing guide](CONTRIBUTING.md)
+- [Code of Conduct](CODE_OF_CONDUCT.md)
+- [Security policy](SECURITY.md)
+- [Architecture, browser, accessibility, and privacy notes](docs/architecture.md)
+- [Deployment and rollback runbook](docs/deployment.md)
+
 ## License
 
 AlphaFun source code is released under the [MIT License](LICENSE). The bundled

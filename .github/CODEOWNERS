@@ -1,0 +1,7 @@
+# Default owners for every file. Replace this team with the repository's
+# active maintainer team if the GitHub organization uses a different handle.
+* @alphafun/maintainers
+
+# Deployment and infrastructure changes need maintainer review.
+/.github/ @alphafun/maintainers
+/infra/ @alphafun/maintainers
