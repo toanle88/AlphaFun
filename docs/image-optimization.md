@@ -19,11 +19,10 @@ config files, so the installed service worker precaches the complete learning se
 for offline use without admitting legacy JPG/PNG files. The unused Vite starter
 SVG was also removed from `public/`, keeping it out of the app-shell precache.
 
-The 34 WebP files and the three PWA icons are original AlphaFun artwork released
-under the MIT License with attribution to AlphaFun contributors. Their exact
-SHA-256 fingerprints and the WebP/PNG conversion notes are maintained in
-[`asset-provenance.json`](../asset-provenance.json); the licensing test checks
-that the ledger and bundled files stay in sync.
+The 34 WebP files and three PWA icons are original AlphaFun artwork authored by
+`scripts/generate-original-art.mjs`. Their SHA-256 fingerprints and conversion
+notes are maintained in `asset-provenance.json`; the licensing test checks that
+the ledger and bundled files stay in sync.
 
 The display mounts one learning image at a time, so each image is the current
 card rather than an offscreen candidate. Images therefore remain eager and use

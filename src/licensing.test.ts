@@ -54,14 +54,14 @@ describe('public release licensing metadata', () => {
     expect(thirdPartyNotices).toContain('Learning content audit')
     expect(thirdPartyNotices).not.toContain('unresolved provenance')
     expect(thirdPartyNotices).not.toContain('redistribution rights cannot be verified')
-    expect(readme).toMatch(/visual assets are attributed to AlphaFun\s+contributors/)
+    expect(readme).toMatch(/visual assets are original AlphaFun\s+artwork/)
     expect(readme).not.toContain('have unresolved provenance and are excluded')
   })
 
   it('records complete, hash-pinned provenance for every bundled visual asset', () => {
     const recordedAssets = Object.keys(assetProvenance.assets).sort()
 
-    expect(assetProvenance.schemaVersion).toBe(1)
+    expect(assetProvenance.schemaVersion).toBe(2)
     expect(assetProvenance.default).toEqual({
       creator: 'AlphaFun contributors',
       license: 'MIT',
@@ -76,7 +76,7 @@ describe('public release licensing metadata', () => {
       expect(effectiveRecord.creator).toBeTruthy()
       expect(effectiveRecord.license).toBe('MIT')
       expect(effectiveRecord.attribution).toBeTruthy()
-      expect(effectiveRecord.source).toBeTruthy()
+      expect(effectiveRecord.source).toContain('generate-original-art.mjs')
       expect(effectiveRecord.modifications).toBeTruthy()
       const hash = createHash('sha256').update(readFileSync(path)).digest('hex')
       expect(hash).toBe(effectiveRecord.sha256)

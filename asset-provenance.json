@@ -1,5 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "default": {
     "creator": "AlphaFun contributors",
     "license": "MIT",
@@ -7,189 +7,189 @@
   },
   "assets": {
     "public/images/apple.webp": {
-      "sha256": "183bd2ee2cacd92d722797157356f83c65d8b6fa8f41b221260f4f0b003170e5",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/ball.webp": {
-      "sha256": "c97ab3b581b98ecbedf08580030a138ed8eab4f7ad4abf8a61bd564982e7b7ca",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/banana.webp": {
-      "sha256": "28dcce8cc2b12017b658316683973e59200a1d92f6f4c4b0488aa24028f30d82",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/bird.webp": {
-      "sha256": "852011a71782582a2711fc5644dd33536c71c64980fc49edc4460a683639aa19",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/book.webp": {
-      "sha256": "1f1c36124b8dd2508a09441c65ab7be96ba55222ee1ded433d6ee1dc0d7d1d9d",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
+      "sha256": "81f9812f8271c53c5a3d74716d1ac95699f1086bb54911a314b0a1e22a536915",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
     },
     "public/images/car.webp": {
-      "sha256": "932349047df75ca8454f3de9f6225f36876b102fbcf6ef006e1f82c14b087118",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/cat.webp": {
-      "sha256": "bab206303c59dd76f94b0ea43bf03e09fb77cd4018d40644366d49641bb58910",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/chair.webp": {
-      "sha256": "bc9da09a90fdc371232dae99e1e74b10815e582f95e0bbed5150440cc3986fe6",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/clap.webp": {
-      "sha256": "d254050ec3bb7b2c88f6c57a9f229aa62eb5721c98ab6192b5b095e049ddbb3e",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/cry.webp": {
-      "sha256": "c3271c57c3426d25976af6a812359c448722ac84f8811d8c665264ee0e950253",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/dance.webp": {
-      "sha256": "01cab24e416c2571d936e41ce5ca0187d6faf67dd26172f9f029be726cbc013a",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
+      "sha256": "f1daba54baa6e99936a260ef22f9f51c3ede32d0b4ffad539b3b927297bab03d",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
     },
     "public/images/dog.webp": {
-      "sha256": "025c2058f721fc64d05e50f4d6117faf6823ff727f9ad65e1fc4e4dd4db78510",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
+      "sha256": "f1dab2b7cf6c130b652d744766a4d24afbfc4f6b078463d0208cc8f6abdf7c7f",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
     },
-    "public/images/drink.webp": {
-      "sha256": "54ef0f1ed646f9ee3ee30acac51e05a23707f66419f8445bfc919aac11a183e9",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/eat.webp": {
-      "sha256": "12b4855f8f9b0b738200f1bf6aff0cfba7d455dd74f535313eec7916bcffd394",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/fish.webp": {
-      "sha256": "02ccffb92d8507bdc780f99ccedaccc1855bc6b19789daa9a85a6e105f788363",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/flower.webp": {
-      "sha256": "f6b3e6a0264e184fc0ee49df8e044dfe1066b4791ce64e6e9e0d590147e7c147",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/hat.webp": {
-      "sha256": "ae9b509ae70f48d26a2d00896dfff17ee116e775a1e23da27b1ae5e3e2c10213",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/house.webp": {
-      "sha256": "c55ca0f4f3fc60defdfe08cbab608871ac5e28936f06ed31c456a9255e27f04e",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/jump.webp": {
-      "sha256": "01af6c4e2a448cd97dc7a8431903eea92e32c20b10cad268635fb00ae012694b",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/laugh.webp": {
-      "sha256": "8cf37c2c74be9571cff22498659e4684edbfccbb89c02593b2388208935bb62f",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/moon.webp": {
-      "sha256": "3a00a3b0279b16d698d822f92374630840b45e03a1bec953b7871ff0d09878eb",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/orange.webp": {
-      "sha256": "0355fac932e3967a20bca11e4ea081409f507ea717269f7182d15334aae5b9b3",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/rabbit.webp": {
-      "sha256": "895c85e3edd15b3893f16bf94f566a536bc7966ae0a92d72233f127427092bec",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/read.webp": {
-      "sha256": "2fd29fc656075fc6eb4533f82be012097bdab726589dc76c839cc221de7796ae",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/run.webp": {
-      "sha256": "0914a70a94a5b4050123df0c14b8b8e66c5c8ab377cea7ac364914b444816a20",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/sing.webp": {
-      "sha256": "20551d7b9e2c1e32f393fffb402e402fab0004ed39135a11b273fb8d638daade",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/sleep.webp": {
-      "sha256": "54419cc846622e1acbaf5eaca1b705f32651a23969342233721f894c55f6e7ac",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
-    },
-    "public/images/star.webp": {
-      "sha256": "bca159c49d0c267ca5bc0f827c5cc9a02132287b7b4707661e3d032b97490402",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
+    "public/images/bird.webp": {
+      "sha256": "ba2e0b90dbd6ccd0b11558363ec887f0a2cd1145743eabddf5834fba68d9f9a3",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
     },
     "public/images/sun.webp": {
-      "sha256": "c92127517f17350946a19a973b77f08d005f8284d24bbe9e9888f098c47e2c34",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
+      "sha256": "94fbfd458c59fb3df3397199993384ce269598867a8afb6ae31d62478350d34c",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
     },
-    "public/images/swim.webp": {
-      "sha256": "ae433b28d21b7a44a42c922299e22da1b7f1adc17298c8250ac13af5c55ea067",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
+    "public/images/banana.webp": {
+      "sha256": "92232a8d4c38b915d92de3677bf63955058a4817c37157f0df2b7a30af5603d6",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
     },
-    "public/images/table.webp": {
-      "sha256": "f58cc3261c02f38f0d31d983a8cc773202867c9648db0cf0bf2068c1fcfabe2b",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
+    "public/images/cat.webp": {
+      "sha256": "5946d24d476f2e1b134d8158f3f77859b6a1c2839145a87ad14ef6dfd08f14db",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/house.webp": {
+      "sha256": "b80c39ccb04e8f0b14f49166e16eaae7a46f1c43bae7afd109d30dc3a0e5b2bc",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/ball.webp": {
+      "sha256": "30764c212dfe481bb3a4a03bca5c0ff9a3d7ff77abdbc4095bd99af946fd7cd9",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/flower.webp": {
+      "sha256": "7d132595cf50411a576658928e5cc0b6fefba2b1325d4f9acdd1adf1609d2bea",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/fish.webp": {
+      "sha256": "14091132129fce98530c2fe04099003d0fb8199de1b7ba28861cb4b1b341a608",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
     },
     "public/images/tree.webp": {
-      "sha256": "cc57ed1196b89b2db2c169f51e09b7a693764999227d12faa378b8071759fd44",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
+      "sha256": "ed412ea6f1d7d3062a3bccf7153ba8b5e32572a99a5d2cc7f1c2b77b5a553b1f",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/book.webp": {
+      "sha256": "c163dab9f972fad096b5cd49cb90b574cad6286feec9eaebf52911f3d0fd56f4",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/hat.webp": {
+      "sha256": "fec960a6a3e9fa2f2cacd517321e41e1d4a2f6e8063f91cf6dd1e3c9e89ab0d0",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/orange.webp": {
+      "sha256": "bfde81979277e112ea97c904cf76fdefa5a1f46dbe20ff22e4fa48e713d2d9e9",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/rabbit.webp": {
+      "sha256": "18a70b37b3468711f8b30f474eaf72d04ea2e124679e6ccc965bbd11e902ebdb",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/moon.webp": {
+      "sha256": "8faa0f5adb13ee7ec3af8c99573795deb16244e32e9c9b04f9ee4b0f255db15f",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/star.webp": {
+      "sha256": "cb0b220717294bc6d86276749f3304bcd9e5db2e1f3b4f74715e2fb9e707dff6",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/table.webp": {
+      "sha256": "da90944ccbd69f33aa45dfa5c75ec52b089dc0613e73e5412f580307a404a950",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/chair.webp": {
+      "sha256": "fa32b0dc6aac0d633df70b42b6cbe0d0800b39777d873c0c9ecdf77f4bbab037",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x763 WebP for the learning card."
+    },
+    "public/images/jump.webp": {
+      "sha256": "1c57d1265a4b8517120f0a7067b6a1bcd07b1e349d25b7d8c14f1b211c1ba6e8",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
+    },
+    "public/images/run.webp": {
+      "sha256": "fd4ff85b403d03f708f65a384ae7ee239cbec899894cfc4a0ea870b20fbcc310",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
+    },
+    "public/images/eat.webp": {
+      "sha256": "8bd94e249d426e2e42d4f5ef222f580e5aee9168f05f00cb3ac9aa54967de64e",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
+    },
+    "public/images/drink.webp": {
+      "sha256": "6275385a13f303ac63522893ced56a0a73f334b0f4daab6ee72bcd100cf1442d",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
+    },
+    "public/images/sleep.webp": {
+      "sha256": "a9d7a722ed6b3a46e537ff42a1d9961e3c80000a832d26b1d45268bcbd069b79",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
     },
     "public/images/walk.webp": {
-      "sha256": "57b5d64703b51bd9128d21faf01f9a5304caede2b8506553f02ca29324a40eb5",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
+      "sha256": "80d96f9d67b2e31918ccf6e29efce42e0a02a7ccf8d433e1c3a8a75b4e7fe353",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
+    },
+    "public/images/laugh.webp": {
+      "sha256": "fbff6edffee884ff56bcb83718d17cb65e593f20687f4529131e7d6b1c64ee26",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
+    },
+    "public/images/cry.webp": {
+      "sha256": "08a288fe3bf530a9efb9671c0be4cb4188ae6222254bc26af252c61be249ce16",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x768 WebP for the learning card."
+    },
+    "public/images/read.webp": {
+      "sha256": "89dc192ecb90eee59328e35afa41ada033f05bf120e81d48f926fd8a3163f5e9",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
     },
     "public/images/write.webp": {
-      "sha256": "a259fa6ca7c6615e89c7fb4d04b231b4ab75715fe543ab93974e04910f8dca2e",
-      "source": "Original AlphaFun artwork created for this repository",
-      "modifications": "WebP derivative at the display dimensions used by the app."
+      "sha256": "3825b9259b984db5055d6e43f087c4aebe3101dd56ca769e3a945ea4f49a043b",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
+    },
+    "public/images/sing.webp": {
+      "sha256": "73b75c9d114ad60bbd5d89a1754c177aaf5a8714827664376b3f836305659345",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
+    },
+    "public/images/swim.webp": {
+      "sha256": "0f78d75dad03dfa0806e653a4d61f2dff4130e566120a95a866a6a70d448e996",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
+    },
+    "public/images/clap.webp": {
+      "sha256": "7af7cb26ca12a9d5f86372a9826c5cec1dd26e1ed552ec1e54173a058ccf2804",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
+    },
+    "public/images/dance.webp": {
+      "sha256": "e19bfafef3517ff0b09790dff54c614b608ab26a3e9873f98780a198e91cd6c9",
+      "source": "Original AlphaFun artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 WebP for the learning card."
     },
     "public/alphafun-icon.svg": {
-      "sha256": "8321f52054e62a37b13a1becf6b0ec3d7611aabbe41825dc95f33a0983880158",
-      "source": "Original AlphaFun icon artwork created in this repository",
-      "modifications": "None."
+      "sha256": "8156c75cbdafcf22fe65af8bbc4fe7e73ea0edb53e1af3af7d2f24b3a37943b1",
+      "source": "Original AlphaFun icon artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Source SVG used directly by the browser and as the PNG export source."
     },
     "public/alphafun-icon-192.png": {
-      "sha256": "87502e9c4777194a9fcc834845edcc9b79d6ed86a79c95f25ea98aa30187fd67",
-      "source": "Raster export of the original AlphaFun icon artwork in this repository",
-      "modifications": "PNG export at 192x192 pixels."
+      "sha256": "588531441495f6107ba1027bf3708ca7e85f02ed30a9cf62cd64ac2b20c046b7",
+      "source": "Original AlphaFun icon artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 192x192 PNG for PWA installation."
     },
     "public/alphafun-icon-512.png": {
-      "sha256": "62e922fc242f13c0b85be1a52a690b7559fc6e3cdd18f36f77da989cd52699c4",
-      "source": "Raster export of the original AlphaFun icon artwork in this repository",
-      "modifications": "PNG export at 512x512 pixels."
+      "sha256": "3e0371ab7609e41d006c0360404fc85cbbc38b121a019f7d99fd6bd14a171fd6",
+      "source": "Original AlphaFun icon artwork authored in scripts/generate-original-art.mjs",
+      "modifications": "Rasterized to 512x512 PNG for PWA installation."
     }
   }
 }

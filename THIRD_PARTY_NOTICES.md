@@ -6,17 +6,19 @@ sourced fonts and dependencies listed later in this file.
 
 ### Bundled visual assets
 
-The 34 WebP learning illustrations under `public/images/` and the three PWA
-icons named `public/alphafun-icon*` are original AlphaFun artwork created for
-this repository by AlphaFun contributors. AlphaFun contributors grant
-permission to copy, modify, and redistribute these files under the MIT License.
-The required attribution is **AlphaFun contributors**.
+The repository contains 34 WebP learning illustrations under
+`public/images/` and three PWA icon files named `public/alphafun-icon*`.
+These files are original AlphaFun artwork authored in
+[`scripts/generate-original-art.mjs`](scripts/generate-original-art.mjs), with
+no external source artwork or downloaded character design retained in the
+repository. AlphaFun contributors grant permission to copy, modify, and
+redistribute these files under the MIT License; the required attribution is
+**AlphaFun contributors**.
 
-The exact file list, SHA-256 fingerprints, source declarations, license, and
-conversion notes are recorded in [`asset-provenance.json`](asset-provenance.json).
-The licensing regression test verifies that every bundled visual file has one
-complete ledger entry and that its fingerprint still matches the recorded
-source artifact.
+The exact file list, SHA-256 fingerprints, source declarations, and conversion
+notes are recorded in [`asset-provenance.json`](asset-provenance.json). The
+licensing regression test verifies that every bundled visual file has one
+complete ledger entry and that its fingerprint still matches the file.
 
 ### Learning content audit
 
@@ -45,10 +47,10 @@ remain under their own licenses:
 | Package          | Resolved version | License |
 | ---------------- | ---------------: | ------- |
 | `clsx`           |            2.1.1 | MIT     |
-| `lucide-react`   |           1.63.0 | ISC     |
-| `react`          |           19.3.1 | MIT     |
-| `react-dom`      |           19.3.1 | MIT     |
-| `tailwind-merge` |            3.7.0 | MIT     |
+| `lucide-react`   |          0.428.0 | ISC     |
+| `react`          |           18.3.1 | MIT     |
+| `react-dom`      |           18.3.1 | MIT     |
+| `tailwind-merge` |            2.6.1 | MIT     |
 
 The Lucide icons used by the application are provided by `lucide-react` and
 are covered by its ISC license. The package's license text is available in
