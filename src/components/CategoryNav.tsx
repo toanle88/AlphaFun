@@ -1,6 +1,6 @@
-import React from 'react';
-import { Category, Language } from '../types';
-import { UI_TEXT } from '../constants/data';
+import React from 'react'
+import { Category, Language } from '../types'
+import { UI_TEXT } from '../constants/data'
 
 export const CATEGORIES: Category[] = [
   'all',
@@ -10,20 +10,16 @@ export const CATEGORIES: Category[] = [
   'colors',
   'verbs',
   'shapes',
-];
+]
 
 interface CategoryNavProps {
-  category: Category;
-  lang: Language;
-  onCategoryChange: (category: Category) => void;
+  category: Category
+  lang: Language
+  onCategoryChange: (category: Category) => void
 }
 
-export const CategoryNav: React.FC<CategoryNavProps> = ({
-  category,
-  lang,
-  onCategoryChange,
-}) => {
-  const labels = UI_TEXT[lang];
+export const CategoryNav: React.FC<CategoryNavProps> = ({ category, lang, onCategoryChange }) => {
+  const labels = UI_TEXT[lang]
 
   return (
     <nav className="category-nav" aria-label={lang === 'vi' ? 'Chọn chủ đề' : 'Choose a category'}>
@@ -39,5 +35,5 @@ export const CategoryNav: React.FC<CategoryNavProps> = ({
         </button>
       ))}
     </nav>
-  );
-};
+  )
+}

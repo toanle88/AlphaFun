@@ -1,186 +1,186 @@
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react'
 
 const stopStream = (stream: MediaStream | null | undefined) => {
   if (!stream) {
-    return;
+    return
   }
 
-  let tracks: MediaStreamTrack[];
+  let tracks: MediaStreamTrack[]
   try {
-    tracks = stream.getTracks();
+    tracks = stream.getTracks()
   } catch {
-    return;
+    return
   }
 
   tracks.forEach((track) => {
     try {
-      track.stop();
+      track.stop()
     } catch {
       // Continue stopping the remaining tracks if one track fails.
     }
-  });
-};
+  })
+}
 
 const stopRecorder = (mediaRecorder: MediaRecorder) => {
   try {
     if (mediaRecorder.state !== 'inactive') {
-      mediaRecorder.stop();
+      mediaRecorder.stop()
     }
   } catch {
     // Cleanup must still release the stream if the recorder is already closing.
   } finally {
     try {
-      stopStream(mediaRecorder.stream);
+      stopStream(mediaRecorder.stream)
     } catch {
       // Some test doubles and partially initialized recorders may not expose a stream.
     }
   }
-};
+}
 
 export const useRecording = () => {
-  const [isRecording, setIsRecording] = useState(false);
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
-  const audioUrlRef = useRef<string | null>(null);
-  const recordingIdRef = useRef(0);
-  const isRecordingRef = useRef(false);
-  const mountedRef = useRef(true);
+  const [isRecording, setIsRecording] = useState(false)
+  const [audioUrl, setAudioUrl] = useState<string | null>(null)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const audioChunksRef = useRef<Blob[]>([])
+  const audioUrlRef = useRef<string | null>(null)
+  const recordingIdRef = useRef(0)
+  const isRecordingRef = useRef(false)
+  const mountedRef = useRef(true)
 
   const revokeAudioUrl = useCallback(() => {
-    const url = audioUrlRef.current;
+    const url = audioUrlRef.current
     if (!url) {
-      return;
+      return
     }
 
     try {
-      URL.revokeObjectURL(url);
+      URL.revokeObjectURL(url)
     } catch {
       // Continue clearing the reference even if the browser rejects the URL.
     } finally {
-      audioUrlRef.current = null;
+      audioUrlRef.current = null
     }
     if (mountedRef.current) {
-      setAudioUrl(null);
+      setAudioUrl(null)
     }
-  }, []);
+  }, [])
 
   const cleanupRecording = useCallback(() => {
     // Invalidate pending onstop callbacks before stopping the recorder.
-    recordingIdRef.current += 1;
-    const mediaRecorder = mediaRecorderRef.current;
-    mediaRecorderRef.current = null;
-    audioChunksRef.current = [];
-    isRecordingRef.current = false;
-    revokeAudioUrl();
+    recordingIdRef.current += 1
+    const mediaRecorder = mediaRecorderRef.current
+    mediaRecorderRef.current = null
+    audioChunksRef.current = []
+    isRecordingRef.current = false
+    revokeAudioUrl()
 
     if (mediaRecorder) {
-      stopRecorder(mediaRecorder);
+      stopRecorder(mediaRecorder)
     }
     if (mountedRef.current) {
-      setIsRecording(false);
+      setIsRecording(false)
     }
-  }, [revokeAudioUrl]);
+  }, [revokeAudioUrl])
 
   const startRecording = useCallback(async () => {
     // Starting another recording explicitly replaces the previous recording.
-    cleanupRecording();
-    const recordingId = recordingIdRef.current + 1;
-    recordingIdRef.current = recordingId;
-    let stream: MediaStream | null = null;
-    let mediaRecorder: MediaRecorder | null = null;
+    cleanupRecording()
+    const recordingId = recordingIdRef.current + 1
+    recordingIdRef.current = recordingId
+    let stream: MediaStream | null = null
+    let mediaRecorder: MediaRecorder | null = null
 
     try {
-      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       if (!mountedRef.current || recordingIdRef.current !== recordingId) {
-        stopStream(stream);
-        return;
+        stopStream(stream)
+        return
       }
 
-      mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
+      mediaRecorder = new MediaRecorder(stream)
+      mediaRecorderRef.current = mediaRecorder
+      audioChunksRef.current = []
 
       mediaRecorder.ondataavailable = (event) => {
         if (mountedRef.current && recordingIdRef.current === recordingId) {
-          audioChunksRef.current.push(event.data);
+          audioChunksRef.current.push(event.data)
         }
-      };
+      }
 
       mediaRecorder.onstop = () => {
         if (!mountedRef.current || recordingIdRef.current !== recordingId) {
-          return;
+          return
         }
 
-        const chunks = audioChunksRef.current;
-        audioChunksRef.current = [];
-        const mimeType = mediaRecorder?.mimeType || chunks.find((chunk) => chunk.type)?.type;
-        const audioBlob = new Blob(chunks, mimeType ? { type: mimeType } : undefined);
-        const url = URL.createObjectURL(audioBlob);
-        audioUrlRef.current = url;
-        setAudioUrl(url);
+        const chunks = audioChunksRef.current
+        audioChunksRef.current = []
+        const mimeType = mediaRecorder?.mimeType || chunks.find((chunk) => chunk.type)?.type
+        const audioBlob = new Blob(chunks, mimeType ? { type: mimeType } : undefined)
+        const url = URL.createObjectURL(audioBlob)
+        audioUrlRef.current = url
+        setAudioUrl(url)
 
-        const audio = new Audio(url);
-        const playPromise = audio.play();
+        const audio = new Audio(url)
+        const playPromise = audio.play()
         if (playPromise) {
-          playPromise.catch(() => undefined);
+          playPromise.catch(() => undefined)
         }
-      };
+      }
 
-      mediaRecorder.start();
-      isRecordingRef.current = true;
-      setIsRecording(true);
+      mediaRecorder.start()
+      isRecordingRef.current = true
+      setIsRecording(true)
     } catch (err) {
-      const isCurrentRecording = recordingIdRef.current === recordingId;
+      const isCurrentRecording = recordingIdRef.current === recordingId
       if (isCurrentRecording) {
-        recordingIdRef.current += 1;
-        mediaRecorderRef.current = null;
-        audioChunksRef.current = [];
-        isRecordingRef.current = false;
+        recordingIdRef.current += 1
+        mediaRecorderRef.current = null
+        audioChunksRef.current = []
+        isRecordingRef.current = false
         if (mountedRef.current) {
-          setIsRecording(false);
+          setIsRecording(false)
         }
       }
 
       if (mediaRecorder) {
-        stopRecorder(mediaRecorder);
+        stopRecorder(mediaRecorder)
       } else if (stream) {
-        stopStream(stream);
+        stopStream(stream)
       }
 
-      console.error('Microphone access denied:', err);
+      console.error('Microphone access denied:', err)
       if (mountedRef.current && isCurrentRecording) {
-        alert('Vui lòng cho phép truy cập micro để sử dụng tính năng này.');
+        alert('Vui lòng cho phép truy cập micro để sử dụng tính năng này.')
       }
     }
-  }, [cleanupRecording]);
+  }, [cleanupRecording])
 
   const stopRecording = useCallback(() => {
-    const mediaRecorder = mediaRecorderRef.current;
+    const mediaRecorder = mediaRecorderRef.current
     if (mediaRecorder && isRecordingRef.current) {
-      mediaRecorderRef.current = null;
-      isRecordingRef.current = false;
+      mediaRecorderRef.current = null
+      isRecordingRef.current = false
       if (mountedRef.current) {
-        setIsRecording(false);
+        setIsRecording(false)
       }
-      stopRecorder(mediaRecorder);
+      stopRecorder(mediaRecorder)
     }
-  }, []);
+  }, [])
 
   const playRecording = useCallback(() => {
     if (audioUrlRef.current) {
-      const audio = new Audio(audioUrlRef.current);
-      audio.play();
+      const audio = new Audio(audioUrlRef.current)
+      audio.play()
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    mountedRef.current = true;
+    mountedRef.current = true
     return () => {
-      mountedRef.current = false;
-      cleanupRecording();
-    };
-  }, [cleanupRecording]);
+      mountedRef.current = false
+      cleanupRecording()
+    }
+  }, [cleanupRecording])
 
   return {
     isRecording,
@@ -188,6 +188,6 @@ export const useRecording = () => {
     startRecording,
     stopRecording,
     playRecording,
-    cleanupRecording
-  };
-};
+    cleanupRecording,
+  }
+}

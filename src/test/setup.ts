@@ -22,7 +22,7 @@ class MockSpeechSynthesisUtterance {
 }
 
 Object.defineProperty(window, 'SpeechSynthesisUtterance', {
-  value: MockSpeechSynthesisUtterance
+  value: MockSpeechSynthesisUtterance,
 })
 
 class MockMediaRecorder {
@@ -38,20 +38,22 @@ class MockMediaRecorder {
   onstop: ((event: Event) => void) | null = null
   state = 'inactive'
   stream = {
-    getTracks: () => [{ stop: vi.fn() }]
+    getTracks: () => [{ stop: vi.fn() }],
   }
 }
 
 Object.defineProperty(window, 'MediaRecorder', {
   value: MockMediaRecorder,
   configurable: true,
-  writable: true
+  writable: true,
 })
 
 Object.defineProperty(navigator, 'mediaDevices', {
   value: {
-    getUserMedia: vi.fn(() => Promise.resolve({
-      getTracks: () => [{ stop: vi.fn() }]
-    }))
-  }
+    getUserMedia: vi.fn(() =>
+      Promise.resolve({
+        getTracks: () => [{ stop: vi.fn() }],
+      }),
+    ),
+  },
 })

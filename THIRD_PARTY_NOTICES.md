@@ -42,13 +42,13 @@ available under the SIL Open Font License, version 1.1 (OFL-1.1):
 These direct production dependencies are resolved by `pnpm-lock.yaml` and
 remain under their own licenses:
 
-| Package | Resolved version | License |
-| --- | ---: | --- |
-| `clsx` | 2.1.1 | MIT |
-| `lucide-react` | 0.428.0 | ISC |
-| `react` | 18.3.1 | MIT |
-| `react-dom` | 18.3.1 | MIT |
-| `tailwind-merge` | 2.6.1 | MIT |
+| Package          | Resolved version | License |
+| ---------------- | ---------------: | ------- |
+| `clsx`           |            2.1.1 | MIT     |
+| `lucide-react`   |          0.428.0 | ISC     |
+| `react`          |           18.3.1 | MIT     |
+| `react-dom`      |           18.3.1 | MIT     |
+| `tailwind-merge` |            2.6.1 | MIT     |
 
 The Lucide icons used by the application are provided by `lucide-react` and
 are covered by its ISC license. The package's license text is available in

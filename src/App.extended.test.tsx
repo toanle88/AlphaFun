@@ -3,176 +3,179 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import App from './App'
 
 describe('App Component Extended Tests', () => {
-    beforeEach(() => {
-        vi.useFakeTimers()
+  beforeEach(() => {
+    vi.useFakeTimers()
+  })
+
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.unstubAllGlobals()
+    vi.restoreAllMocks()
+  })
+
+  it('resets sequential index when category changes', () => {
+    render(<App />)
+
+    // Switch to sequential mode
+    const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
+    fireEvent.click(settingsBtn)
+    const sequentialBtn = screen.getByText('Normal')
+    fireEvent.click(sequentialBtn)
+
+    // Click next a few times
+    const nextBtn = screen.getByText(/TIẾP THEO|NEXT/)
+    fireEvent.click(nextBtn)
+    fireEvent.click(nextBtn)
+
+    // Change category
+    const numbersBtn = screen.getByText(/Số|Numbers|Chữ số/)
+    fireEvent.click(numbersBtn)
+
+    expect(screen.getByTestId('progress')).toHaveTextContent('1 / 9')
+    expect(screen.getByTestId('display-item')).toHaveTextContent('1')
+  })
+
+  it('advances automatically in auto mode', () => {
+    render(<App />)
+
+    // Enable auto mode
+    const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
+    fireEvent.click(settingsBtn)
+    const autoBtn = screen.getByText('Auto')
+    fireEvent.click(autoBtn)
+
+    const initialItem = screen.getByTestId('display-item').textContent
+
+    // Advance timers
+    act(() => {
+      vi.advanceTimersByTime(6000)
     })
 
-    afterEach(() => {
-        vi.useRealTimers()
-        vi.unstubAllGlobals()
-        vi.restoreAllMocks()
+    const nextItem = screen.getByTestId('display-item').textContent
+    expect(nextItem).not.toBe(initialItem)
+  })
+
+  it('cleans up the auto-play timer when returning to manual mode', () => {
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByText('Auto'))
+    act(() => {
+      vi.advanceTimersByTime(6000)
     })
 
-    it('resets sequential index when category changes', () => {
-        render(<App />)
+    const itemAfterAutoAdvance = screen.getByTestId('display-item').textContent
+    fireEvent.click(screen.getByText('Manual'))
 
-        // Switch to sequential mode
-        const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
-        fireEvent.click(settingsBtn)
-        const sequentialBtn = screen.getByText('Normal')
-        fireEvent.click(sequentialBtn)
-
-        // Click next a few times
-        const nextBtn = screen.getByText(/TIẾP THEO|NEXT/)
-        fireEvent.click(nextBtn)
-        fireEvent.click(nextBtn)
-
-        // Change category
-        const numbersBtn = screen.getByText(/Số|Numbers|Chữ số/)
-        fireEvent.click(numbersBtn)
-
-        expect(screen.getByTestId('progress')).toHaveTextContent('1 / 9')
-        expect(screen.getByTestId('display-item')).toHaveTextContent('1')
+    act(() => {
+      vi.advanceTimersByTime(12000)
     })
 
-    it('advances automatically in auto mode', () => {
-        render(<App />)
+    expect(screen.getByTestId('display-item')).toHaveTextContent(itemAfterAutoAdvance ?? '')
+  })
 
-        // Enable auto mode
-        const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
-        fireEvent.click(settingsBtn)
-        const autoBtn = screen.getByText('Auto')
-        fireEvent.click(autoBtn)
+  it('keeps auto-play on the newly selected category', () => {
+    render(<App />)
 
-        const initialItem = screen.getByTestId('display-item').textContent
+    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByText('Auto'))
+    fireEvent.click(screen.getByRole('button', { name: 'Chữ số' }))
 
-        // Advance timers
-        act(() => {
-            vi.advanceTimersByTime(6000)
-        })
+    const initialNumber = screen.getByTestId('display-item').textContent
+    expect(screen.getByTestId('progress')).toHaveTextContent('1 / 9')
 
-        const nextItem = screen.getByTestId('display-item').textContent
-        expect(nextItem).not.toBe(initialItem)
+    act(() => {
+      vi.advanceTimersByTime(6000)
     })
 
-    it('cleans up the auto-play timer when returning to manual mode', () => {
-        render(<App />)
+    expect(screen.getByTestId('display-item').textContent).not.toBe(initialNumber)
+    expect(screen.getByTestId('progress')).toHaveTextContent('/ 9')
+  })
 
-        fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
-        fireEvent.click(screen.getByText('Auto'))
-        act(() => {
-            vi.advanceTimersByTime(6000)
-        })
+  it('handles random order without repeating current item immediately', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0)
+    render(<App />)
+    const nextBtn = screen.getByText(/TIẾP THEO|NEXT/)
 
-        const itemAfterAutoAdvance = screen.getByTestId('display-item').textContent
-        fireEvent.click(screen.getByText('Manual'))
+    const firstItem = screen.getByTestId('display-item').textContent
 
-        act(() => {
-            vi.advanceTimersByTime(12000)
-        })
+    // The mocked random value selects the first available candidate after exclusion.
+    fireEvent.click(nextBtn)
+    const secondItem = screen.getByTestId('display-item').textContent
+    expect(secondItem).not.toBe(firstItem)
+  })
 
-        expect(screen.getByTestId('display-item')).toHaveTextContent(itemAfterAutoAdvance ?? '')
+  it('shows a completed recording for replay and cleans it up on unmount', async () => {
+    const tracks = [{ stop: vi.fn() }]
+    const createObjectURL = vi.fn(() => 'blob:app-recording')
+    const revokeObjectURL = vi.fn()
+    const play = vi.fn(() => Promise.resolve())
+    const recorderInstances: Array<{
+      ondataavailable: ((event: BlobEvent) => void) | null
+    }> = []
+
+    class TestMediaRecorder {
+      mimeType = 'audio/webm;codecs=opus'
+      state = 'inactive'
+      stream = { getTracks: () => tracks }
+      ondataavailable: ((event: BlobEvent) => void) | null = null
+      onstop: (() => void) | null = null
+
+      constructor() {
+        recorderInstances.push(this)
+      }
+
+      start = vi.fn(() => {
+        this.state = 'recording'
+      })
+
+      stop = vi.fn(() => {
+        this.state = 'inactive'
+        this.onstop?.()
+      })
+    }
+
+    vi.stubGlobal('MediaRecorder', TestMediaRecorder)
+    vi.stubGlobal('URL', { createObjectURL, revokeObjectURL })
+    vi.stubGlobal(
+      'Audio',
+      vi.fn(() => ({ play })),
+    )
+    vi.mocked(navigator.mediaDevices.getUserMedia).mockResolvedValue({
+      getTracks: () => tracks,
+    } as unknown as MediaStream)
+
+    const { unmount } = render(<App />)
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Record your voice' }))
+      await Promise.resolve()
     })
 
-    it('keeps auto-play on the newly selected category', () => {
-        render(<App />)
+    const recorder = recorderInstances[0]
+    expect(screen.getByRole('button', { name: 'Stop recording' })).toBeInTheDocument()
 
-        fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
-        fireEvent.click(screen.getByText('Auto'))
-        fireEvent.click(screen.getByRole('button', { name: 'Chữ số' }))
-
-        const initialNumber = screen.getByTestId('display-item').textContent
-        expect(screen.getByTestId('progress')).toHaveTextContent('1 / 9')
-
-        act(() => {
-            vi.advanceTimersByTime(6000)
-        })
-
-        expect(screen.getByTestId('display-item').textContent).not.toBe(initialNumber)
-        expect(screen.getByTestId('progress')).toHaveTextContent('/ 9')
+    act(() => {
+      recorder.ondataavailable?.({
+        data: new Blob(['recorded audio'], { type: 'audio/webm' }),
+      } as BlobEvent)
+      fireEvent.click(screen.getByRole('button', { name: 'Stop recording' }))
     })
 
-    it('handles random order without repeating current item immediately', () => {
-        vi.spyOn(Math, 'random').mockReturnValue(0)
-        render(<App />)
-        const nextBtn = screen.getByText(/TIẾP THEO|NEXT/)
+    expect(screen.getByRole('button', { name: 'Play recording' })).toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('Bản ghi đã sẵn sàng để phát lại')
 
-        const firstItem = screen.getByTestId('display-item').textContent
+    unmount()
+    expect(revokeObjectURL).toHaveBeenCalledWith('blob:app-recording')
+  })
 
-        // The mocked random value selects the first available candidate after exclusion.
-        fireEvent.click(nextBtn)
-        const secondItem = screen.getByTestId('display-item').textContent
-        expect(secondItem).not.toBe(firstItem)
-    })
+  it('clears the auto-play interval when the app unmounts', () => {
+    const clearInterval = vi.spyOn(window, 'clearInterval')
+    const { unmount } = render(<App />)
 
-    it('shows a completed recording for replay and cleans it up on unmount', async () => {
-        const tracks = [{ stop: vi.fn() }]
-        const createObjectURL = vi.fn(() => 'blob:app-recording')
-        const revokeObjectURL = vi.fn()
-        const play = vi.fn(() => Promise.resolve())
-        const recorderInstances: Array<{
-            ondataavailable: ((event: BlobEvent) => void) | null
-        }> = []
+    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByText('Auto'))
+    unmount()
 
-        class TestMediaRecorder {
-            mimeType = 'audio/webm;codecs=opus'
-            state = 'inactive'
-            stream = { getTracks: () => tracks }
-            ondataavailable: ((event: BlobEvent) => void) | null = null
-            onstop: (() => void) | null = null
-
-            constructor() {
-                recorderInstances.push(this)
-            }
-
-            start = vi.fn(() => {
-                this.state = 'recording'
-            })
-
-            stop = vi.fn(() => {
-                this.state = 'inactive'
-                this.onstop?.()
-            })
-        }
-
-        vi.stubGlobal('MediaRecorder', TestMediaRecorder)
-        vi.stubGlobal('URL', { createObjectURL, revokeObjectURL })
-        vi.stubGlobal('Audio', vi.fn(() => ({ play })))
-        vi.mocked(navigator.mediaDevices.getUserMedia).mockResolvedValue({
-            getTracks: () => tracks,
-        } as unknown as MediaStream)
-
-        const { unmount } = render(<App />)
-        await act(async () => {
-            fireEvent.click(screen.getByRole('button', { name: 'Record your voice' }))
-            await Promise.resolve()
-        })
-
-        const recorder = recorderInstances[0]
-        expect(screen.getByRole('button', { name: 'Stop recording' })).toBeInTheDocument()
-
-        act(() => {
-            recorder.ondataavailable?.({
-                data: new Blob(['recorded audio'], { type: 'audio/webm' }),
-            } as BlobEvent)
-            fireEvent.click(screen.getByRole('button', { name: 'Stop recording' }))
-        })
-
-        expect(screen.getByRole('button', { name: 'Play recording' })).toBeInTheDocument()
-        expect(screen.getByRole('status')).toHaveTextContent('Bản ghi đã sẵn sàng để phát lại')
-
-        unmount()
-        expect(revokeObjectURL).toHaveBeenCalledWith('blob:app-recording')
-    })
-
-    it('clears the auto-play interval when the app unmounts', () => {
-        const clearInterval = vi.spyOn(window, 'clearInterval')
-        const { unmount } = render(<App />)
-
-        fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
-        fireEvent.click(screen.getByText('Auto'))
-        unmount()
-
-        expect(clearInterval).toHaveBeenCalled()
-    })
+    expect(clearInterval).toHaveBeenCalled()
+  })
 })

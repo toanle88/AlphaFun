@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   preview:
-    name: "🚀 Deploy: Pull Request Preview"
+    name: '🚀 Deploy: Pull Request Preview'
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     environment: preview
@@ -51,7 +51,7 @@ jobs:
           skip_app_build: true
 
   close_preview:
-    name: "🧹 Cleanup: Pull Request Preview"
+    name: '🧹 Cleanup: Pull Request Preview'
     if: github.event.action == 'closed'
     runs-on: ubuntu-latest
     environment: preview

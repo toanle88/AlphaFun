@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
       colors: {
@@ -28,11 +25,11 @@ export default {
         '3xl': '30px',
       },
       boxShadow: {
-        'neo': 'var(--shadow-depth) var(--shadow-depth) 0px rgba(0, 0, 0, 0.1)',
+        neo: 'var(--shadow-depth) var(--shadow-depth) 0px rgba(0, 0, 0, 0.1)',
         'neo-inset': 'inset 0 0 20px rgba(0, 0, 0, 0.05)',
       },
       borderWidth: {
-        '4': '4px',
+        4: '4px',
       },
       fontFamily: {
         main: ['Fredoka', 'Nunito', 'sans-serif'],

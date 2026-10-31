@@ -2,12 +2,12 @@
 
 The baseline was measured before the migration with `find public/images -maxdepth 1 -type f -printf '%s\n' | awk '{ total += $1 } END { print total }'`.
 
-| Asset set | Files | Bytes | MiB |
-| --- | ---: | ---: | ---: |
-| Before: all `public/images` files | 36 | 26,150,920 | 24.94 |
-| Before: referenced learning files | 34 | 25,388,322 | 24.21 |
-| After: referenced learning files | 34 | 1,707,830 | 1.63 |
-| After: all `public/images` files | 34 | 1,707,830 | 1.63 |
+| Asset set                         | Files |      Bytes |   MiB |
+| --------------------------------- | ----: | ---------: | ----: |
+| Before: all `public/images` files |    36 | 26,150,920 | 24.94 |
+| Before: referenced learning files |    34 | 25,388,322 | 24.21 |
+| After: referenced learning files  |    34 |  1,707,830 |  1.63 |
+| After: all `public/images` files  |    34 |  1,707,830 |  1.63 |
 
 The referenced set is 93.3% smaller. All 34 learning images are now 512px-wide
 WebP files at quality 90. The 14 action illustrations retain transparency, and

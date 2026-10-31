@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       source_ref:
-        description: "Known-good commit SHA or ref to build for a controlled rollback"
+        description: 'Known-good commit SHA or ref to build for a controlled rollback'
         required: false
         type: string
   push:
@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   build:
-    name: "🔨 Build: Production Artifact"
+    name: '🔨 Build: Production Artifact'
     if: >-
       (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
       (github.event_name == 'release' && github.event.action == 'published' && github.event.release.target_commitish == 'main') ||
@@ -101,7 +101,7 @@ jobs:
           if-no-files-found: error
 
   deploy:
-    name: "🚀 Deploy: Production"
+    name: '🚀 Deploy: Production'
     needs: build
     runs-on: ubuntu-latest
     environment: production

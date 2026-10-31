@@ -39,7 +39,7 @@ describe('deployment security configuration', () => {
     expect(deployWorkflow).toContain('fetch-depth: 0')
     expect(deployWorkflow).toContain('checked_out_sha="$(git rev-parse HEAD)"')
     expect(deployWorkflow).toContain('git merge-base --is-ancestor "${SOURCE_REF}" origin/main')
-    expect(deployWorkflow).toContain('source_ref != \'\'')
+    expect(deployWorkflow).toContain("source_ref != ''")
   })
 
   it('scopes OIDC write permission to Terraform jobs', () => {
