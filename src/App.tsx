@@ -60,7 +60,7 @@ const App: React.FC = () => {
                 filteredPool = pool.filter(p => {
                     const getIdentifier = (item: AppItem) => {
                         if (typeof item.value === 'string') return item.value;
-                        const v = item.value as any;
+                        const v = item.value as { hex?: string; image?: string; svg?: string; emoji?: string };
                         return v.hex || v.image || v.svg || v.emoji;
                     };
                     return getIdentifier(p) !== getIdentifier(currentItem);

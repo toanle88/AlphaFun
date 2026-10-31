@@ -6,7 +6,6 @@
 - Keep changes focused on the requested behavior.
 - Add or update regression tests for behavior changes.
 - Run the configured fast checks before handing work back.
-- Do not commit, push, or publish from inside an Agentic developer run.
 
 ## Project-specific notes
 
