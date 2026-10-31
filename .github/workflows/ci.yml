@@ -35,11 +35,11 @@ jobs:
       - name: Type-check
         run: pnpm type-check
 
-      - name: Format check
-        run: pnpm format:check
-
       - name: Show deployment security test formatting
         run: pnpm exec prettier src/deploymentSecurity.test.ts
+
+      - name: Format check
+        run: pnpm format:check
 
       - name: Lint
         run: pnpm lint
