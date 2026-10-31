@@ -38,16 +38,17 @@ A colorful, interactive flashcard PWA that helps young children learn to speak ‚
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/) (v18+)
+- [Node.js](https://nodejs.org/) (v24)
+- [pnpm](https://pnpm.io/) (v9.15.9; enabled automatically through the `packageManager` field)
 
 ### Install & Run
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Start the dev server
-npm run dev
+pnpm dev
 ```
 
 The app will be available at `http://localhost:5173`.
@@ -55,8 +56,16 @@ The app will be available at `http://localhost:5173`.
 ### Build for Production
 
 ```bash
-npm run build
-npm run preview   # preview the production build locally
+pnpm build
+pnpm preview   # preview the production build locally
+```
+
+Run the fast validation checks before opening a pull request:
+
+```bash
+pnpm lint
+pnpm test -- --run
+pnpm build
 ```
 
 ## üìÅ Project Structure

@@ -12,7 +12,7 @@
       "version": "latest"
     }
   },
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "corepack enable && pnpm install --frozen-lockfile",
   "forwardPorts": [5173],
   "customizations": {
     "vscode": {

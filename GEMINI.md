@@ -17,9 +17,9 @@
     - **Security**: Requires `SLACK_WEBHOOK_URL` environment variable. Never hardcode the URL in scripts.
 - **Tests**:
     - **Engine**: Vitest + React Testing Library.
-    - **Windows Execution**: Run via `.\node_modules\.bin\vitest.cmd run`.
+    - **Validation**: Run `pnpm test -- --run`.
     - **Mocks**: Ensure Speech Synthesis and MediaRecorder are mocked in `src/test/setup.ts`.
-- **CI/CD**: GitHub Actions uses `npm install --legacy-peer-deps`.
+- **CI/CD**: GitHub Actions uses pnpm 9.15.9 with the committed `pnpm-lock.yaml`.
     - **Compatibility**: `@eslint/js` must be kept at version 9 to align with ESLint 9 peer dependencies.
 
 ## Key Components

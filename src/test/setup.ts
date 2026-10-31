@@ -14,8 +14,8 @@ Object.defineProperty(window, 'speechSynthesis', {
 class MockSpeechSynthesisUtterance {
   text: string = ''
   lang: string = ''
-  voice: any = null
-  onend: any = null
+  voice: SpeechSynthesisVoice | null = null
+  onend: ((event: SpeechSynthesisEvent) => void) | null = null
   constructor(text: string) {
     this.text = text
   }
