@@ -35,11 +35,6 @@ jobs:
       - name: Type-check
         run: pnpm type-check
 
-      - name: Diagnose deployment security test formatting
-        run: |
-          pnpm exec prettier src/deploymentSecurity.test.ts > /tmp/deploymentSecurity.test.ts
-          diff -u src/deploymentSecurity.test.ts /tmp/deploymentSecurity.test.ts || true
-
       - name: Format check
         run: pnpm format:check
 

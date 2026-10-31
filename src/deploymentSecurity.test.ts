@@ -118,7 +118,9 @@ describe('deployment security configuration', () => {
   it('keeps dependency installs and privileged Terraform plans safe for PRs', () => {
     expect(ciWorkflow).toContain('pnpm install --frozen-lockfile')
     expect(infrastructureWorkflow).toContain('terraform init -backend=false')
-    expect(infrastructureWorkflow).toContain('github.event.pull_request.head.repo.full_name == github.repository')
+    expect(infrastructureWorkflow).toContain(
+      'github.event.pull_request.head.repo.full_name == github.repository',
+    )
   })
 
   it('validates and promotes one exact Terraform plan', () => {
