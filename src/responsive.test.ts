@@ -1,5 +1,5 @@
 // @ts-expect-error Node typings are not a runtime dependency of the browser app.
-import { readFileSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import documentMarkup from '../index.html?raw'
 
@@ -28,5 +28,12 @@ describe('mobile responsive layout contract', () => {
     expect(documentMarkup).toContain('width=device-width, initial-scale=1.0, viewport-fit=cover')
     expect(documentMarkup).not.toContain('maximum-scale')
     expect(documentMarkup).not.toContain('user-scalable=no')
+  })
+
+  it('declares the existing AlphaFun icon as the document favicon', () => {
+    expect(documentMarkup).toContain(
+      '<link rel="icon" type="image/svg+xml" href="/alphafun-icon.svg" />',
+    )
+    expect(existsSync('public/alphafun-icon.svg')).toBe(true)
   })
 })
