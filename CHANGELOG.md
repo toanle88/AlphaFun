@@ -6,9 +6,9 @@ that a published tag is exactly `v<version>`.
 
 ## [0.1.0] - Unreleased
 
-This is the initial public release target. As of 2026-10-31, it remains
-unreleased; the `v0.1.0` tag and GitHub release will be created from the exact
-merged commit after this process change is approved.
+This is the initial public release target. It remains unreleased until the
+release process is completed; the `v0.1.0` tag and GitHub release will be
+created from the exact merged commit.
 
 ### Added
 

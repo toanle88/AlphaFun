@@ -20,10 +20,10 @@ recording permissions, supported browsers, or a persisted/public data format.
 
 ## Current `0.1.0` status
 
-As of 2026-10-31, the canonical repository has no `v0.1.0` tag or GitHub
-release. The decision is that `0.1.0` remains unreleased until this process
-change is merged; the tag and release must be created from the merged commit,
-not from this pull-request branch.
+The canonical repository currently has no `v0.1.0` tag or GitHub release.
+The decision is that `0.1.0` remains unreleased until this process change is
+merged; the tag and release must be created from the merged commit, not from
+this pull-request branch.
 
 1. After merging, update the changelog heading from `Unreleased` to the actual
    UTC release date in the merge commit.

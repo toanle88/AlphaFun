@@ -1,5 +1,9 @@
 # 🎓 AlphaFun — Bé Tập Nói Thật Vui!
 
+[![CI](https://github.com/toanle88/AlphaFun/actions/workflows/ci.yml/badge.svg)](https://github.com/toanle88/AlphaFun/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/toanle88/AlphaFun/actions/workflows/codeql.yml/badge.svg)](https://github.com/toanle88/AlphaFun/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 AlphaFun is a colorful, interactive flashcard PWA that helps young children learn to speak. It includes letters, numbers, objects, colors, actions, and shapes in Vietnamese and English.
 
 ## Features
@@ -14,7 +18,7 @@ AlphaFun is a colorful, interactive flashcard PWA that helps young children lear
 
 ## Tech stack
 
-- React 18 and TypeScript
+- React 19 and TypeScript
 - Vite and `vite-plugin-pwa`
 - Tailwind CSS with project-specific styles in `src/index.css`
 - Vitest and Testing Library
@@ -42,6 +46,8 @@ The app is available at `http://localhost:5173`.
 Run the checks used across pull-request validation and production deployment:
 
 ```bash
+pnpm check:third-party-notices
+pnpm check:release
 pnpm type-check
 pnpm format:check
 pnpm lint
@@ -150,5 +156,6 @@ contributors; their exact hashes and provenance records are in
 dependencies are listed in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 
 The initial public release target is version `0.1.0`, which remains unreleased
-as of 2026-10-31. The canonical `v0.1.0` tag and GitHub release will be created
-from the exact merged commit; see the [SemVer release process](docs/release-process.md).
+until the documented release process is completed. The canonical `v0.1.0` tag
+and GitHub release will be created from the exact merged commit; see the
+[SemVer release process](docs/release-process.md).

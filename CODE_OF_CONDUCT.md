@@ -20,10 +20,11 @@ in a professional project space.
 
 ## Reporting and enforcement
 
-Do not report conduct concerns in a public issue. Contact the project
-maintainers privately through the repository's private contact mechanism or a
-private message to a maintainer listed in [CODEOWNERS](.github/CODEOWNERS).
-Reports will be reviewed respectfully and kept as confidential as practical.
+Do not report conduct concerns in a public issue. Request a private contact
+channel from the repository owner, [@toanle88](https://github.com/toanle88),
+through GitHub. Do not include sensitive details until a private channel is
+available. Reports will be reviewed respectfully and kept as confidential as
+practical.
 Maintainers may remove comments, close contributions, restrict participation,
 or take other action they consider appropriate.
 
