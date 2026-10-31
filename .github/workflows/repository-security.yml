@@ -42,7 +42,7 @@ jobs:
           echo "Lockfile(s) changed: ${changed_lockfiles}"
           approved_reviewers="$(gh api --paginate \
             "repos/${GITHUB_REPOSITORY}/pulls/${PR_NUMBER}/reviews" |
-            jq -r 'add | group_by(.user.login) | map(.[-1] | select(.state == "APPROVED") | .user.login) | .[]' || true)"
+  jq -s -r 'add // [] | group_by(.user.login) | map(.[-1] | select(.state == "APPROVED") | .user.login) | .[]' || true)"
           if [ -z "${approved_reviewers}" ]; then
             echo 'A lockfile change requires an approving review before merge.' >&2
             exit 1
