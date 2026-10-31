@@ -29,8 +29,8 @@ describe('App Component Extended Tests', () => {
         const numbersBtn = screen.getByText(/Số|Numbers|Chữ số/)
         fireEvent.click(numbersBtn)
 
-        // Sequential index should be reset (first item should be rendered)
-        // Note: selectNextItem(true) is called on category change
+        expect(screen.getByTestId('progress')).toHaveTextContent('1 / 9')
+        expect(screen.getByTestId('display-item')).toHaveTextContent('1')
     })
 
     it('advances automatically in auto mode', () => {
@@ -53,13 +53,51 @@ describe('App Component Extended Tests', () => {
         expect(nextItem).not.toBe(initialItem)
     })
 
+    it('cleans up the auto-play timer when returning to manual mode', () => {
+        render(<App />)
+
+        fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+        fireEvent.click(screen.getByText('Auto'))
+        act(() => {
+            vi.advanceTimersByTime(6000)
+        })
+
+        const itemAfterAutoAdvance = screen.getByTestId('display-item').textContent
+        fireEvent.click(screen.getByText('Manual'))
+
+        act(() => {
+            vi.advanceTimersByTime(12000)
+        })
+
+        expect(screen.getByTestId('display-item')).toHaveTextContent(itemAfterAutoAdvance ?? '')
+    })
+
+    it('keeps auto-play on the newly selected category', () => {
+        render(<App />)
+
+        fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+        fireEvent.click(screen.getByText('Auto'))
+        fireEvent.click(screen.getByRole('button', { name: 'Chữ số' }))
+
+        const initialNumber = screen.getByTestId('display-item').textContent
+        expect(screen.getByTestId('progress')).toHaveTextContent('1 / 9')
+
+        act(() => {
+            vi.advanceTimersByTime(6000)
+        })
+
+        expect(screen.getByTestId('display-item').textContent).not.toBe(initialNumber)
+        expect(screen.getByTestId('progress')).toHaveTextContent('/ 9')
+    })
+
     it('handles random order without repeating current item immediately', () => {
+        vi.spyOn(Math, 'random').mockReturnValue(0)
         render(<App />)
         const nextBtn = screen.getByText(/TIẾP THEO|NEXT/)
 
         const firstItem = screen.getByTestId('display-item').textContent
 
-        // Click multiple times and verify it doesn't stay the same (probabilistically very likely to change)
+        // The mocked random value selects the first available candidate after exclusion.
         fireEvent.click(nextBtn)
         const secondItem = screen.getByTestId('display-item').textContent
         expect(secondItem).not.toBe(firstItem)
