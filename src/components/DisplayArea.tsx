@@ -33,13 +33,13 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, 
             <div data-testid="display-item" className="animate-pop-in flex flex-col items-center w-full">
                 {item.type === 'shape' ? (
                     <div
-                        className="w-[clamp(150px,30vh,250px)] h-[clamp(150px,30vh,250px)] flex justify-center items-center hover:scale-105 hover:rotate-3 transition-transform duration-300 drop-shadow-md"
+                        className="learning-visual flex justify-center items-center hover:scale-105 hover:rotate-3 transition-transform duration-300 drop-shadow-md"
                         style={{ color: item.value.color }}
                         dangerouslySetInnerHTML={{ __html: `<svg viewBox="0 0 100 100" width="100%" height="100%">${item.value.svg}</svg>` }}
                     />
                 ) : item.type === 'color' ? (
                     <div
-                        className="w-[clamp(150px,30vh,250px)] h-[clamp(150px,30vh,250px)] rounded-full border-2 border-white shadow-sm hover:scale-105 hover:-rotate-3 transition-transform duration-300"
+                        className="learning-visual rounded-full border-2 border-white shadow-sm hover:scale-105 hover:-rotate-3 transition-transform duration-300"
                         style={{ backgroundColor: item.value.hex }}
                     />
                 ) : item.type === 'object' || item.type === 'verb' ? (
@@ -47,7 +47,7 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, 
                         <img
                             src={item.value.image}
                             alt={itemName}
-                            className="h-[clamp(150px,30vh,250px)] object-contain drop-shadow-md hover:scale-105 hover:rotate-3 transition-transform duration-300"
+                            className="learning-visual learning-image object-contain drop-shadow-md hover:scale-105 hover:rotate-3 transition-transform duration-300"
                         />
                     ) : (item.type === 'object' && 'emoji' in item.value) ? (
                         <span className="big-text emoji-text">{item.value.emoji}</span>
@@ -59,7 +59,7 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, 
                 )}
 
                 {(item.type !== 'letter' && item.type !== 'number') && (
-                    <div className="mt-6 font-main text-[clamp(2rem,5vw,3rem)] font-semibold capitalize text-text-main tracking-wider italic">
+                    <div className="item-name mt-6 font-main text-[clamp(2rem,5vw,3rem)] font-semibold capitalize text-text-main tracking-wider italic">
                         {itemName}
                     </div>
                 )}
