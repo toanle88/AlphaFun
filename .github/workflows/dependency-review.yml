@@ -19,6 +19,6 @@ jobs:
       contents: read
     steps:
       - name: Dependency review
-        uses: actions/dependency-review-action@da24556b548a50705ddfbcb5f60a3f3c3c3d4e5f # v4.6.0
+        uses: actions/dependency-review-action@ce3cf9537a52e8119d91fd484ab5b8a807627bf8 # v4.6.0
         with:
           fail-on-severity: high

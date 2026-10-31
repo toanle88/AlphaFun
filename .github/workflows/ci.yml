@@ -38,6 +38,9 @@ jobs:
       - name: Format check
         run: pnpm format:check
 
+      - name: Show deployment security test formatting
+        run: pnpm exec prettier src/deploymentSecurity.test.ts
+
       - name: Lint
         run: pnpm lint
 
