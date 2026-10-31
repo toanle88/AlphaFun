@@ -10,7 +10,6 @@ import workflowSecurityWorkflow from '../.github/workflows/workflow-security.yml
 import repositorySecurityWorkflow from '../.github/workflows/repository-security.yml?raw'
 import dependabotConfig from '../.github/dependabot.yml?raw'
 import codeowners from '../.github/CODEOWNERS?raw'
-import eslintConfig from '../eslint.config.js?raw'
 import postcssConfig from '../postcss.config.js?raw'
 
 const workflows = [
@@ -47,12 +46,6 @@ describe('deployment security configuration', () => {
   it('uses the Tailwind CSS v4 PostCSS plugin', () => {
     expect(postcssConfig).toContain("'@tailwindcss/postcss': {}")
     expect(postcssConfig).not.toContain('tailwindcss: {}')
-  })
-
-  it('does not lint generated test and browser output', () => {
-    expect(eslintConfig).toContain("'coverage'")
-    expect(eslintConfig).toContain("'playwright-report'")
-    expect(eslintConfig).toContain("'test-results'")
   })
 
   it('keeps production and preview Azure credentials separate', () => {

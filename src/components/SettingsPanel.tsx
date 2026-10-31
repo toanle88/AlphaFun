@@ -5,7 +5,7 @@ interface SettingsPanelProps {
   lang: Language
   mode: Mode
   order: Order
-  firstControlRef: React.RefObject<HTMLButtonElement>
+  firstControlRef: React.RefObject<HTMLButtonElement | null>
   onLanguageChange: (language: Language) => void
   onModeChange: (mode: Mode) => void
   onOrderChange: (order: Order) => void
