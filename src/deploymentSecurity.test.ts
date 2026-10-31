@@ -8,6 +8,7 @@ import dependencyReviewWorkflow from '../.github/workflows/dependency-review.yml
 import codeqlWorkflow from '../.github/workflows/codeql.yml?raw'
 import workflowSecurityWorkflow from '../.github/workflows/workflow-security.yml?raw'
 import repositorySecurityWorkflow from '../.github/workflows/repository-security.yml?raw'
+import releaseWorkflow from '../.github/workflows/release.yml?raw'
 import dependabotConfig from '../.github/dependabot.yml?raw'
 import codeowners from '../.github/CODEOWNERS?raw'
 import postcssConfig from '../postcss.config.js?raw'
@@ -21,6 +22,7 @@ const workflows = [
   codeqlWorkflow,
   workflowSecurityWorkflow,
   repositorySecurityWorkflow,
+  releaseWorkflow,
 ]
 
 describe('deployment security configuration', () => {

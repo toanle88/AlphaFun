@@ -9,9 +9,11 @@ manages the
 explicitly named Azure pull-request staging preview and closes it when the
 pull request closes.
 
-`.github/workflows/deploy.yml` repeats those validation steps for approved
-production candidates, uploads the verified `dist/` artifact once, and deploys
-that artifact to Azure Static Web Apps. Production deployment is limited to
+`.github/workflows/deploy.yml` repeats the release metadata, third-party notice,
+type-check, formatting, lint, unit-coverage, build, and asset-budget checks for
+approved production candidates, uploads the verified `dist/` artifact once, and
+deploys that artifact to Azure Static Web Apps. Pull-request CI additionally
+runs the browser/e2e suite. Production deployment is limited to
 pushes to `main`, published releases targeting `main`, or a manually approved
 run on `main`; the `production` environment supplies the approval gate.
 The deploy job is the only application job that receives the production Azure
