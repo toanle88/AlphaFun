@@ -12,6 +12,8 @@ interface DisplayAreaProps {
     progress: string;
 }
 
+const highPriorityImageProps = { fetchpriority: 'high' as const };
+
 export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, progress }) => {
     const { speak, isSpeaking } = useSpeech(lang);
     const { isRecording, audioUrl, startRecording, stopRecording, playRecording, cleanupRecording } = useRecording();
@@ -79,6 +81,11 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, 
                 <img
                     src={item.value.image}
                     alt={itemName}
+                    width={item.value.imageWidth}
+                    height={item.value.imageHeight}
+                    loading="eager"
+                    {...highPriorityImageProps}
+                    decoding="async"
                     className="learning-visual learning-image object-contain drop-shadow-md hover:scale-105 hover:rotate-3 transition-transform duration-300"
                 />
             ) : item.value.emoji ? (
@@ -91,6 +98,11 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, 
                 <img
                     src={item.value.image}
                     alt={itemName}
+                    width={item.value.imageWidth}
+                    height={item.value.imageHeight}
+                    loading="eager"
+                    {...highPriorityImageProps}
+                    decoding="async"
                     className="learning-visual learning-image object-contain drop-shadow-md hover:scale-105 hover:rotate-3 transition-transform duration-300"
                 />
             );

@@ -29,6 +29,8 @@ export interface ObjectItem extends BaseItem {
   value: {
     name: LocalizedName;
     image?: string;
+    imageWidth?: number;
+    imageHeight?: number;
     emoji?: string;
   };
 }
@@ -46,6 +48,8 @@ export interface VerbItem extends BaseItem {
   value: {
     name: LocalizedName;
     image: string;
+    imageWidth: number;
+    imageHeight: number;
   };
 }
 

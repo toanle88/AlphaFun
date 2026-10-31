@@ -262,6 +262,7 @@
   .learning-image {
     width: auto;
     object-fit: contain;
+    aspect-ratio: auto;
   }
 
   .item-name {
