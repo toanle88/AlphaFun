@@ -54,7 +54,7 @@ jobs:
 
       - name: "🔧 Install TFLint"
         run: |
-          go install github.com/terraform-linters/tflint/cmd/tflint@v0.55.1
+          go install github.com/terraform-linters/tflint@v0.55.1
           echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
 
       - name: "🔍 Run TFLint"
