@@ -1,12 +1,11 @@
-# Default owners for every file. Replace this team with the repository's
-# active maintainer team if the GitHub organization uses a different handle.
-* @alphafun/maintainers
+# Default owner for every file. This repository is owned by @toanle88.
+* @toanle88
 
 # Deployment and infrastructure changes need maintainer review.
-/.github/ @alphafun/maintainers
-/infra/ @alphafun/maintainers
-/package.json @alphafun/maintainers
-/pnpm-lock.yaml @alphafun/maintainers
-/infra/.terraform.lock.hcl @alphafun/maintainers
-/.github/dependabot.yml @alphafun/maintainers
-/.github/workflows/ @alphafun/maintainers
+/.github/ @toanle88
+/infra/ @toanle88
+/package.json @toanle88
+/pnpm-lock.yaml @toanle88
+/infra/.terraform.lock.hcl @toanle88
+/.github/dependabot.yml @toanle88
+/.github/workflows/ @toanle88

@@ -72,9 +72,16 @@ protection in the repository or organization settings, where the plan supports
 those features. Push protection bypasses require a documented reason and
 maintainer review. The `Security - Repository settings` workflow audits these
 settings weekly or when manually dispatched and fails when they are disabled.
-The default branch must also require CODEOWNERS review for the protected paths
-listed above. The lockfile-review job provides a pull-request gate for
-`pnpm-lock.yaml` and `infra/.terraform.lock.hcl`; configure that job as a
-required status check after enabling branch protection. These settings cannot
-be enabled by a repository file, so an administrator must configure them before
-the workflow can pass.
+
+The active `Main Protect` branch ruleset must require at least one approving
+review, CODEOWNERS review, and these pull-request checks:
+
+- `Validate: Pull Request`
+- `Browser and PWA`
+- `Review dependency changes`
+- `Analyze JavaScript and TypeScript`
+- `Verify workflow action pins`
+
+These settings cannot be enabled by a repository file, so an administrator must
+configure the ruleset and private vulnerability reporting before the workflow
+can pass.

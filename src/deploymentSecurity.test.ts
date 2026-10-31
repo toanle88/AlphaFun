@@ -91,15 +91,14 @@ describe('deployment security configuration', () => {
     expect(workflowSecurityWorkflow).not.toContain('id-token: write')
   })
 
-  it('audits repository security settings without a lockfile approval gate', () => {
-    expect(repositorySecurityWorkflow).not.toContain('pull_request_review:')
-    expect(repositorySecurityWorkflow).not.toContain('pnpm-lock\\.yaml')
-    expect(repositorySecurityWorkflow).not.toContain('infra/\\.terraform\\.lock\\.hcl')
+  it('audits repository security settings through the active branch ruleset', () => {
+    expect(repositorySecurityWorkflow).toContain('rulesets?includes_parents=false')
+    expect(repositorySecurityWorkflow).toContain('require_code_owner_review')
+    expect(repositorySecurityWorkflow).toContain('required_approving_review_count')
+    expect(repositorySecurityWorkflow).toContain('required_status_checks')
+    expect(repositorySecurityWorkflow).toContain('Validate: Pull Request')
+    expect(repositorySecurityWorkflow).toContain('Review dependency changes')
     expect(repositorySecurityWorkflow).toContain('secret_scanning_push_protection')
-    expect(repositorySecurityWorkflow).toContain('require_code_owner_reviews')
-    expect(repositorySecurityWorkflow).not.toContain(
-      'A lockfile change requires an approving review',
-    )
   })
 
   it('configures dependency monitoring for every supported ecosystem', () => {
@@ -110,10 +109,12 @@ describe('deployment security configuration', () => {
   })
 
   it('requires maintainer review for dependency and security configuration', () => {
-    expect(codeowners).toContain('/package.json @alphafun/maintainers')
-    expect(codeowners).toContain('/pnpm-lock.yaml @alphafun/maintainers')
-    expect(codeowners).toContain('/infra/.terraform.lock.hcl @alphafun/maintainers')
-    expect(codeowners).toContain('/.github/workflows/ @alphafun/maintainers')
+    expect(codeowners).toContain('* @toanle88')
+    expect(codeowners).toContain('/package.json @toanle88')
+    expect(codeowners).toContain('/pnpm-lock.yaml @toanle88')
+    expect(codeowners).toContain('/infra/.terraform.lock.hcl @toanle88')
+    expect(codeowners).toContain('/.github/workflows/ @toanle88')
+    expect(codeowners).not.toContain('@alphafun/maintainers')
   })
 
   it('keeps dependency installs and privileged Terraform plans safe for PRs', () => {
