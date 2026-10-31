@@ -17,6 +17,10 @@ dist-ssr
 *.tsbuildinfo
 vite.config.js
 vite.config.d.ts
+coverage
+playwright-report
+test-results
+asset-size-report.json
 
 # Editor directories and files
 .vscode/*

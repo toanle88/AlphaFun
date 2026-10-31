@@ -11,7 +11,10 @@
     "format:check": "prettier --check .",
     "preview": "vite preview",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "test": "vitest"
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "check:asset-size": "node scripts/check-asset-size.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
@@ -22,12 +25,15 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@axe-core/playwright": "^4.10.2",
+    "@playwright/test": "^1.55.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-v8": "^2.1.9",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.9.0",
     "eslint-plugin-react-hooks": "^7.0.1",

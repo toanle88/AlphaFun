@@ -56,4 +56,5 @@ Object.defineProperty(navigator, 'mediaDevices', {
       }),
     ),
   },
+  configurable: true,
 })

@@ -18,6 +18,9 @@ export default defineConfig({
         name: 'AlphaFun',
         short_name: 'AlphaFun',
         description: 'Learning is fun!',
+        start_url: '/',
+        display: 'standalone',
+        background_color: '#F8FBFA',
         theme_color: '#FF6B6B',
         icons: [
           {
@@ -43,5 +46,18 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: './src/test/setup.ts',
+    exclude: ['node_modules', 'dist', 'tests/e2e/**'],
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'json-summary', 'html'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/test/**', '**/*.test.{ts,tsx}', 'src/main.tsx'],
+      thresholds: {
+        lines: 70,
+        functions: 70,
+        branches: 60,
+        statements: 70,
+      },
+    },
   },
 })
