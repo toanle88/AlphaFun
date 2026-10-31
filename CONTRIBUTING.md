@@ -31,6 +31,7 @@ a pull request:
 
 ```bash
 pnpm type-check
+pnpm format:check
 pnpm lint
 pnpm test -- --run
 pnpm build
@@ -38,6 +39,12 @@ pnpm build
 
 Use `pnpm test` without `--run` when you want Vitest watch mode. If a check
 cannot be run locally, explain why in the pull request.
+
+Use `pnpm exec prettier --write .` to format files before running the checks.
+Do not commit generated `dist/`, PWA/Workbox, TypeScript build-info, or
+compiled Vite configuration files. The project does not currently add separate
+accessibility or Testing Library ESLint plugins; those concerns are covered by
+the existing test suite and reviewed UI semantics.
 
 ## Branches and commits
 
