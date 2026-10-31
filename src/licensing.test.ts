@@ -5,10 +5,12 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 
 const packageJson = JSON.parse(readFileSync('package.json', 'utf8')) as {
+  dependencies?: Record<string, string>
   license?: string
   private?: boolean
   version?: string
 }
+const pnpmLock = readFileSync('pnpm-lock.yaml', 'utf8')
 const licenseText = readFileSync('LICENSE', 'utf8')
 const readme = readFileSync('README.md', 'utf8')
 const thirdPartyNotices = readFileSync('THIRD_PARTY_NOTICES.md', 'utf8')
@@ -27,6 +29,64 @@ const bundledVisualAssets = [
     .filter((file: string) => visualAssetPattern.test(file))
     .map((file: string) => `public/${file}`),
 ].sort()
+
+type PackageManifest = {
+  license?: string
+  version?: string
+  homepage?: string
+  repository?: string | { url?: string }
+}
+
+type NoticeDependency = {
+  name: string
+  version: string
+  license: string
+  attributionUrl: string
+}
+
+const parseLockfileRuntimeVersions = () => {
+  const lines = pnpmLock.split('\n')
+  const importerStart = lines.indexOf('  .:')
+  const dependenciesStart = lines.indexOf('    dependencies:', importerStart)
+  const versions = new Map<string, string>()
+
+  for (let index = dependenciesStart + 1; index < lines.length; index += 1) {
+    const packageLine = lines[index].match(/^      ([^:]+):$/)
+    if (lines[index].startsWith('    ') && !lines[index].startsWith('      ')) break
+    if (!packageLine) continue
+
+    const versionLine = lines[index + 2]?.match(/^        version: (.+)$/)
+    if (versionLine) versions.set(packageLine[1], versionLine[1].split('(')[0])
+  }
+
+  return versions
+}
+
+const normalizeRepositoryUrl = (manifest: PackageManifest) => {
+  const repository = manifest.repository
+  const rawUrl = typeof repository === 'string' ? repository : repository?.url
+  if (!rawUrl) return manifest.homepage?.replace(/\/$/, '')
+  if (/^[\w.-]+\/[\w.-]+$/.test(rawUrl)) return `https://github.com/${rawUrl}`
+  return rawUrl
+    .replace(/^git\+/, '')
+    .replace(/\.git$/, '')
+    .replace(/\/$/, '')
+}
+
+const readPackageManifest = (name: string) =>
+  JSON.parse(readFileSync(`node_modules/${name}/package.json`, 'utf8')) as PackageManifest
+
+const parseNoticeDependencies = (): NoticeDependency[] =>
+  [
+    ...thirdPartyNotices.matchAll(
+      /^\| `([^`]+)`\s+\|\s*([^|]+?)\s*\|\s*([^|]+?)\s*\|\s*\[[^\]]+\]\((https?:\/\/[^)]+)\)\s*\|$/gm,
+    ),
+  ].map(([, name, version, license, attributionUrl]) => ({
+    name,
+    version,
+    license,
+    attributionUrl,
+  }))
 
 describe('public release licensing metadata', () => {
   it('declares the MIT license and initial public release', () => {
@@ -56,6 +116,26 @@ describe('public release licensing metadata', () => {
     expect(thirdPartyNotices).not.toContain('redistribution rights cannot be verified')
     expect(readme).toMatch(/visual assets are attributed to AlphaFun\s+contributors/)
     expect(readme).not.toContain('have unresolved provenance and are excluded')
+  })
+
+  it('keeps runtime dependency notices aligned with resolved package metadata', () => {
+    const directDependencies = Object.keys(packageJson.dependencies ?? {}).sort()
+    const noticeDependencies = parseNoticeDependencies()
+    const lockfileVersions = parseLockfileRuntimeVersions()
+
+    expect(noticeDependencies.map(({ name }) => name).sort()).toEqual(directDependencies)
+    expect(lockfileVersions.size).toBe(directDependencies.length)
+
+    noticeDependencies.forEach(({ name, version, license, attributionUrl }) => {
+      const manifest = readPackageManifest(name)
+      const resolvedVersion = lockfileVersions.get(name)
+      const repositoryUrl = normalizeRepositoryUrl(manifest)
+
+      expect(resolvedVersion, `${name} is missing from the lockfile importer`).toBe(version)
+      expect(manifest.version, `${name} manifest version`).toBe(resolvedVersion)
+      expect(manifest.license, `${name} license`).toBe(license)
+      expect(attributionUrl, `${name} repository link`).toBe(repositoryUrl)
+    })
   })
 
   it('records complete, hash-pinned provenance for every bundled visual asset', () => {

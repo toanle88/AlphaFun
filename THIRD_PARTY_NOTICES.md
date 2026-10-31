@@ -42,18 +42,24 @@ available under the SIL Open Font License, version 1.1 (OFL-1.1):
 These direct production dependencies are resolved by `pnpm-lock.yaml` and
 remain under their own licenses:
 
-| Package          | Resolved version | License |
-| ---------------- | ---------------: | ------- |
-| `clsx`           |            2.1.1 | MIT     |
-| `lucide-react`   |           1.63.0 | ISC     |
-| `react`          |           19.3.1 | MIT     |
-| `react-dom`      |           19.3.1 | MIT     |
-| `tailwind-merge` |            3.7.0 | MIT     |
+| Package          | Resolved version | License | Attribution                                             |
+| ---------------- | ---------------: | ------- | ------------------------------------------------------- |
+| `clsx`           |            2.1.1 | MIT     | [repository](https://github.com/lukeed/clsx)            |
+| `lucide-react`   |           1.63.0 | ISC     | [repository](https://github.com/lucide-icons/lucide)    |
+| `react`          |           19.3.1 | MIT     | [repository](https://github.com/react/react)            |
+| `react-dom`      |           19.3.1 | MIT     | [repository](https://github.com/react/react)            |
+| `tailwind-merge` |            3.7.0 | MIT     | [repository](https://github.com/dcastil/tailwind-merge) |
 
 The Lucide icons used by the application are provided by `lucide-react` and
 are covered by its ISC license. The package's license text is available in
-the package distribution and in the [Lucide repository](https://github.com/lucide-icons/lucide).
+the package distribution and in its linked repository.
 
 Development-only dependencies are not shipped as part of the application
 runtime. Any future dependency or vendored asset should be added to this file
 when it requires attribution or carries license terms beyond the MIT License.
+
+To verify this inventory after changing a production dependency, run
+`pnpm check:third-party-notices`. The check compares this table with the direct
+dependencies in `package.json`, their exact versions in the root importer of
+`pnpm-lock.yaml`, and the license and repository metadata in each installed
+package manifest. CI runs the same check on every pull request.
