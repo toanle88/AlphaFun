@@ -142,11 +142,11 @@ Infrastructure changes are handled separately by
 
 ## License
 
-AlphaFun source code is released under the [MIT License](LICENSE). The bundled
-illustrations and PWA icons have unresolved provenance and are excluded from
-that license; see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) before
-redistributing the application or its visual assets. Externally sourced fonts
-and dependencies are also listed there.
+AlphaFun source code and the bundled illustrations and PWA icons are released
+under the [MIT License](LICENSE). The visual assets are attributed to AlphaFun
+contributors; their exact hashes and provenance records are in
+[`asset-provenance.json`](asset-provenance.json). Externally sourced fonts and
+dependencies are listed in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 
 The initial public release is version `0.1.0`, documented by the Git tag
 `v0.1.0`.
