@@ -56,6 +56,24 @@ test.describe('AlphaFun production browser smoke tests', () => {
 })
 
 test.describe('AlphaFun PWA and offline shell', () => {
+  test('loads the declared favicon without requesting the missing fallback', async ({ page }) => {
+    const faviconRequests: string[] = []
+    page.on('request', (request) => {
+      if (new URL(request.url()).pathname === '/favicon.ico') {
+        faviconRequests.push(request.url())
+      }
+    })
+
+    await page.goto('/')
+    const faviconHref = await page.locator('link[rel="icon"]').getAttribute('href')
+    expect(faviconHref).toBe('/alphafun-icon.svg')
+
+    const favicon = await page.request.get(new URL(faviconHref!, page.url()).toString())
+    expect(favicon.ok()).toBeTruthy()
+    expect(favicon.headers()['content-type']).toContain('image/svg+xml')
+    expect(faviconRequests).toEqual([])
+  })
+
   test('publishes an installable manifest and registers a service worker', async ({ page }) => {
     await page.goto('/')
     const manifestHref = await page.locator('link[rel="manifest"]').getAttribute('href')
