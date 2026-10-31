@@ -97,7 +97,12 @@ The image migration and before/after byte counts are recorded in [`docs/image-op
 
 ## Deployment
 
-The application is deployed as an Azure Static Web App through `.github/workflows/deploy.yml`. That workflow installs the locked dependencies, runs type-checking, linting, the test suite, and the production build, then deploys `dist/`. Infrastructure changes are handled separately by `.github/workflows/infrastructure.yml`.
+Pull requests are validated by `.github/workflows/ci.yml`; their staging
+previews are managed separately by `.github/workflows/preview.yml`. Approved
+pushes or releases targeting `main` are built and deployed by
+`.github/workflows/deploy.yml`, which deploys the verified `dist/` artifact.
+Infrastructure changes are handled separately by
+`.github/workflows/infrastructure.yml`.
 
 ## Contributor and maintainer documentation
 

@@ -2,11 +2,17 @@
 
 ## Application deployment
 
-`.github/workflows/deploy.yml` installs the locked pnpm dependencies, runs
-type-checking, lint, tests, and the production build, then deploys `dist/` to
-Azure Static Web Apps. Pushes to `main` and pull requests targeting `main`
-invoke the workflow; pull-request staging deployments are closed when the
+Pull requests targeting `main` run `.github/workflows/ci.yml`, which installs
+the locked pnpm dependencies, runs type-checking, lint, tests, and the
+production build. `.github/workflows/preview.yml` separately manages the
+explicitly named Azure pull-request staging preview and closes it when the
 pull request closes.
+
+`.github/workflows/deploy.yml` repeats those validation steps for approved
+production candidates, uploads the verified `dist/` artifact once, and deploys
+that artifact to Azure Static Web Apps. Production deployment is limited to
+pushes to `main`, published releases targeting `main`, or a manually approved
+run on `main`; the `production` environment supplies the approval gate.
 
 The production build creates the PWA manifest and service worker. Do not
 commit `dist/` or generated service-worker output.
