@@ -44,6 +44,15 @@ When changing a production dependency, also run
 `pnpm check:third-party-notices`. This verifies the dependency table against
 the lockfile and the installed package manifests; CI runs it automatically.
 
+## Contributed content and assets
+
+Before submitting artwork, icons, translations, or other content, confirm that
+you created it or have permission to redistribute it. Include the source,
+license, attribution, and any modifications in the pull request. By submitting
+content to AlphaFun, you confirm that you have the right to contribute it under
+the project's stated license and agree to update `THIRD_PARTY_NOTICES.md` and
+`asset-provenance.json` when applicable.
+
 Use `pnpm test` without `--run` when you want Vitest watch mode. If a check
 cannot be run locally, explain why in the pull request.
 
