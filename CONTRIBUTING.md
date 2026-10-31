@@ -37,6 +37,10 @@ pnpm test -- --run
 pnpm build
 ```
 
+When changing a production dependency, also run
+`pnpm check:third-party-notices`. This verifies the dependency table against
+the lockfile and the installed package manifests; CI runs it automatically.
+
 Use `pnpm test` without `--run` when you want Vitest watch mode. If a check
 cannot be run locally, explain why in the pull request.
 
