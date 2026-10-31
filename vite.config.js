@@ -8,7 +8,15 @@ export default defineConfig({
         react(),
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'mask-icon.svg'],
+            includeAssets: [
+                'alphafun-icon.svg',
+                'alphafun-icon-192.png',
+                'alphafun-icon-512.png',
+            ],
+            workbox: {
+                globPatterns: ['**/*.{js,css,html,svg,webp}'],
+                maximumFileSizeToCacheInBytes: 512 * 1024,
+            },
             manifest: {
                 name: 'AlphaFun',
                 short_name: 'AlphaFun',
@@ -16,15 +24,20 @@ export default defineConfig({
                 theme_color: '#FF6B6B',
                 icons: [
                     {
-                        src: 'pwa-192x192.png',
+                        src: 'alphafun-icon.svg',
+                        sizes: 'any',
+                        type: 'image/svg+xml'
+                    },
+                    {
+                        src: 'alphafun-icon-192.png',
                         sizes: '192x192',
                         type: 'image/png'
                     },
                     {
-                        src: 'pwa-512x512.png',
+                        src: 'alphafun-icon-512.png',
                         sizes: '512x512',
                         type: 'image/png'
-                    }
+                    },
                 ]
             }
         })

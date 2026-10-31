@@ -84,8 +84,7 @@ AlphaFun/
 ├── package.json
 ├── public/
 │   ├── alphafun-icon.svg   # App icon
-│   ├── pwa-192x192.png     # PWA icon (192×192)
-│   ├── pwa-512x512.png     # PWA icon (512×512)
+│   ├── alphafun-icon.svg   # PWA icon
 │   └── images/             # Flashcard images (objects & verbs)
 ├── src/
 │   ├── main.js             # Core app logic & data
@@ -98,6 +97,9 @@ AlphaFun/
     ├── deploy.yml           # CI/CD to Azure Static Web Apps
     └── infrastructure.yml   # Terraform provisioning
 ```
+
+The image migration and before/after byte counts are recorded in
+[`docs/image-optimization.md`](docs/image-optimization.md).
 
 ## ☁️ Deployment
 
