@@ -19,13 +19,20 @@ jobs:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - name: Verify secret scanning, push protection, and branch rules
+      - name: Checkout repository metadata
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          sparse-checkout: .github/CODEOWNERS
+          sparse-checkout-cone-mode: false
+
+      - name: Verify secret scanning, ownership, and branch rules
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
 
           repository="$(gh api "repos/${GITHUB_REPOSITORY}")"
+          owner="$(jq -r '.owner.login' <<< "${repository}")"
           for setting in secret_scanning secret_scanning_push_protection; do
             status="$(jq -r --arg setting "${setting}" \
               '.security_and_analysis[$setting].status // "disabled"' <<< "${repository}")"
@@ -35,16 +42,48 @@ jobs:
             fi
           done
 
-          protection="$(gh api \
-            "repos/${GITHUB_REPOSITORY}/branches/main/protection" 2>/dev/null || true)"
-          if [ -z "${protection}" ]; then
-            echo 'The main branch has no protection rules; require code-owner review in the default-branch ruleset.' >&2
+          if ! grep -Eq "^[^#[:space:]]+[[:space:]]+@${owner}([[:space:]]|$)" .github/CODEOWNERS; then
+            echo "CODEOWNERS does not assign the repository owner @${owner}." >&2
             exit 1
           fi
 
-          require_code_owner_review="$(jq -r \
-            '.required_pull_request_reviews.require_code_owner_reviews // false' <<< "${protection}")"
-          if [ "${require_code_owner_review}" != 'true' ]; then
-            echo 'The main branch does not require code-owner review.' >&2
+          rulesets="$(gh api --paginate --slurp \
+            "repos/${GITHUB_REPOSITORY}/rulesets?includes_parents=false")"
+          ruleset_id="$(jq -r \
+            '[.[][] | select(.name == "Main Protect" and .target == "branch" and .enforcement == "active")][0].id // empty' \
+            <<< "${rulesets}")"
+          if [ -z "${ruleset_id}" ]; then
+            echo 'The active Main Protect branch ruleset is missing.' >&2
             exit 1
           fi
+
+          ruleset="$(gh api "repos/${GITHUB_REPOSITORY}/rulesets/${ruleset_id}")"
+          pull_request_rule="$(jq -c '[.rules[] | select(.type == "pull_request")][0] // {}' <<< "${ruleset}")"
+          require_code_owner_review="$(jq -r \
+            '.parameters.require_code_owner_review // false' <<< "${pull_request_rule}")"
+          if [ "${require_code_owner_review}" != 'true' ]; then
+            echo 'The Main Protect ruleset does not require code-owner review.' >&2
+            exit 1
+          fi
+
+          required_approvals="$(jq -r \
+            '.parameters.required_approving_review_count // 0' <<< "${pull_request_rule}")"
+          if [ "${required_approvals}" -lt 1 ]; then
+            echo 'The Main Protect ruleset must require at least one approving review.' >&2
+            exit 1
+          fi
+
+          required_checks="$(jq -r \
+            '[.rules[] | select(.type == "required_status_checks") | .parameters.required_status_checks[]?.context] | .[]' \
+            <<< "${ruleset}")"
+          for check in \
+            'Validate: Pull Request' \
+            'Browser and PWA' \
+            'Review dependency changes' \
+            'Analyze JavaScript and TypeScript' \
+            'Verify workflow action pins'; do
+            if ! grep -Fq "${check}" <<< "${required_checks}"; then
+              echo "The Main Protect ruleset does not require the ${check} check." >&2
+              exit 1
+            fi
+          done
