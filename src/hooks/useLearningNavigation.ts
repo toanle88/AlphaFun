@@ -5,6 +5,7 @@ import {
   buildPool,
   getItemPosition,
   NavigationState,
+  reconcileNavigationForOrder,
   resetNavigation,
   resetNavigationToFirst,
 } from '../utils/navigation'
@@ -43,9 +44,13 @@ export const useLearningNavigation = ({
     [isRecording, language],
   )
 
-  const setOrder = useCallback((nextOrder: Order) => {
-    setOrderState(nextOrder)
-  }, [])
+  const setOrder = useCallback(
+    (nextOrder: Order) => {
+      setOrderState(nextOrder)
+      setNavigation((previous) => reconcileNavigationForOrder(pool, nextOrder, previous))
+    },
+    [pool],
+  )
 
   const resetForLanguage = useCallback(
     (nextLanguage: Language) => {

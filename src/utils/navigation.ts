@@ -127,6 +127,29 @@ export const resetNavigationToFirst = (pool: AppItem[]): NavigationState => {
   }
 }
 
+/**
+ * Keeps the visible item while aligning the cursor with the selected order.
+ * Switching to sequential order therefore always advances from the visible
+ * item, regardless of how that item was selected.
+ */
+export const reconcileNavigationForOrder = (
+  pool: AppItem[],
+  order: Order,
+  state: NavigationState,
+): NavigationState => {
+  if (pool.length === 0) {
+    return { currentItemId: null, sequentialIndex: 0 }
+  }
+
+  const currentIndex = pool.findIndex((item) => item.id === state.currentItemId)
+  const visibleIndex = currentIndex === -1 ? 0 : currentIndex
+
+  return {
+    currentItemId: pool[visibleIndex].id,
+    sequentialIndex: order === 'sequential' ? (visibleIndex + 1) % pool.length : 0,
+  }
+}
+
 export const advanceNavigation = (
   pool: AppItem[],
   order: Order,
