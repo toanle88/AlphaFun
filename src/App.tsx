@@ -11,6 +11,7 @@ import { UI_TEXT } from './constants/data'
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('vi')
   const [mode, setMode] = useState<Mode>('manual')
+  const [isRecording, setIsRecording] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const settingsButtonRef = useRef<HTMLButtonElement>(null)
   const firstSettingsControlRef = useRef<HTMLButtonElement>(null)
@@ -20,6 +21,7 @@ const App: React.FC = () => {
       initialCategory: 'all',
       initialOrder: 'random',
       mode,
+      isRecording,
     })
 
   useCategoryTheme(category)
@@ -81,7 +83,12 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        <CategoryNav category={category} lang={lang} onCategoryChange={setCategory} />
+        <CategoryNav
+          category={category}
+          lang={lang}
+          disabled={isRecording}
+          onCategoryChange={setCategory}
+        />
 
         <main className="learning-main">
           <DisplayArea
@@ -89,6 +96,7 @@ const App: React.FC = () => {
             lang={lang}
             autoPlay={mode === 'auto'}
             progress={progress}
+            onRecordingChange={setIsRecording}
           />
 
           <button
@@ -96,6 +104,7 @@ const App: React.FC = () => {
             className="next-button"
             aria-label={lang === 'vi' ? 'Mục tiếp theo' : 'Next item'}
             onClick={selectNextItem}
+            disabled={isRecording}
           >
             {t.next} <ChevronRight className="next-icon" aria-hidden="true" />
           </button>

@@ -15,10 +15,16 @@ export const CATEGORIES: Category[] = [
 interface CategoryNavProps {
   category: Category
   lang: Language
+  disabled?: boolean
   onCategoryChange: (category: Category) => void
 }
 
-export const CategoryNav: React.FC<CategoryNavProps> = ({ category, lang, onCategoryChange }) => {
+export const CategoryNav: React.FC<CategoryNavProps> = ({
+  category,
+  lang,
+  disabled = false,
+  onCategoryChange,
+}) => {
   const labels = UI_TEXT[lang]
 
   return (
@@ -30,6 +36,7 @@ export const CategoryNav: React.FC<CategoryNavProps> = ({ category, lang, onCate
           className={`category-button ${category === itemCategory ? 'is-selected' : ''}`}
           onClick={() => onCategoryChange(itemCategory)}
           aria-pressed={category === itemCategory}
+          disabled={disabled}
         >
           {labels[itemCategory]}
         </button>

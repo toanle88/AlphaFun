@@ -10,11 +10,18 @@ interface DisplayAreaProps {
   lang: Language
   autoPlay: boolean
   progress: string
+  onRecordingChange: (isRecording: boolean) => void
 }
 
 const highPriorityImageProps = { fetchpriority: 'high' as const }
 
-export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, progress }) => {
+export const DisplayArea: React.FC<DisplayAreaProps> = ({
+  item,
+  lang,
+  autoPlay,
+  progress,
+  onRecordingChange,
+}) => {
   const { speak, isSpeaking } = useSpeech(lang)
   const { isRecording, audioUrl, startRecording, stopRecording, playRecording, cleanupRecording } =
     useRecording()
@@ -30,6 +37,10 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({ item, lang, autoPlay, 
   React.useEffect(() => {
     cleanupRecording()
   }, [item.id, cleanupRecording])
+
+  React.useEffect(() => {
+    onRecordingChange(isRecording)
+  }, [isRecording, onRecordingChange])
 
   const renderShape = (kind: ShapeKind) => {
     switch (kind) {

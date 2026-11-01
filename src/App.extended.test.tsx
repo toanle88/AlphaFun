@@ -55,6 +55,68 @@ describe('App Component Extended Tests', () => {
     expect(nextItem).not.toBe(initialItem)
   })
 
+  it('keeps the active recording and blocks navigation until it stops', async () => {
+    const tracks = [{ stop: vi.fn() }]
+    const recorderInstances: Array<{
+      onstop: (() => void) | null
+      stop: ReturnType<typeof vi.fn>
+    }> = []
+
+    class TestMediaRecorder {
+      mimeType = 'audio/webm;codecs=opus'
+      state = 'inactive'
+      stream = { getTracks: () => tracks }
+      ondataavailable: ((event: BlobEvent) => void) | null = null
+      onstop: (() => void) | null = null
+
+      constructor() {
+        recorderInstances.push(this)
+      }
+
+      start = vi.fn(() => {
+        this.state = 'recording'
+      })
+
+      stop = vi.fn(() => {
+        this.state = 'inactive'
+        this.onstop?.()
+      })
+    }
+
+    vi.stubGlobal('MediaRecorder', TestMediaRecorder)
+    vi.mocked(navigator.mediaDevices.getUserMedia).mockResolvedValue({
+      getTracks: () => tracks,
+    } as unknown as MediaStream)
+
+    render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByText('Auto'))
+
+    const initialProgress = screen.getByTestId('progress').textContent
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Record your voice' }))
+      await Promise.resolve()
+    })
+
+    expect(screen.getByRole('button', { name: 'Stop recording' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Mục tiếp theo' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Chữ số' })).toBeDisabled()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Mục tiếp theo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Chữ số' }))
+    expect(screen.getByTestId('progress').textContent).toBe(initialProgress)
+    expect(screen.getByRole('button', { name: 'Chữ số' })).toHaveAttribute('aria-pressed', 'false')
+
+    act(() => {
+      vi.advanceTimersByTime(6000)
+    })
+
+    expect(screen.getByTestId('progress').textContent).toBe(initialProgress)
+    expect(screen.getByRole('button', { name: 'Stop recording' })).toBeInTheDocument()
+    expect(recorderInstances).toHaveLength(1)
+    expect(recorderInstances[0].stop).not.toHaveBeenCalled()
+  })
+
   it('cleans up the auto-play timer when returning to manual mode', () => {
     render(<App />)
 
