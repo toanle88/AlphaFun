@@ -1,30 +1,52 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Language } from '../types'
 
 export const useSpeech = (lang: Language) => {
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([])
+  const [, setVoices] = useState<SpeechSynthesisVoice[]>([])
+  const voicesRef = useRef<SpeechSynthesisVoice[]>([])
   const [isSpeaking, setIsSpeaking] = useState(false)
 
   useEffect(() => {
-    const loadVoices = () => {
-      setVoices(window.speechSynthesis.getVoices())
+    const synthesis = typeof window !== 'undefined' ? window.speechSynthesis : undefined
+    if (!synthesis || typeof synthesis.getVoices !== 'function') {
+      return
     }
-    window.speechSynthesis.onvoiceschanged = loadVoices
+
+    const loadVoices = () => {
+      const nextVoices = synthesis.getVoices()
+      voicesRef.current = nextVoices
+      setVoices(nextVoices)
+    }
+
+    synthesis.onvoiceschanged = loadVoices
     loadVoices()
     return () => {
-      window.speechSynthesis.onvoiceschanged = null
+      if (synthesis.onvoiceschanged === loadVoices) {
+        synthesis.onvoiceschanged = null
+      }
     }
   }, [])
 
   const speak = useCallback(
     (text: string) => {
-      if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel()
+      const synthesis = typeof window !== 'undefined' ? window.speechSynthesis : undefined
+      const Utterance = typeof window !== 'undefined' ? window.SpeechSynthesisUtterance : undefined
+
+      if (
+        !synthesis ||
+        typeof synthesis.cancel !== 'function' ||
+        typeof synthesis.speak !== 'function' ||
+        typeof Utterance !== 'function'
+      ) {
+        return
       }
 
-      const utterance = new SpeechSynthesisUtterance(text)
-      const viVoice = voices.find((v) => v.lang.startsWith('vi'))
-      const enVoice = voices.find((v) => v.lang.startsWith('en'))
+      synthesis.cancel()
+      setIsSpeaking(false)
+
+      const utterance = new Utterance(text)
+      const viVoice = voicesRef.current.find((v) => v.lang.startsWith('vi'))
+      const enVoice = voicesRef.current.find((v) => v.lang.startsWith('en'))
 
       if (lang === 'vi') {
         utterance.lang = 'vi-VN'
@@ -41,9 +63,9 @@ export const useSpeech = (lang: Language) => {
       utterance.onend = () => setIsSpeaking(false)
       utterance.onerror = () => setIsSpeaking(false)
 
-      window.speechSynthesis.speak(utterance)
+      synthesis.speak(utterance)
     },
-    [voices, lang],
+    [lang],
   )
 
   return { speak, isSpeaking }
