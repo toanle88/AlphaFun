@@ -133,7 +133,7 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
       )
     }
 
-    return <span className="big-text text-primary">{item.value}</span>
+    return <span className="big-text font-main text-primary">{item.value}</span>
   }
 
   return (

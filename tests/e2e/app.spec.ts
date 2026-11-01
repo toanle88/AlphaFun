@@ -50,6 +50,29 @@ test.describe('AlphaFun production browser smoke tests', () => {
     await context.close()
   })
 
+  test('uses the main font for Vietnamese large letters after webfonts load', async ({ page }) => {
+    for (const width of [390, 1280]) {
+      await page.setViewportSize({ width, height: 844 })
+      await page.goto('/')
+      await page.getByRole('button', { name: 'Chữ cái' }).click()
+      await page.getByRole('button', { name: 'Mở cài đặt' }).click()
+      const settingsDialog = page.getByRole('dialog', { name: 'Cài đặt học tập' })
+      await settingsDialog.getByRole('button', { name: 'Tuần tự' }).click()
+      await page.keyboard.press('Escape')
+      await expect(settingsDialog).toBeHidden()
+      await page.getByRole('button', { name: 'TIẾP THEO' }).click()
+      await page.evaluate(async () => {
+        await document.fonts.ready
+      })
+
+      const largeLetter = page.locator('.big-text')
+      await expect(largeLetter).toHaveText('Ă')
+      expect(
+        await largeLetter.evaluate((element) => getComputedStyle(element).fontFamily),
+      ).toContain('Nunito')
+    }
+  })
+
   test('dismisses settings outside the panel and keeps the heading clear of the close button', async ({
     page,
   }) => {

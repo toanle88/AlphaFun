@@ -15,7 +15,8 @@
   --soft-surface: #f1f7f5;
   --focus-ring: #147d77;
 
-  --font-main: 'Fredoka', 'Nunito', sans-serif;
+  --font-main: 'Nunito', sans-serif;
+  --font-brand: 'Fredoka', sans-serif;
 }
 
 @layer base {
@@ -84,6 +85,7 @@
   }
 
   .app-title {
+    @apply font-brand;
     color: var(--primary);
     font-size: clamp(2rem, 6vw, 2.8rem);
     font-weight: 700;
