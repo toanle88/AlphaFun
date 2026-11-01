@@ -21,6 +21,7 @@ describe('App Component Extended Tests', () => {
     fireEvent.click(settingsBtn)
     const sequentialBtn = screen.getByText('Normal')
     fireEvent.click(sequentialBtn)
+    fireEvent.keyDown(document, { key: 'Escape' })
 
     // Click next a few times
     const nextBtn = screen.getByText(/TIẾP THEO|NEXT/)
@@ -91,6 +92,7 @@ describe('App Component Extended Tests', () => {
     render(<App />)
     fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
     fireEvent.click(screen.getByText('Auto'))
+    fireEvent.keyDown(document, { key: 'Escape' })
 
     const initialProgress = screen.getByTestId('progress').textContent
     await act(async () => {
@@ -141,6 +143,7 @@ describe('App Component Extended Tests', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
     fireEvent.click(screen.getByText('Auto'))
+    fireEvent.keyDown(document, { key: 'Escape' })
     fireEvent.click(screen.getByRole('button', { name: 'Chữ số' }))
 
     const initialNumber = screen.getByTestId('display-item').textContent

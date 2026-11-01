@@ -15,11 +15,14 @@ test.describe('AlphaFun production browser smoke tests', () => {
     await expect(page.getByTestId('progress')).toHaveText(/\/ 26$/)
 
     await page.getByRole('button', { name: 'Open settings' }).click()
-    await expect(page.getByRole('dialog', { name: 'Learning settings' })).toBeVisible()
-    await page.getByRole('button', { name: 'English' }).click()
+    const settingsDialog = page.getByRole('dialog', { name: 'Learning settings' })
+    await expect(settingsDialog).toBeVisible()
+    await settingsDialog.getByRole('button', { name: 'English' }).click()
+    const closeSettingsButton = settingsDialog.getByRole('button', { name: 'Close settings' })
+    await expect(closeSettingsButton).toBeVisible()
+    await closeSettingsButton.click()
+    await expect(settingsDialog).toBeHidden()
     await expect(page.getByRole('button', { name: 'Letters' })).toBeVisible()
-    await page.getByRole('button', { name: 'Close settings' }).click()
-    await expect(page.getByRole('dialog', { name: 'Learning settings' })).toBeHidden()
   })
 
   test('keeps navigation and card controls usable on a phone viewport', async ({ browser }) => {

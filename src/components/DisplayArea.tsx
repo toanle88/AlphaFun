@@ -10,6 +10,7 @@ interface DisplayAreaProps {
   lang: Language
   autoPlay: boolean
   progress: string
+  disabled?: boolean
   onRecordingChange: (isRecording: boolean) => void
 }
 
@@ -20,6 +21,7 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
   lang,
   autoPlay,
   progress,
+  disabled = false,
   onRecordingChange,
 }) => {
   const { speak, isSpeaking } = useSpeech(lang)
@@ -151,6 +153,7 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
             onClick={() => speak(itemName)}
             aria-label="Play pronunciation"
             title="Play pronunciation"
+            disabled={disabled}
           >
             <Volume2 aria-hidden="true" />
           </button>
@@ -162,6 +165,7 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
             aria-label={isRecording ? 'Stop recording' : 'Record your voice'}
             aria-pressed={isRecording}
             title={isRecording ? 'Stop recording' : 'Record your voice'}
+            disabled={disabled}
           >
             {isRecording ? <Square aria-hidden="true" /> : <Mic aria-hidden="true" />}
           </button>
@@ -173,6 +177,7 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
               onClick={playRecording}
               aria-label="Play recording"
               title="Play recording"
+              disabled={disabled}
             >
               <Play aria-hidden="true" />
             </button>

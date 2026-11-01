@@ -4,6 +4,12 @@ All notable AlphaFun changes are recorded here. Entries are ordered newest
 first and use the version from `package.json`; the release workflow verifies
 that a published tag is exactly `v<version>`.
 
+## [0.1.1] - 2026-11-01
+
+### Fixed
+
+- Completed settings dialog focus containment and background isolation.
+
 ## [0.1.0] - Unreleased
 
 This is the initial public release target. It remains unreleased until the

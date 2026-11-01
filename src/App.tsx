@@ -49,24 +49,27 @@ const App: React.FC = () => {
     <div id="app" className="app-shell">
       <div className="app-frame">
         <header className="app-header">
-          <div>
+          <div inert={showSettings || undefined}>
             <p className="eyebrow">Learn through play</p>
             <h1 className="app-title">AlphaFun</h1>
           </div>
 
           <div className="settings-wrap">
-            <button
-              type="button"
-              className="icon-button"
-              ref={settingsButtonRef}
-              onClick={() => setShowSettings((isOpen) => !isOpen)}
-              aria-label={showSettings ? 'Close settings' : 'Open settings'}
-              aria-expanded={showSettings}
-              aria-controls="settings-panel"
-              aria-haspopup="dialog"
-            >
-              <Settings className="icon-button-icon" aria-hidden="true" />
-            </button>
+            <div inert={showSettings || undefined}>
+              <button
+                type="button"
+                className="icon-button"
+                ref={settingsButtonRef}
+                onClick={() => setShowSettings((isOpen) => !isOpen)}
+                aria-label={showSettings ? 'Close settings' : 'Open settings'}
+                aria-expanded={showSettings}
+                aria-controls="settings-panel"
+                aria-haspopup="dialog"
+                disabled={showSettings}
+              >
+                <Settings className="icon-button-icon" aria-hidden="true" />
+              </button>
+            </div>
 
             {showSettings && (
               <SettingsPanel
@@ -83,32 +86,35 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        <CategoryNav
-          category={category}
-          lang={lang}
-          disabled={isRecording}
-          onCategoryChange={setCategory}
-        />
-
-        <main className="learning-main">
-          <DisplayArea
-            item={currentItem}
+        <div inert={showSettings || undefined}>
+          <CategoryNav
+            category={category}
             lang={lang}
-            autoPlay={mode === 'auto'}
-            progress={progress}
-            onRecordingChange={setIsRecording}
+            disabled={isRecording || showSettings}
+            onCategoryChange={setCategory}
           />
 
-          <button
-            type="button"
-            className="next-button"
-            aria-label={lang === 'vi' ? 'Mục tiếp theo' : 'Next item'}
-            onClick={selectNextItem}
-            disabled={isRecording}
-          >
-            {t.next} <ChevronRight className="next-icon" aria-hidden="true" />
-          </button>
-        </main>
+          <main className="learning-main">
+            <DisplayArea
+              item={currentItem}
+              lang={lang}
+              autoPlay={mode === 'auto'}
+              progress={progress}
+              disabled={showSettings}
+              onRecordingChange={setIsRecording}
+            />
+
+            <button
+              type="button"
+              className="next-button"
+              aria-label={lang === 'vi' ? 'Mục tiếp theo' : 'Next item'}
+              onClick={selectNextItem}
+              disabled={isRecording || showSettings}
+            >
+              {t.next} <ChevronRight className="next-icon" aria-hidden="true" />
+            </button>
+          </main>
+        </div>
       </div>
     </div>
   )
