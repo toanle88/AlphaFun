@@ -13,12 +13,14 @@ interface UseLearningNavigationOptions {
   initialCategory: Category
   initialOrder: Order
   mode: Mode
+  isRecording: boolean
 }
 
 export const useLearningNavigation = ({
   initialCategory,
   initialOrder,
   mode,
+  isRecording,
 }: UseLearningNavigationOptions) => {
   const [category, setCategoryState] = useState(initialCategory)
   const [order, setOrderState] = useState(initialOrder)
@@ -27,18 +29,29 @@ export const useLearningNavigation = ({
     resetNavigation(buildPool(initialCategory), initialOrder),
   )
 
-  const setCategory = useCallback((nextCategory: Category) => {
-    setCategoryState(nextCategory)
-    setNavigation(resetNavigationToFirst(buildPool(nextCategory)))
-  }, [])
+  const setCategory = useCallback(
+    (nextCategory: Category) => {
+      if (isRecording) {
+        return
+      }
+
+      setCategoryState(nextCategory)
+      setNavigation(resetNavigationToFirst(buildPool(nextCategory)))
+    },
+    [isRecording],
+  )
 
   const setOrder = useCallback((nextOrder: Order) => {
     setOrderState(nextOrder)
   }, [])
 
   const selectNextItem = useCallback(() => {
+    if (isRecording) {
+      return
+    }
+
     setNavigation((previous) => advanceNavigation(pool, order, previous))
-  }, [order, pool])
+  }, [isRecording, order, pool])
 
   useEffect(() => {
     if (mode !== 'auto') {
