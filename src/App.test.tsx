@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import { describe, it, expect } from 'vitest'
 import App from './App'
 
@@ -40,10 +40,7 @@ describe('App Component', () => {
       'aria-modal',
       'true',
     )
-    expect(screen.getByRole('button', { name: 'Close settings' })).toHaveAttribute(
-      'aria-expanded',
-      'true',
-    )
+    expect(settingsBtn).toHaveAttribute('aria-expanded', 'true')
 
     fireEvent.keyDown(document, { key: 'Escape' })
     expect(screen.queryByRole('dialog', { name: 'Learning settings' })).not.toBeInTheDocument()
@@ -53,7 +50,7 @@ describe('App Component', () => {
     )
   })
 
-  it('moves focus into settings and restores it after Escape or trigger dismissal', () => {
+  it('moves focus into settings and restores it after Escape or dialog dismissal', () => {
     render(<App />)
 
     const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
@@ -65,8 +62,61 @@ describe('App Component', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
     expect(screen.getByRole('button', { name: 'Tiếng Việt' })).toHaveFocus()
-    fireEvent.click(screen.getByRole('button', { name: 'Close settings' }))
+    fireEvent.click(
+      within(screen.getByRole('dialog', { name: 'Learning settings' })).getByRole('button', {
+        name: 'Close settings',
+      }),
+    )
     expect(screen.getByRole('button', { name: 'Open settings' })).toHaveFocus()
+  })
+
+  it('wraps Tab focus within the modal settings panel', () => {
+    render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+
+    const firstControl = screen.getByRole('button', { name: 'Tiếng Việt' })
+    const dialog = screen.getByRole('dialog', { name: 'Learning settings' })
+    const lastControl = within(dialog).getByRole('button', { name: 'Close settings' })
+
+    fireEvent.keyDown(lastControl, { key: 'Tab' })
+    expect(firstControl).toHaveFocus()
+
+    fireEvent.keyDown(firstControl, { key: 'Tab', shiftKey: true })
+    expect(lastControl).toHaveFocus()
+  })
+
+  it('returns focus to the modal when focus is moved to the background', () => {
+    render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+
+    const firstControl = screen.getByRole('button', { name: 'Tiếng Việt' })
+    fireEvent.focus(document.body)
+
+    expect(firstControl).toHaveFocus()
+  })
+
+  it('isolates background controls while settings is open', () => {
+    render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+
+    expect(
+      within(screen.getByRole('dialog', { name: 'Learning settings' })).getByRole('button', {
+        name: 'Close settings',
+      }),
+    ).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Chữ cái' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Play pronunciation' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Mục tiếp theo' })).toBeDisabled()
+    expect(screen.getByRole('heading', { name: 'AlphaFun' }).parentElement).toHaveAttribute('inert')
+    expect(screen.getByRole('navigation').parentElement).toHaveAttribute('inert')
+    expect(screen.getByRole('main').parentElement).toHaveAttribute('inert')
+    const settingsTrigger = screen
+      .getByRole('banner')
+      .querySelector<HTMLButtonElement>('.icon-button')
+    expect(settingsTrigger).toBeDisabled()
+
+    fireEvent.click(screen.getByRole('button', { name: 'Chữ cái' }))
+    expect(screen.getByRole('button', { name: 'Tất cả' })).toHaveAttribute('aria-pressed', 'true')
   })
 
   it('exposes names and states for the main learning controls', () => {
@@ -149,6 +199,7 @@ describe('App Component', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
     fireEvent.click(screen.getByRole('button', { name: 'Normal' }))
+    fireEvent.keyDown(document, { key: 'Escape' })
     fireEvent.click(screen.getByRole('button', { name: 'Chữ cái' }))
     expect(screen.getByTestId('progress')).toHaveTextContent('1 / 26')
 

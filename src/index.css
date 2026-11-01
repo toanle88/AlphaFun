@@ -140,6 +140,27 @@
     animation: panelIn 160ms ease-out;
   }
 
+  .settings-close-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    background: transparent;
+    border: 0;
+    border-radius: 0.5rem;
+    cursor: pointer;
+  }
+
+  .settings-close-button svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
   .settings-heading {
     display: flex;
     align-items: baseline;
