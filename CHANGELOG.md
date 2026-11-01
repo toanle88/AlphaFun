@@ -4,6 +4,13 @@ All notable AlphaFun changes are recorded here. Entries are ordered newest
 first and use the version from `package.json`; the release workflow verifies
 that a published tag is exactly `v<version>`.
 
+## [0.1.8] - 2026-11-01
+
+### Fixed
+
+- Close the learning settings panel when clicking outside it and keep its
+  heading clear of the touch-friendly close button on narrow screens.
+
 ## [0.1.7] - 2026-11-01
 
 ### Fixed

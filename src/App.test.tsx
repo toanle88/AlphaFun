@@ -117,6 +117,22 @@ describe('App Component', () => {
     expect(screen.getByRole('button', { name: 'Mở cài đặt' })).toHaveFocus()
   })
 
+  it('dismisses settings from outside while keeping inside interaction open', () => {
+    render(<App />)
+
+    const settingsBtn = screen.getByRole('button', { name: 'Mở cài đặt' })
+    fireEvent.click(settingsBtn)
+    const dialog = screen.getByRole('dialog', { name: 'Cài đặt học tập' })
+
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Tự động' }))
+    expect(screen.getByRole('dialog', { name: 'Cài đặt học tập' })).toBeInTheDocument()
+
+    fireEvent.pointerDown(document.body)
+
+    expect(screen.queryByRole('dialog', { name: 'Cài đặt học tập' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Mở cài đặt' })).toHaveFocus()
+  })
+
   it('wraps Tab focus within the modal settings panel', () => {
     render(<App />)
     fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))

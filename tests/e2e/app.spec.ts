@@ -50,6 +50,36 @@ test.describe('AlphaFun production browser smoke tests', () => {
     await context.close()
   })
 
+  test('dismisses settings outside the panel and keeps the heading clear of the close button', async ({
+    page,
+  }) => {
+    for (const width of [390, 1280]) {
+      await page.setViewportSize({ width, height: 844 })
+      await page.goto('/')
+      await page.getByRole('button', { name: 'Mở cài đặt' }).click()
+
+      const dialog = page.locator('#settings-panel')
+      const closeButton = dialog.getByRole('button', { name: 'Đóng cài đặt' })
+      const title = dialog.locator('#settings-title')
+      const hint = dialog.locator('#settings-hint')
+      const [closeBox, titleBox, hintBox] = await Promise.all([
+        closeButton.boundingBox(),
+        title.boundingBox(),
+        hint.boundingBox(),
+      ])
+
+      expect(closeBox).not.toBeNull()
+      expect(titleBox).not.toBeNull()
+      expect(hintBox).not.toBeNull()
+      expect(titleBox!.x + titleBox!.width).toBeLessThanOrEqual(closeBox!.x)
+      expect(hintBox!.x + hintBox!.width).toBeLessThanOrEqual(closeBox!.x)
+
+      await page.mouse.click(8, 8)
+      await expect(dialog).toBeHidden()
+      await expect(page.getByRole('button', { name: 'Mở cài đặt' })).toBeFocused()
+    }
+  })
+
   test('has no axe violations on the app and settings dialog', async ({ page }) => {
     await page.goto('/')
     const appResults = await new AxeBuilder({ page }).analyze()

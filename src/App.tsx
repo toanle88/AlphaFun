@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { ChevronRight, Settings } from 'lucide-react'
 import { CategoryNav } from './components/CategoryNav'
 import { DisplayArea } from './components/DisplayArea'
@@ -57,7 +57,7 @@ const App: React.FC = () => {
       ?.setAttribute('content', t.documentDescription)
   }, [lang, t])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (showSettings) {
       settingsWasOpenRef.current = true
     } else if (settingsWasOpenRef.current) {
