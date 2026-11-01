@@ -76,7 +76,7 @@ const App: React.FC = () => {
         <header className="app-header">
           <div inert={showSettings || undefined}>
             <p className="eyebrow">{t.appTagline}</p>
-            <h1 className="app-title">AlphaFun</h1>
+            <h1 className="app-title font-brand">AlphaFun</h1>
           </div>
 
           <div className="settings-wrap">

@@ -32,7 +32,8 @@ export default {
         4: '4px',
       },
       fontFamily: {
-        main: ['Fredoka', 'Nunito', 'sans-serif'],
+        main: ['Nunito', 'sans-serif'],
+        brand: ['Fredoka', 'sans-serif'],
       },
     },
   },

@@ -4,6 +4,13 @@ All notable AlphaFun changes are recorded here. Entries are ordered newest
 first and use the version from `package.json`; the release workflow verifies
 that a published tag is exactly `v<version>`.
 
+## [0.1.9] - 2026-11-01
+
+### Fixed
+
+- Use the Vietnamese-capable Nunito font consistently for learning UI and
+  large letters, while retaining Fredoka for the Latin-only brand title.
+
 ## [0.1.8] - 2026-11-01
 
 ### Fixed
