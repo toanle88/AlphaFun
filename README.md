@@ -12,7 +12,7 @@ Try the deployed app: [AlphaFun](https://gray-forest-04a2fc200.2.azurestaticapps
 
 - Six learning categories: letters, numbers, objects, colors, actions, and shapes
 - Vietnamese and English labels and pronunciation
-- Text-to-speech with language and available-voice selection
+- Text-to-speech with automatic selection of the first matching browser voice; availability and speech behavior depend on the browser and operating system
 - Voice recording with replay
 - Manual or auto-play navigation in sequential or random order
 - Category-specific themes and responsive mobile navigation
