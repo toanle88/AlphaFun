@@ -16,19 +16,36 @@ const App: React.FC = () => {
   const settingsButtonRef = useRef<HTMLButtonElement>(null)
   const firstSettingsControlRef = useRef<HTMLButtonElement>(null)
   const settingsWasOpenRef = useRef(false)
-  const { category, currentItem, order, progress, selectNextItem, setCategory, setOrder } =
-    useLearningNavigation({
-      initialCategory: 'all',
-      initialOrder: 'random',
-      mode,
-      isRecording,
-    })
+  const {
+    category,
+    currentItem,
+    order,
+    progress,
+    resetForLanguage,
+    selectNextItem,
+    setCategory,
+    setOrder,
+  } = useLearningNavigation({
+    initialCategory: 'all',
+    initialOrder: 'random',
+    language: lang,
+    mode,
+    isRecording,
+  })
 
   useCategoryTheme(category)
 
   const closeSettings = useCallback(() => {
     setShowSettings(false)
   }, [])
+
+  const changeLanguage = useCallback(
+    (nextLanguage: Language) => {
+      setLang(nextLanguage)
+      resetForLanguage(nextLanguage)
+    },
+    [resetForLanguage],
+  )
 
   useEffect(() => {
     if (showSettings) {
@@ -77,7 +94,7 @@ const App: React.FC = () => {
                 mode={mode}
                 order={order}
                 firstControlRef={firstSettingsControlRef}
-                onLanguageChange={setLang}
+                onLanguageChange={changeLanguage}
                 onModeChange={setMode}
                 onOrderChange={setOrder}
                 onClose={closeSettings}

@@ -5,14 +5,14 @@ test.describe('AlphaFun production browser smoke tests', () => {
   test('starts, navigates categories, and changes settings', async ({ page }) => {
     await page.goto('/')
     await expect(page.getByRole('heading', { name: 'AlphaFun' })).toBeVisible()
-    await expect(page.getByTestId('progress')).toHaveText(/\/ 89$/)
+    await expect(page.getByTestId('progress')).toHaveText(/\/ 92$/)
 
     await page.getByRole('button', { name: 'Chữ cái' }).click()
     await expect(page.getByRole('button', { name: 'Chữ cái' })).toHaveAttribute(
       'aria-pressed',
       'true',
     )
-    await expect(page.getByTestId('progress')).toHaveText(/\/ 26$/)
+    await expect(page.getByTestId('progress')).toHaveText(/\/ 29$/)
 
     await page.getByRole('button', { name: 'Open settings' }).click()
     const settingsDialog = page.getByRole('dialog', { name: 'Learning settings' })
@@ -23,6 +23,7 @@ test.describe('AlphaFun production browser smoke tests', () => {
     await closeSettingsButton.click()
     await expect(settingsDialog).toBeHidden()
     await expect(page.getByRole('button', { name: 'Letters' })).toBeVisible()
+    await expect(page.getByTestId('progress')).toHaveText(/\/ 26$/)
   })
 
   test('keeps navigation and card controls usable on a phone viewport', async ({ browser }) => {

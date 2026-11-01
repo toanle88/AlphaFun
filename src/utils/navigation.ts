@@ -1,17 +1,26 @@
-import { Category, Order, AppItem } from '../types'
-import { COLORS, LETTERS, NUMBERS, OBJECTS, SHAPES, VERBS } from '../constants/data'
+import { Category, Language, Order, AppItem } from '../types'
+import {
+  COLORS,
+  LETTERS,
+  NUMBERS,
+  OBJECTS,
+  SHAPES,
+  VERBS,
+  VIETNAMESE_LETTERS,
+} from '../constants/data'
 
 export interface NavigationState {
   currentItemId: string | null
   sequentialIndex: number
 }
 
-export const buildPool = (category: Category): AppItem[] => {
+export const buildPool = (category: Category, language: Language): AppItem[] => {
   const items: AppItem[] = []
 
   if (category === 'all' || category === 'letters') {
+    const letters = language === 'vi' ? VIETNAMESE_LETTERS : LETTERS
     items.push(
-      ...LETTERS.map((value) => ({
+      ...letters.map((value) => ({
         id: `letter:${value}`,
         type: 'letter' as const,
         value,
