@@ -4,6 +4,7 @@ import { useSpeech } from '../hooks/useSpeech'
 import { useRecording } from '../hooks/useRecording'
 import { Mic, Play, Square, Volume2 } from 'lucide-react'
 import { LearningCard } from './LearningCard'
+import { UI_TEXT } from '../constants/data'
 
 interface DisplayAreaProps {
   item: AppItem
@@ -136,7 +137,7 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
   }
 
   return (
-    <LearningCard progress={progress}>
+    <LearningCard progress={progress} progressLabel={UI_TEXT[lang].categoryPosition}>
       <div data-testid="display-item" className="animate-pop-in flex flex-col items-center w-full">
         {renderVisual()}
 
