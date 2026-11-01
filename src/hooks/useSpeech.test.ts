@@ -98,6 +98,33 @@ describe('useSpeech', () => {
     expect(calls).toEqual(['cancel', 'speak', 'cancel', 'speak'])
   })
 
+  it('ignores callbacks from an older utterance', () => {
+    const { result } = renderHook(() => useSpeech('en'))
+
+    act(() => result.current.speak('first'))
+    const firstUtterance = vi.mocked(window.speechSynthesis.speak).mock.calls[0][0]
+    act(() => firstUtterance.onstart?.(new Event('start') as SpeechSynthesisEvent))
+
+    act(() => result.current.speak('second'))
+    const secondUtterance = vi.mocked(window.speechSynthesis.speak).mock.calls[1][0]
+    act(() => secondUtterance.onstart?.(new Event('start') as SpeechSynthesisEvent))
+    act(() => firstUtterance.onend?.(new Event('end') as SpeechSynthesisEvent))
+
+    expect(result.current.isSpeaking).toBe(true)
+  })
+
+  it('cancels speech when requested and when unmounted', () => {
+    const { result, unmount } = renderHook(() => useSpeech('en'))
+
+    act(() => result.current.speak('hello'))
+    act(() => result.current.cancelSpeech())
+    expect(window.speechSynthesis.cancel).toHaveBeenCalledTimes(2)
+    expect(result.current.isSpeaking).toBe(false)
+
+    unmount()
+    expect(window.speechSynthesis.cancel).toHaveBeenCalledTimes(3)
+  })
+
   it('keeps the speak callback stable while voices load', () => {
     vi.mocked(window.speechSynthesis.getVoices).mockReturnValue([])
     const { result } = renderHook(() => useSpeech('en'))

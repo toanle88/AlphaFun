@@ -5,6 +5,7 @@ export const useSpeech = (lang: Language) => {
   const [, setVoices] = useState<SpeechSynthesisVoice[]>([])
   const voicesRef = useRef<SpeechSynthesisVoice[]>([])
   const [isSpeaking, setIsSpeaking] = useState(false)
+  const utteranceGenerationRef = useRef(0)
 
   useEffect(() => {
     const synthesis = typeof window !== 'undefined' ? window.speechSynthesis : undefined
@@ -27,6 +28,21 @@ export const useSpeech = (lang: Language) => {
     }
   }, [])
 
+  const cancelSpeech = useCallback(() => {
+    utteranceGenerationRef.current += 1
+    const synthesis = typeof window !== 'undefined' ? window.speechSynthesis : undefined
+    synthesis?.cancel()
+    setIsSpeaking(false)
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      utteranceGenerationRef.current += 1
+      const synthesis = typeof window !== 'undefined' ? window.speechSynthesis : undefined
+      synthesis?.cancel()
+    }
+  }, [])
+
   const speak = useCallback(
     (text: string) => {
       const synthesis = typeof window !== 'undefined' ? window.speechSynthesis : undefined
@@ -41,6 +57,7 @@ export const useSpeech = (lang: Language) => {
         return
       }
 
+      const generation = ++utteranceGenerationRef.current
       synthesis.cancel()
       setIsSpeaking(false)
 
@@ -59,14 +76,26 @@ export const useSpeech = (lang: Language) => {
       utterance.rate = 0.9
       utterance.pitch = 1.1
 
-      utterance.onstart = () => setIsSpeaking(true)
-      utterance.onend = () => setIsSpeaking(false)
-      utterance.onerror = () => setIsSpeaking(false)
+      utterance.onstart = () => {
+        if (utteranceGenerationRef.current === generation) {
+          setIsSpeaking(true)
+        }
+      }
+      utterance.onend = () => {
+        if (utteranceGenerationRef.current === generation) {
+          setIsSpeaking(false)
+        }
+      }
+      utterance.onerror = () => {
+        if (utteranceGenerationRef.current === generation) {
+          setIsSpeaking(false)
+        }
+      }
 
       synthesis.speak(utterance)
     },
     [lang],
   )
 
-  return { speak, isSpeaking }
+  return { speak, cancelSpeech, isSpeaking }
 }

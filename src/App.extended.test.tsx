@@ -36,7 +36,7 @@ describe('App Component Extended Tests', () => {
     expect(screen.getByTestId('display-item')).toHaveTextContent('1')
   })
 
-  it('advances automatically in auto mode', () => {
+  it('pauses automatic advancement while settings are open and resumes after closing', () => {
     render(<App />)
 
     // Enable auto mode
@@ -52,15 +52,24 @@ describe('App Component Extended Tests', () => {
       vi.advanceTimersByTime(6000)
     })
 
-    const nextItem = screen.getByTestId('display-item').textContent
-    expect(nextItem).not.toBe(initialItem)
+    expect(screen.getByTestId('display-item')).toHaveTextContent(initialItem ?? '')
+
+    fireEvent.keyDown(document, { key: 'Escape' })
+    act(() => {
+      vi.advanceTimersByTime(6000)
+    })
+
+    expect(screen.getByTestId('display-item').textContent).not.toBe(initialItem)
   })
 
-  it('does not replay the current item when voices finish loading', () => {
+  it('pauses automatic pronunciation while settings are open', () => {
     render(<App />)
 
     fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
     fireEvent.click(screen.getByText('Tự động'))
+    expect(window.speechSynthesis.speak).not.toHaveBeenCalled()
+
+    fireEvent.keyDown(document, { key: 'Escape' })
     expect(window.speechSynthesis.speak).toHaveBeenCalledTimes(1)
 
     act(() => {
@@ -70,6 +79,30 @@ describe('App Component Extended Tests', () => {
     expect(window.speechSynthesis.speak).toHaveBeenCalledTimes(1)
   })
 
+  it('renders localized recording errors without a browser alert', async () => {
+    // Keep the card identity stable across the language change so this test
+    // exercises localization rather than item-change recording cleanup.
+    vi.spyOn(Math, 'random').mockReturnValue(0)
+    vi.mocked(navigator.mediaDevices.getUserMedia).mockRejectedValueOnce(
+      new DOMException('Permission denied', 'NotAllowedError'),
+    )
+    render(<App />)
+
+    await act(async () => {
+      fireEvent.click(screen.getByRole('button', { name: 'Ghi âm giọng nói' }))
+      await Promise.resolve()
+    })
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Không thể truy cập micro. Hãy cho phép quyền truy cập rồi thử lại.',
+    )
+
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
+    fireEvent.click(screen.getByText('English'))
+    expect(screen.getByRole('status')).toHaveTextContent(
+      'Microphone access was denied. Allow access and try again.',
+    )
+  })
+
   it('continues from the visible item when order changes during auto-play', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     render(<App />)
@@ -77,6 +110,7 @@ describe('App Component Extended Tests', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
     fireEvent.click(screen.getByText('Tự động'))
     fireEvent.click(screen.getByText('Tuần tự'))
+    fireEvent.keyDown(document, { key: 'Escape' })
 
     expect(screen.getByTestId('display-item')).toHaveTextContent('A')
     expect(screen.getByTestId('progress')).toHaveTextContent('1 / 92')
@@ -272,6 +306,7 @@ describe('App Component Extended Tests', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
     fireEvent.click(screen.getByText('Tự động'))
+    fireEvent.keyDown(document, { key: 'Escape' })
     unmount()
 
     expect(clearInterval).toHaveBeenCalled()

@@ -16,6 +16,7 @@ interface UseLearningNavigationOptions {
   language: Language
   mode: Mode
   isRecording: boolean
+  isSettingsOpen: boolean
 }
 
 export const useLearningNavigation = ({
@@ -24,6 +25,7 @@ export const useLearningNavigation = ({
   language,
   mode,
   isRecording,
+  isSettingsOpen,
 }: UseLearningNavigationOptions) => {
   const [category, setCategoryState] = useState(initialCategory)
   const [order, setOrderState] = useState(initialOrder)
@@ -68,13 +70,13 @@ export const useLearningNavigation = ({
   }, [isRecording, order, pool])
 
   useEffect(() => {
-    if (mode !== 'auto') {
+    if (mode !== 'auto' || isSettingsOpen) {
       return undefined
     }
 
     const timer = window.setInterval(selectNextItem, 6000)
     return () => window.clearInterval(timer)
-  }, [mode, selectNextItem])
+  }, [isSettingsOpen, mode, selectNextItem])
 
   const currentItem = pool.find((item) => item.id === navigation.currentItemId) ?? null
   const currentPosition = getItemPosition(pool, navigation.currentItemId)

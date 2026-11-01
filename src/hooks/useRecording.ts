@@ -1,5 +1,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react'
 
+export type RecordingError = 'permission-denied' | 'unsupported' | 'unknown'
+
 const stopStream = (stream: MediaStream | null | undefined) => {
   if (!stream) {
     return
@@ -39,6 +41,8 @@ const stopRecorder = (mediaRecorder: MediaRecorder) => {
 
 export const useRecording = () => {
   const [isRecording, setIsRecording] = useState(false)
+  const [isPermissionRequesting, setIsPermissionRequesting] = useState(false)
+  const [error, setError] = useState<RecordingError | null>(null)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const audioChunksRef = useRef<Blob[]>([])
@@ -46,6 +50,7 @@ export const useRecording = () => {
   const recordingIdRef = useRef(0)
   const isRecordingRef = useRef(false)
   const mountedRef = useRef(true)
+  const isPermissionRequestingRef = useRef(false)
 
   const revokeAudioUrl = useCallback(() => {
     const url = audioUrlRef.current
@@ -72,6 +77,7 @@ export const useRecording = () => {
     mediaRecorderRef.current = null
     audioChunksRef.current = []
     isRecordingRef.current = false
+    isPermissionRequestingRef.current = false
     revokeAudioUrl()
 
     if (mediaRecorder) {
@@ -79,22 +85,42 @@ export const useRecording = () => {
     }
     if (mountedRef.current) {
       setIsRecording(false)
+      setIsPermissionRequesting(false)
+      setError(null)
     }
   }, [revokeAudioUrl])
 
   const startRecording = useCallback(async () => {
+    if (isPermissionRequestingRef.current || isRecordingRef.current) {
+      return
+    }
+
     // Starting another recording explicitly replaces the previous recording.
     cleanupRecording()
+    setError(null)
+    isPermissionRequestingRef.current = true
+    setIsPermissionRequesting(true)
     const recordingId = recordingIdRef.current + 1
     recordingIdRef.current = recordingId
     let stream: MediaStream | null = null
     let mediaRecorder: MediaRecorder | null = null
+    let recordingError: RecordingError = 'unknown'
 
     try {
+      if (!navigator.mediaDevices?.getUserMedia) {
+        recordingError = 'unsupported'
+        throw new Error('Microphone APIs are unavailable')
+      }
+
       stream = await navigator.mediaDevices.getUserMedia({ audio: true })
       if (!mountedRef.current || recordingIdRef.current !== recordingId) {
         stopStream(stream)
         return
+      }
+
+      if (typeof MediaRecorder === 'undefined') {
+        recordingError = 'unsupported'
+        throw new Error('MediaRecorder is unavailable')
       }
 
       mediaRecorder = new MediaRecorder(stream)
@@ -139,6 +165,8 @@ export const useRecording = () => {
         isRecordingRef.current = false
         if (mountedRef.current) {
           setIsRecording(false)
+          isPermissionRequestingRef.current = false
+          setIsPermissionRequesting(false)
         }
       }
 
@@ -148,9 +176,20 @@ export const useRecording = () => {
         stopStream(stream)
       }
 
+      if (recordingError === 'unknown' && err instanceof DOMException) {
+        recordingError =
+          err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError'
+            ? 'permission-denied'
+            : 'unknown'
+      }
       console.error('Microphone access denied:', err)
       if (mountedRef.current && isCurrentRecording) {
-        alert('Vui lòng cho phép truy cập micro để sử dụng tính năng này.')
+        setError(recordingError)
+      }
+    } finally {
+      if (mountedRef.current && recordingIdRef.current === recordingId) {
+        isPermissionRequestingRef.current = false
+        setIsPermissionRequesting(false)
       }
     }
   }, [cleanupRecording])
@@ -178,12 +217,15 @@ export const useRecording = () => {
     mountedRef.current = true
     return () => {
       mountedRef.current = false
+      isPermissionRequestingRef.current = false
       cleanupRecording()
     }
   }, [cleanupRecording])
 
   return {
     isRecording,
+    isPermissionRequesting,
+    error,
     audioUrl,
     startRecording,
     stopRecording,

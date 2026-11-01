@@ -4,6 +4,17 @@ All notable AlphaFun changes are recorded here. Entries are ordered newest
 first and use the version from `package.json`; the release workflow verifies
 that a published tag is exactly `v<version>`.
 
+## [0.1.10] - 2026-11-01
+
+### Fixed
+
+- Paused automatic navigation and pronunciation while settings are open.
+- Prevented overlapping microphone permission requests and added localized,
+  accessible recording feedback.
+- Scoped speech callbacks to the active utterance and cancelled speech during
+  replacement, cancellation, and unmount cleanup.
+- Added regression coverage for settings pause/resume and audio lifecycle races.
+
 ## [0.1.9] - 2026-11-01
 
 ### Fixed

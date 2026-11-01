@@ -31,6 +31,7 @@ const App: React.FC = () => {
     language: lang,
     mode,
     isRecording,
+    isSettingsOpen: showSettings,
   })
 
   useCategoryTheme(category)
