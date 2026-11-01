@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { X } from 'lucide-react'
 import { Language, Mode, Order } from '../types'
+import { UI_TEXT } from '../constants/data'
 
 const FOCUSABLE_SELECTOR =
   'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
@@ -27,6 +28,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
   onClose,
 }) => {
   const panelRef = useRef<HTMLDivElement>(null)
+  const labels = UI_TEXT[lang]
 
   useEffect(() => {
     firstControlRef.current?.focus()
@@ -91,15 +93,15 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
       onKeyDown={containFocus}
     >
       <div className="settings-heading">
-        <span id="settings-title">Learning settings</span>
+        <span id="settings-title">{labels.settingsTitle}</span>
         <span id="settings-hint" className="settings-hint">
-          Tap to change
+          {labels.settingsHint}
         </span>
       </div>
 
       <div className="settings-group" role="group" aria-labelledby="language-label">
         <span id="language-label" className="settings-label">
-          Ngôn ngữ / Language
+          {labels.languageLabel}
         </span>
         <div className="segmented-control">
           <button
@@ -124,7 +126,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
 
       <div className="settings-group" role="group" aria-labelledby="mode-label">
         <span id="mode-label" className="settings-label">
-          Chế độ / Mode
+          {labels.modeLabel}
         </span>
         <div className="segmented-control">
           <button
@@ -133,7 +135,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             onClick={() => onModeChange('manual')}
             aria-pressed={mode === 'manual'}
           >
-            Manual
+            {labels.manual}
           </button>
           <button
             type="button"
@@ -141,14 +143,14 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             onClick={() => onModeChange('auto')}
             aria-pressed={mode === 'auto'}
           >
-            Auto
+            {labels.auto}
           </button>
         </div>
       </div>
 
       <div className="settings-group" role="group" aria-labelledby="order-label">
         <span id="order-label" className="settings-label">
-          Thứ tự / Order
+          {labels.orderLabel}
         </span>
         <div className="segmented-control">
           <button
@@ -157,7 +159,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             onClick={() => onOrderChange('random')}
             aria-pressed={order === 'random'}
           >
-            Random
+            {labels.random}
           </button>
           <button
             type="button"
@@ -165,7 +167,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
             onClick={() => onOrderChange('sequential')}
             aria-pressed={order === 'sequential'}
           >
-            Normal
+            {labels.normal}
           </button>
         </div>
       </div>
@@ -174,7 +176,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
         type="button"
         className="settings-close-button"
         onClick={onClose}
-        aria-label="Close settings"
+        aria-label={labels.closeSettings}
       >
         <X aria-hidden="true" />
       </button>

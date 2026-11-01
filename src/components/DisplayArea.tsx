@@ -137,7 +137,11 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
   }
 
   return (
-    <LearningCard progress={progress} progressLabel={UI_TEXT[lang].categoryPosition}>
+    <LearningCard
+      progress={progress}
+      progressLabel={UI_TEXT[lang].categoryPosition}
+      cardLabel={UI_TEXT[lang].learningCard}
+    >
       <div data-testid="display-item" className="animate-pop-in flex flex-col items-center w-full">
         {renderVisual()}
 
@@ -147,13 +151,13 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
           </div>
         )}
 
-        <div className="audio-controls" aria-label="Audio controls">
+        <div className="audio-controls" aria-label={UI_TEXT[lang].audioControls}>
           <button
             type="button"
             className={`audio-button ${isSpeaking ? 'is-speaking' : ''}`}
             onClick={() => speak(itemName)}
-            aria-label="Play pronunciation"
-            title="Play pronunciation"
+            aria-label={UI_TEXT[lang].playPronunciation}
+            title={UI_TEXT[lang].playPronunciation}
             disabled={disabled}
           >
             <Volume2 aria-hidden="true" />
@@ -163,9 +167,9 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
             type="button"
             className={`audio-button ${isRecording ? 'is-recording' : ''}`}
             onClick={isRecording ? stopRecording : startRecording}
-            aria-label={isRecording ? 'Stop recording' : 'Record your voice'}
+            aria-label={isRecording ? UI_TEXT[lang].stopRecording : UI_TEXT[lang].recordVoice}
             aria-pressed={isRecording}
-            title={isRecording ? 'Stop recording' : 'Record your voice'}
+            title={isRecording ? UI_TEXT[lang].stopRecording : UI_TEXT[lang].recordVoice}
             disabled={disabled}
           >
             {isRecording ? <Square aria-hidden="true" /> : <Mic aria-hidden="true" />}
@@ -176,8 +180,8 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
               type="button"
               className="audio-button is-playback"
               onClick={playRecording}
-              aria-label="Play recording"
-              title="Play recording"
+              aria-label={UI_TEXT[lang].playRecording}
+              title={UI_TEXT[lang].playRecording}
               disabled={disabled}
             >
               <Play aria-hidden="true" />
@@ -186,20 +190,12 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
         </div>
         <p className="audio-status" role="status" aria-live="polite">
           {isSpeaking
-            ? lang === 'vi'
-              ? 'Đang phát âm'
-              : 'Speaking'
+            ? UI_TEXT[lang].speaking
             : isRecording
-              ? lang === 'vi'
-                ? 'Đang ghi âm'
-                : 'Recording'
+              ? UI_TEXT[lang].recording
               : audioUrl
-                ? lang === 'vi'
-                  ? 'Bản ghi đã sẵn sàng để phát lại'
-                  : 'Recording ready to replay'
-                : lang === 'vi'
-                  ? 'Sẵn sàng'
-                  : 'Ready'}
+                ? UI_TEXT[lang].recordingReady
+                : UI_TEXT[lang].ready}
         </p>
       </div>
     </LearningCard>

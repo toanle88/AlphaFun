@@ -35,6 +35,8 @@ const App: React.FC = () => {
 
   useCategoryTheme(category)
 
+  const t = UI_TEXT[lang]
+
   const closeSettings = useCallback(() => {
     setShowSettings(false)
   }, [])
@@ -48,6 +50,14 @@ const App: React.FC = () => {
   )
 
   useEffect(() => {
+    document.documentElement.lang = lang
+    document.title = t.documentTitle
+    document
+      .querySelector('meta[name="description"]')
+      ?.setAttribute('content', t.documentDescription)
+  }, [lang, t])
+
+  useEffect(() => {
     if (showSettings) {
       settingsWasOpenRef.current = true
     } else if (settingsWasOpenRef.current) {
@@ -55,8 +65,6 @@ const App: React.FC = () => {
       settingsWasOpenRef.current = false
     }
   }, [showSettings])
-
-  const t = UI_TEXT[lang]
 
   if (!currentItem) {
     return null
@@ -67,7 +75,7 @@ const App: React.FC = () => {
       <div className="app-frame">
         <header className="app-header">
           <div inert={showSettings || undefined}>
-            <p className="eyebrow">Learn through play</p>
+            <p className="eyebrow">{t.appTagline}</p>
             <h1 className="app-title">AlphaFun</h1>
           </div>
 
@@ -78,7 +86,7 @@ const App: React.FC = () => {
                 className="icon-button"
                 ref={settingsButtonRef}
                 onClick={() => setShowSettings((isOpen) => !isOpen)}
-                aria-label={showSettings ? 'Close settings' : 'Open settings'}
+                aria-label={showSettings ? t.closeSettings : t.openSettings}
                 aria-expanded={showSettings}
                 aria-controls="settings-panel"
                 aria-haspopup="dialog"
@@ -124,7 +132,7 @@ const App: React.FC = () => {
             <button
               type="button"
               className="next-button"
-              aria-label={lang === 'vi' ? 'Mục tiếp theo' : 'Next item'}
+              aria-label={t.nextItem}
               onClick={selectNextItem}
               disabled={isRecording || showSettings}
             >

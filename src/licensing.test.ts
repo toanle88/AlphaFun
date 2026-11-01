@@ -91,7 +91,7 @@ const parseNoticeDependencies = (): NoticeDependency[] =>
 describe('public release licensing metadata', () => {
   it('declares the MIT license and current release version', () => {
     expect(packageJson.license).toBe('MIT')
-    expect(packageJson.version).toBe('0.1.5')
+    expect(packageJson.version).toBe('0.1.6')
     expect(packageJson.private).not.toBe(true)
     expect(licenseText).toContain('MIT License')
     expect(licenseText).toContain('Copyright (c) 2026 AlphaFun contributors')

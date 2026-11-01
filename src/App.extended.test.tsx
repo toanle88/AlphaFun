@@ -17,9 +17,9 @@ describe('App Component Extended Tests', () => {
     render(<App />)
 
     // Switch to sequential mode
-    const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
+    const settingsBtn = screen.getByRole('button', { name: 'Mở cài đặt' })
     fireEvent.click(settingsBtn)
-    const sequentialBtn = screen.getByText('Normal')
+    const sequentialBtn = screen.getByText('Tuần tự')
     fireEvent.click(sequentialBtn)
     fireEvent.keyDown(document, { key: 'Escape' })
 
@@ -40,9 +40,9 @@ describe('App Component Extended Tests', () => {
     render(<App />)
 
     // Enable auto mode
-    const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
+    const settingsBtn = screen.getByRole('button', { name: 'Mở cài đặt' })
     fireEvent.click(settingsBtn)
-    const autoBtn = screen.getByText('Auto')
+    const autoBtn = screen.getByText('Tự động')
     fireEvent.click(autoBtn)
 
     const initialItem = screen.getByTestId('display-item').textContent
@@ -59,8 +59,8 @@ describe('App Component Extended Tests', () => {
   it('does not replay the current item when voices finish loading', () => {
     render(<App />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
-    fireEvent.click(screen.getByText('Auto'))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
+    fireEvent.click(screen.getByText('Tự động'))
     expect(window.speechSynthesis.speak).toHaveBeenCalledTimes(1)
 
     act(() => {
@@ -74,9 +74,9 @@ describe('App Component Extended Tests', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     render(<App />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
-    fireEvent.click(screen.getByText('Auto'))
-    fireEvent.click(screen.getByText('Normal'))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
+    fireEvent.click(screen.getByText('Tự động'))
+    fireEvent.click(screen.getByText('Tuần tự'))
 
     expect(screen.getByTestId('display-item')).toHaveTextContent('A')
     expect(screen.getByTestId('progress')).toHaveTextContent('1 / 92')
@@ -123,17 +123,17 @@ describe('App Component Extended Tests', () => {
     } as unknown as MediaStream)
 
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
-    fireEvent.click(screen.getByText('Auto'))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
+    fireEvent.click(screen.getByText('Tự động'))
     fireEvent.keyDown(document, { key: 'Escape' })
 
     const initialProgress = screen.getByTestId('progress').textContent
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Record your voice' }))
+      fireEvent.click(screen.getByRole('button', { name: 'Ghi âm giọng nói' }))
       await Promise.resolve()
     })
 
-    expect(screen.getByRole('button', { name: 'Stop recording' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Dừng ghi âm' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Mục tiếp theo' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Chữ số' })).toBeDisabled()
 
@@ -147,7 +147,7 @@ describe('App Component Extended Tests', () => {
     })
 
     expect(screen.getByTestId('progress').textContent).toBe(initialProgress)
-    expect(screen.getByRole('button', { name: 'Stop recording' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Dừng ghi âm' })).toBeInTheDocument()
     expect(recorderInstances).toHaveLength(1)
     expect(recorderInstances[0].stop).not.toHaveBeenCalled()
   })
@@ -155,14 +155,14 @@ describe('App Component Extended Tests', () => {
   it('cleans up the auto-play timer when returning to manual mode', () => {
     render(<App />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
-    fireEvent.click(screen.getByText('Auto'))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
+    fireEvent.click(screen.getByText('Tự động'))
     act(() => {
       vi.advanceTimersByTime(6000)
     })
 
     const itemAfterAutoAdvance = screen.getByTestId('display-item').textContent
-    fireEvent.click(screen.getByText('Manual'))
+    fireEvent.click(screen.getByText('Thủ công'))
 
     act(() => {
       vi.advanceTimersByTime(12000)
@@ -174,8 +174,8 @@ describe('App Component Extended Tests', () => {
   it('keeps auto-play on the newly selected category', () => {
     render(<App />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
-    fireEvent.click(screen.getByText('Auto'))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
+    fireEvent.click(screen.getByText('Tự động'))
     fireEvent.keyDown(document, { key: 'Escape' })
     fireEvent.click(screen.getByRole('button', { name: 'Chữ số' }))
 
@@ -245,21 +245,21 @@ describe('App Component Extended Tests', () => {
 
     const { unmount } = render(<App />)
     await act(async () => {
-      fireEvent.click(screen.getByRole('button', { name: 'Record your voice' }))
+      fireEvent.click(screen.getByRole('button', { name: 'Ghi âm giọng nói' }))
       await Promise.resolve()
     })
 
     const recorder = recorderInstances[0]
-    expect(screen.getByRole('button', { name: 'Stop recording' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Dừng ghi âm' })).toBeInTheDocument()
 
     act(() => {
       recorder.ondataavailable?.({
         data: new Blob(['recorded audio'], { type: 'audio/webm' }),
       } as BlobEvent)
-      fireEvent.click(screen.getByRole('button', { name: 'Stop recording' }))
+      fireEvent.click(screen.getByRole('button', { name: 'Dừng ghi âm' }))
     })
 
-    expect(screen.getByRole('button', { name: 'Play recording' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Phát bản ghi' })).toBeInTheDocument()
     expect(screen.getByRole('status')).toHaveTextContent('Bản ghi đã sẵn sàng để phát lại')
 
     unmount()
@@ -270,8 +270,8 @@ describe('App Component Extended Tests', () => {
     const clearInterval = vi.spyOn(window, 'clearInterval')
     const { unmount } = render(<App />)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
-    fireEvent.click(screen.getByText('Auto'))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
+    fireEvent.click(screen.getByText('Tự động'))
     unmount()
 
     expect(clearInterval).toHaveBeenCalled()

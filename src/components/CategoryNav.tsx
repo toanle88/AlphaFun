@@ -28,7 +28,7 @@ export const CategoryNav: React.FC<CategoryNavProps> = ({
   const labels = UI_TEXT[lang]
 
   return (
-    <nav className="category-nav" aria-label={lang === 'vi' ? 'Chọn chủ đề' : 'Choose a category'}>
+    <nav className="category-nav" aria-label={labels.chooseCategory}>
       {CATEGORIES.map((itemCategory) => (
         <button
           type="button"
