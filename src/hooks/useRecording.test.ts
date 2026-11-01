@@ -117,7 +117,6 @@ describe('useRecording', () => {
   it('handles microphone permission denial without leaving recording active', async () => {
     const denied = new DOMException('Permission denied', 'NotAllowedError')
     vi.mocked(navigator.mediaDevices.getUserMedia).mockRejectedValueOnce(denied)
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => undefined)
     const { result } = renderHook(() => useRecording())
 
     await act(async () => {
@@ -125,14 +124,12 @@ describe('useRecording', () => {
     })
 
     expect(result.current.isRecording).toBe(false)
-    expect(alertSpy).toHaveBeenCalledWith(
-      'Vui lòng cho phép truy cập micro để sử dụng tính năng này.',
-    )
+    expect(result.current.error).toBe('permission-denied')
+    expect(result.current.isPermissionRequesting).toBe(false)
   })
 
   it('handles browsers without MediaRecorder support', async () => {
     vi.stubGlobal('MediaRecorder', undefined)
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => undefined)
     const { result } = renderHook(() => useRecording())
 
     await act(async () => {
@@ -141,7 +138,7 @@ describe('useRecording', () => {
 
     expect(result.current.isRecording).toBe(false)
     expect(tracks[0].stop).toHaveBeenCalled()
-    expect(alertSpy).toHaveBeenCalled()
+    expect(result.current.error).toBe('unsupported')
   })
 
   it('handles browsers without microphone APIs', async () => {
@@ -150,7 +147,6 @@ describe('useRecording', () => {
       value: undefined,
       configurable: true,
     })
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => undefined)
     const { result } = renderHook(() => useRecording())
 
     await act(async () => {
@@ -158,12 +154,43 @@ describe('useRecording', () => {
     })
 
     expect(result.current.isRecording).toBe(false)
-    expect(alertSpy).toHaveBeenCalledWith(
-      'Vui lòng cho phép truy cập micro để sử dụng tính năng này.',
-    )
+    expect(result.current.error).toBe('unsupported')
     Object.defineProperty(navigator, 'mediaDevices', {
       value: originalMediaDevices,
       configurable: true,
     })
+  })
+
+  it('allows only one microphone permission request while it is pending', async () => {
+    let resolvePermission: ((stream: MediaStream) => void) | undefined
+    vi.mocked(navigator.mediaDevices.getUserMedia).mockImplementationOnce(
+      () =>
+        new Promise((resolve) => {
+          resolvePermission = resolve
+        }),
+    )
+    const { result } = renderHook(() => useRecording())
+
+    let firstRequest: Promise<void> | undefined
+    await act(async () => {
+      firstRequest = result.current.startRecording()
+      await Promise.resolve()
+    })
+
+    expect(result.current.isPermissionRequesting).toBe(true)
+    expect(navigator.mediaDevices.getUserMedia).toHaveBeenCalledOnce()
+
+    await act(async () => {
+      await result.current.startRecording()
+    })
+    expect(navigator.mediaDevices.getUserMedia).toHaveBeenCalledOnce()
+
+    resolvePermission?.({ getTracks: () => tracks } as unknown as MediaStream)
+    await act(async () => {
+      await firstRequest
+    })
+
+    expect(result.current.isPermissionRequesting).toBe(false)
+    expect(result.current.isRecording).toBe(true)
   })
 })

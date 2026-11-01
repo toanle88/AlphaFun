@@ -11,7 +11,7 @@
 
 ### Architecture
 
-- AlphaFun is a client-rendered React 18 and TypeScript PWA built with Vite.
+- AlphaFun is a client-rendered React 19 and TypeScript PWA built with Vite.
 - `src/App.tsx` owns top-level language, playback, and settings state. UI is
   composed from `src/components/`; learning data and localized labels live in
   `src/constants/data.ts`; shared types live in `src/types/`; navigation,

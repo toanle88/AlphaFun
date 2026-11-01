@@ -25,17 +25,27 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
   disabled = false,
   onRecordingChange,
 }) => {
-  const { speak, isSpeaking } = useSpeech(lang)
-  const { isRecording, audioUrl, startRecording, stopRecording, playRecording, cleanupRecording } =
-    useRecording()
+  const { speak, cancelSpeech, isSpeaking } = useSpeech(lang)
+  const {
+    isRecording,
+    isPermissionRequesting,
+    error: recordingError,
+    audioUrl,
+    startRecording,
+    stopRecording,
+    playRecording,
+    cleanupRecording,
+  } = useRecording()
 
   const itemName = typeof item.name === 'string' ? item.name : item.name[lang]
 
   React.useEffect(() => {
-    if (autoPlay) {
+    if (autoPlay && !disabled) {
       speak(itemName)
+    } else if (disabled) {
+      cancelSpeech()
     }
-  }, [lang, autoPlay, speak, itemName])
+  }, [autoPlay, cancelSpeech, disabled, lang, speak, itemName])
 
   React.useEffect(() => {
     cleanupRecording()
@@ -44,6 +54,22 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
   React.useEffect(() => {
     onRecordingChange(isRecording)
   }, [isRecording, onRecordingChange])
+
+  const audioStatus = isPermissionRequesting
+    ? UI_TEXT[lang].recordingPermissionPending
+    : recordingError === 'permission-denied'
+      ? UI_TEXT[lang].recordingPermissionDenied
+      : recordingError === 'unsupported'
+        ? UI_TEXT[lang].recordingUnsupported
+        : recordingError === 'unknown'
+          ? UI_TEXT[lang].recordingUnknownError
+          : isSpeaking
+            ? UI_TEXT[lang].speaking
+            : isRecording
+              ? UI_TEXT[lang].recording
+              : audioUrl
+                ? UI_TEXT[lang].recordingReady
+                : UI_TEXT[lang].ready
 
   const renderShape = (kind: ShapeKind) => {
     switch (kind) {
@@ -169,8 +195,10 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
             onClick={isRecording ? stopRecording : startRecording}
             aria-label={isRecording ? UI_TEXT[lang].stopRecording : UI_TEXT[lang].recordVoice}
             aria-pressed={isRecording}
+            aria-busy={isPermissionRequesting}
+            aria-describedby="audio-status"
             title={isRecording ? UI_TEXT[lang].stopRecording : UI_TEXT[lang].recordVoice}
-            disabled={disabled}
+            disabled={disabled || isPermissionRequesting}
           >
             {isRecording ? <Square aria-hidden="true" /> : <Mic aria-hidden="true" />}
           </button>
@@ -188,14 +216,8 @@ export const DisplayArea: React.FC<DisplayAreaProps> = ({
             </button>
           )}
         </div>
-        <p className="audio-status" role="status" aria-live="polite">
-          {isSpeaking
-            ? UI_TEXT[lang].speaking
-            : isRecording
-              ? UI_TEXT[lang].recording
-              : audioUrl
-                ? UI_TEXT[lang].recordingReady
-                : UI_TEXT[lang].ready}
+        <p id="audio-status" className="audio-status" role="status" aria-live="polite">
+          {audioStatus}
         </p>
       </div>
     </LearningCard>
