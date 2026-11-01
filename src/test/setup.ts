@@ -7,8 +7,11 @@ Object.defineProperty(window, 'speechSynthesis', {
     speak: vi.fn(),
     cancel: vi.fn(),
     speaking: false,
+    pending: false,
     onvoiceschanged: null,
   },
+  configurable: true,
+  writable: true,
 })
 
 class MockSpeechSynthesisUtterance {
@@ -23,6 +26,8 @@ class MockSpeechSynthesisUtterance {
 
 Object.defineProperty(window, 'SpeechSynthesisUtterance', {
   value: MockSpeechSynthesisUtterance,
+  configurable: true,
+  writable: true,
 })
 
 class MockMediaRecorder {

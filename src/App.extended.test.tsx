@@ -56,6 +56,20 @@ describe('App Component Extended Tests', () => {
     expect(nextItem).not.toBe(initialItem)
   })
 
+  it('does not replay the current item when voices finish loading', () => {
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByText('Auto'))
+    expect(window.speechSynthesis.speak).toHaveBeenCalledTimes(1)
+
+    act(() => {
+      window.speechSynthesis.onvoiceschanged?.(new Event('voiceschanged'))
+    })
+
+    expect(window.speechSynthesis.speak).toHaveBeenCalledTimes(1)
+  })
+
   it('continues from the visible item when order changes during auto-play', () => {
     vi.spyOn(Math, 'random').mockReturnValue(0)
     render(<App />)
