@@ -4,6 +4,12 @@ All notable AlphaFun changes are recorded here. Entries are ordered newest
 first and use the version from `package.json`; the release workflow verifies
 that a published tag is exactly `v<version>`.
 
+## [0.1.3] - 2026-11-01
+
+### Fixed
+
+- Clarified random-mode progress as the selected card's position in its category.
+
 ## [0.1.2] - 2026-11-01
 
 ### Added

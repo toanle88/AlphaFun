@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, within } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import App from './App'
 
 describe('App Component', () => {
@@ -31,6 +31,9 @@ describe('App Component', () => {
     render(<App />)
 
     expect(screen.getByTestId('progress')).toHaveTextContent(/\/ 92$/)
+    expect(screen.getByRole('group', { name: /Vị trí trong danh mục/ })).toHaveAccessibleName(
+      /Vị trí trong danh mục \d+ \/ 92/,
+    )
 
     const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
     expect(settingsBtn).toHaveAttribute('aria-expanded', 'false')
@@ -205,6 +208,15 @@ describe('App Component', () => {
 
     fireEvent.click(screen.getByText('TIẾP THEO'))
     expect(screen.getByTestId('progress')).toHaveTextContent('2 / 29')
+    expect(screen.getByRole('group', { name: 'Vị trí trong danh mục 2 / 29' })).toBeInTheDocument()
+  })
+
+  it('describes random progress as the selected card position in the category', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0.99)
+    render(<App />)
+
+    expect(screen.getByTestId('progress')).toHaveTextContent('92 / 92')
+    expect(screen.getByRole('group', { name: 'Vị trí trong danh mục 92 / 92' })).toBeInTheDocument()
   })
 
   it('updates the letters pool and total when the language changes', () => {

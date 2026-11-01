@@ -334,6 +334,7 @@ export const UI_TEXT = {
     verbs: 'Hành động',
     shapes: 'Hình khối',
     next: 'TIẾP THEO',
+    categoryPosition: 'Vị trí trong danh mục',
   },
   en: {
     all: 'All',
@@ -344,6 +345,7 @@ export const UI_TEXT = {
     verbs: 'Actions',
     shapes: 'Shapes',
     next: 'NEXT',
+    categoryPosition: 'Category position',
   },
 }
 
