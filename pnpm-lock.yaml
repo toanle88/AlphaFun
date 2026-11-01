@@ -7,6 +7,7 @@ settings:
 importers:
 
   .:
+    version: 0.1.8
     dependencies:
       clsx:
         specifier: ^2.1.1

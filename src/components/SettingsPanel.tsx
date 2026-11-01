@@ -47,11 +47,23 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({
       firstControlRef.current?.focus()
     }
 
+    const closeOnPointerDownOutside = (event: PointerEvent) => {
+      const target = event.target
+      if (target instanceof Node && panelRef.current?.contains(target)) {
+        return
+      }
+
+      event.preventDefault()
+      onClose()
+    }
+
     document.addEventListener('keydown', closeOnEscape)
     document.addEventListener('focusin', containFocus)
+    document.addEventListener('pointerdown', closeOnPointerDownOutside)
     return () => {
       document.removeEventListener('keydown', closeOnEscape)
       document.removeEventListener('focusin', containFocus)
+      document.removeEventListener('pointerdown', closeOnPointerDownOutside)
     }
   }, [firstControlRef, onClose])
 
