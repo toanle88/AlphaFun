@@ -4,6 +4,13 @@ All notable AlphaFun changes are recorded here. Entries are ordered newest
 first and use the version from `package.json`; the release workflow verifies
 that a published tag is exactly `v<version>`.
 
+## [0.1.4] - 2026-11-01
+
+### Fixed
+
+- Preserved the visible learning card and its next-item position when changing
+  between random and sequential order.
+
 ## [0.1.3] - 2026-11-01
 
 ### Fixed

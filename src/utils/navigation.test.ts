@@ -3,6 +3,7 @@ import {
   advanceNavigation,
   buildPool,
   getItemPosition,
+  reconcileNavigationForOrder,
   resetNavigation,
   resetNavigationToFirst,
 } from './navigation'
@@ -59,6 +60,34 @@ describe('learning navigation', () => {
       currentItemId: 'number:1',
       sequentialIndex: 1,
     })
+  })
+
+  it('continues after the visible item when changing from random to sequential', () => {
+    const numbers = buildPool('numbers', 'en')
+    const random = resetNavigation(numbers, 'random', () => 0.4)
+    const transitioned = reconcileNavigationForOrder(numbers, 'sequential', random)
+    const next = advanceNavigation(numbers, 'sequential', transitioned)
+
+    expect(transitioned.currentItemId).toBe(random.currentItemId)
+    expect(transitioned.sequentialIndex).toBe(4)
+    expect(getItemPosition(numbers, transitioned.currentItemId)).toBe(4)
+    expect(next.currentItemId).toBe('number:5')
+  })
+
+  it('keeps the visible item when changing from sequential to random', () => {
+    const numbers = buildPool('numbers', 'en')
+    const sequential = advanceNavigation(
+      numbers,
+      'sequential',
+      resetNavigation(numbers, 'sequential'),
+    )
+    const transitioned = reconcileNavigationForOrder(numbers, 'random', sequential)
+    const next = advanceNavigation(numbers, 'random', transitioned, () => 0)
+
+    expect(transitioned.currentItemId).toBe('number:2')
+    expect(transitioned.sequentialIndex).toBe(0)
+    expect(getItemPosition(numbers, transitioned.currentItemId)).toBe(2)
+    expect(next.currentItemId).toBe('number:1')
   })
 
   it('wraps sequential navigation at the end of a pool', () => {

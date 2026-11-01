@@ -56,6 +56,25 @@ describe('App Component Extended Tests', () => {
     expect(nextItem).not.toBe(initialItem)
   })
 
+  it('continues from the visible item when order changes during auto-play', () => {
+    vi.spyOn(Math, 'random').mockReturnValue(0)
+    render(<App />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByText('Auto'))
+    fireEvent.click(screen.getByText('Normal'))
+
+    expect(screen.getByTestId('display-item')).toHaveTextContent('A')
+    expect(screen.getByTestId('progress')).toHaveTextContent('1 / 92')
+
+    act(() => {
+      vi.advanceTimersByTime(6000)
+    })
+
+    expect(screen.getByTestId('display-item')).toHaveTextContent('Ă')
+    expect(screen.getByTestId('progress')).toHaveTextContent('2 / 92')
+  })
+
   it('keeps the active recording and blocks navigation until it stops', async () => {
     const tracks = [{ stop: vi.fn() }]
     const recorderInstances: Array<{
