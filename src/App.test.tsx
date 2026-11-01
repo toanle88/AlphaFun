@@ -18,13 +18,57 @@ describe('App Component', () => {
 
   it('changes language when settings are toggled and clicked', () => {
     render(<App />)
-    const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
+    const settingsBtn = screen.getByRole('button', { name: 'Mở cài đặt' })
     fireEvent.click(settingsBtn)
 
     const enBtn = screen.getByText('English')
     fireEvent.click(enBtn)
 
     expect(screen.getByText('Letters')).toBeInTheDocument()
+  })
+
+  it('synchronizes Vietnamese and English document language and accessible labels', () => {
+    render(<App />)
+
+    expect(document.documentElement).toHaveAttribute('lang', 'vi')
+    expect(document.title).toBe('AlphaFun - Học mà chơi!')
+    expect(screen.getByRole('button', { name: 'Mở cài đặt' })).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Thẻ học tập' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Phát cách phát âm' })).toHaveAttribute(
+      'title',
+      'Phát cách phát âm',
+    )
+    expect(screen.getByRole('status')).toHaveTextContent('Sẵn sàng')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
+    expect(screen.getByRole('dialog', { name: 'Cài đặt học tập' })).toHaveAccessibleDescription(
+      'Chạm để thay đổi',
+    )
+    expect(screen.getByRole('group', { name: 'Ngôn ngữ' })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: 'Chế độ' })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: 'Thứ tự' })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole('button', { name: 'English' }))
+
+    expect(document.documentElement).toHaveAttribute('lang', 'en')
+    expect(document.title).toBe('AlphaFun - Learning is Fun!')
+    const englishDialog = screen.getByRole('dialog', { name: 'Learning settings' })
+    expect(
+      within(englishDialog).getByRole('button', { name: 'Close settings' }),
+    ).toBeInTheDocument()
+    expect(englishDialog).toHaveAccessibleDescription('Tap to change')
+    expect(screen.getByRole('group', { name: 'Language' })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: 'Mode' })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: 'Order' })).toBeInTheDocument()
+    expect(screen.getByRole('navigation', { name: 'Choose a category' })).toBeInTheDocument()
+    expect(screen.getByRole('group', { name: /Category position \d+ \/ 89/ })).toBeInTheDocument()
+    expect(screen.getByLabelText('Audio controls')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Play pronunciation' })).toHaveAttribute(
+      'title',
+      'Play pronunciation',
+    )
+    expect(screen.getByRole('button', { name: 'Next item' })).toBeInTheDocument()
+    expect(screen.getByRole('status')).toHaveTextContent('Ready')
   })
 
   it('shows progress for the active category and exposes settings state', () => {
@@ -35,19 +79,19 @@ describe('App Component', () => {
       /Vị trí trong danh mục \d+ \/ 92/,
     )
 
-    const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
+    const settingsBtn = screen.getByRole('button', { name: 'Mở cài đặt' })
     expect(settingsBtn).toHaveAttribute('aria-expanded', 'false')
     fireEvent.click(settingsBtn)
 
-    expect(screen.getByRole('dialog', { name: 'Learning settings' })).toHaveAttribute(
+    expect(screen.getByRole('dialog', { name: 'Cài đặt học tập' })).toHaveAttribute(
       'aria-modal',
       'true',
     )
     expect(settingsBtn).toHaveAttribute('aria-expanded', 'true')
 
     fireEvent.keyDown(document, { key: 'Escape' })
-    expect(screen.queryByRole('dialog', { name: 'Learning settings' })).not.toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Open settings' })).toHaveAttribute(
+    expect(screen.queryByRole('dialog', { name: 'Cài đặt học tập' })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Mở cài đặt' })).toHaveAttribute(
       'aria-expanded',
       'false',
     )
@@ -56,30 +100,30 @@ describe('App Component', () => {
   it('moves focus into settings and restores it after Escape or dialog dismissal', () => {
     render(<App />)
 
-    const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
+    const settingsBtn = screen.getByRole('button', { name: 'Mở cài đặt' })
     fireEvent.click(settingsBtn)
     expect(screen.getByRole('button', { name: 'Tiếng Việt' })).toHaveFocus()
 
     fireEvent.keyDown(document, { key: 'Escape' })
-    expect(screen.getByRole('button', { name: 'Open settings' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: 'Mở cài đặt' })).toHaveFocus()
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
     expect(screen.getByRole('button', { name: 'Tiếng Việt' })).toHaveFocus()
     fireEvent.click(
-      within(screen.getByRole('dialog', { name: 'Learning settings' })).getByRole('button', {
-        name: 'Close settings',
+      within(screen.getByRole('dialog', { name: 'Cài đặt học tập' })).getByRole('button', {
+        name: 'Đóng cài đặt',
       }),
     )
-    expect(screen.getByRole('button', { name: 'Open settings' })).toHaveFocus()
+    expect(screen.getByRole('button', { name: 'Mở cài đặt' })).toHaveFocus()
   })
 
   it('wraps Tab focus within the modal settings panel', () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
 
     const firstControl = screen.getByRole('button', { name: 'Tiếng Việt' })
-    const dialog = screen.getByRole('dialog', { name: 'Learning settings' })
-    const lastControl = within(dialog).getByRole('button', { name: 'Close settings' })
+    const dialog = screen.getByRole('dialog', { name: 'Cài đặt học tập' })
+    const lastControl = within(dialog).getByRole('button', { name: 'Đóng cài đặt' })
 
     fireEvent.keyDown(lastControl, { key: 'Tab' })
     expect(firstControl).toHaveFocus()
@@ -90,7 +134,7 @@ describe('App Component', () => {
 
   it('returns focus to the modal when focus is moved to the background', () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
 
     const firstControl = screen.getByRole('button', { name: 'Tiếng Việt' })
     fireEvent.focus(document.body)
@@ -100,15 +144,15 @@ describe('App Component', () => {
 
   it('isolates background controls while settings is open', () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
 
     expect(
-      within(screen.getByRole('dialog', { name: 'Learning settings' })).getByRole('button', {
-        name: 'Close settings',
+      within(screen.getByRole('dialog', { name: 'Cài đặt học tập' })).getByRole('button', {
+        name: 'Đóng cài đặt',
       }),
     ).toBeEnabled()
     expect(screen.getByRole('button', { name: 'Chữ cái' })).toBeDisabled()
-    expect(screen.getByRole('button', { name: 'Play pronunciation' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Phát cách phát âm' })).toBeDisabled()
     expect(screen.getByRole('button', { name: 'Mục tiếp theo' })).toBeDisabled()
     expect(screen.getByRole('heading', { name: 'AlphaFun' }).parentElement).toHaveAttribute('inert')
     expect(screen.getByRole('navigation').parentElement).toHaveAttribute('inert')
@@ -130,7 +174,7 @@ describe('App Component', () => {
     })
     expect(screen.getByRole('button', { name: 'Tất cả' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByRole('button', { name: 'Chữ cái' })).toHaveAttribute('aria-pressed', 'false')
-    expect(screen.getByRole('button', { name: 'Record your voice' })).toHaveAttribute(
+    expect(screen.getByRole('button', { name: 'Ghi âm giọng nói' })).toHaveAttribute(
       'aria-pressed',
       'false',
     )
@@ -139,7 +183,7 @@ describe('App Component', () => {
 
   it('announces the selected value in every settings group', () => {
     render(<App />)
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
 
     const assertPressed = (name: string, pressed: boolean) => {
       expect(screen.getByRole('button', { name })).toHaveAttribute('aria-pressed', String(pressed))
@@ -200,8 +244,8 @@ describe('App Component', () => {
       expect(screen.getByTestId('progress')).toHaveTextContent(new RegExp(`/ ${total}$`))
     })
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
-    fireEvent.click(screen.getByRole('button', { name: 'Normal' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Tuần tự' }))
     fireEvent.keyDown(document, { key: 'Escape' })
     fireEvent.click(screen.getByRole('button', { name: 'Chữ cái' }))
     expect(screen.getByTestId('progress')).toHaveTextContent('1 / 29')
@@ -225,7 +269,7 @@ describe('App Component', () => {
 
     expect(screen.getByTestId('progress')).toHaveTextContent(/\/ 29$/)
 
-    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Mở cài đặt' }))
     fireEvent.click(screen.getByRole('button', { name: 'English' }))
     fireEvent.keyDown(document, { key: 'Escape' })
 
