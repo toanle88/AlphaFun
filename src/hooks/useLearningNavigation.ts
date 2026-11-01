@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { Category, Mode, Order } from '../types'
+import { Category, Language, Mode, Order } from '../types'
 import {
   advanceNavigation,
   buildPool,
@@ -12,6 +12,7 @@ import {
 interface UseLearningNavigationOptions {
   initialCategory: Category
   initialOrder: Order
+  language: Language
   mode: Mode
   isRecording: boolean
 }
@@ -19,14 +20,15 @@ interface UseLearningNavigationOptions {
 export const useLearningNavigation = ({
   initialCategory,
   initialOrder,
+  language,
   mode,
   isRecording,
 }: UseLearningNavigationOptions) => {
   const [category, setCategoryState] = useState(initialCategory)
   const [order, setOrderState] = useState(initialOrder)
-  const pool = useMemo(() => buildPool(category), [category])
+  const pool = useMemo(() => buildPool(category, language), [category, language])
   const [navigation, setNavigation] = useState<NavigationState>(() =>
-    resetNavigation(buildPool(initialCategory), initialOrder),
+    resetNavigation(buildPool(initialCategory, language), initialOrder),
   )
 
   const setCategory = useCallback(
@@ -36,14 +38,21 @@ export const useLearningNavigation = ({
       }
 
       setCategoryState(nextCategory)
-      setNavigation(resetNavigationToFirst(buildPool(nextCategory)))
+      setNavigation(resetNavigationToFirst(buildPool(nextCategory, language)))
     },
-    [isRecording],
+    [isRecording, language],
   )
 
   const setOrder = useCallback((nextOrder: Order) => {
     setOrderState(nextOrder)
   }, [])
+
+  const resetForLanguage = useCallback(
+    (nextLanguage: Language) => {
+      setNavigation(resetNavigation(buildPool(category, nextLanguage), order))
+    },
+    [category, order],
+  )
 
   const selectNextItem = useCallback(() => {
     if (isRecording) {
@@ -71,6 +80,7 @@ export const useLearningNavigation = ({
     order,
     pool,
     progress: `${currentPosition} / ${pool.length}`,
+    resetForLanguage,
     selectNextItem,
     setCategory,
     setOrder,

@@ -1,6 +1,7 @@
 import { CategoryTheme, Category, ShapeKind } from '../types'
 
 export const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+export const VIETNAMESE_LETTERS = 'AĂÂBCDĐEÊGHIKLMNOÔƠPQRSTUƯVXY'.split('')
 export const NUMBERS = '123456789'.split('')
 
 export const OBJECTS = [

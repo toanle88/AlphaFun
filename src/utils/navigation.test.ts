@@ -9,13 +9,13 @@ import {
 
 describe('learning navigation', () => {
   it('builds complete, uniquely identified category pools', () => {
-    const pool = buildPool('all')
+    const pool = buildPool('all', 'en')
     const ids = pool.map((item) => item.id)
 
     expect(pool).toHaveLength(89)
     expect(new Set(ids).size).toBe(ids.length)
     expect(ids.every((id) => id.includes(':'))).toBe(true)
-    expect(buildPool('shapes').map((item) => item.id)).toEqual([
+    expect(buildPool('shapes', 'en').map((item) => item.id)).toEqual([
       'shape:circle',
       'shape:square',
       'shape:triangle',
@@ -28,8 +28,22 @@ describe('learning navigation', () => {
     ])
   })
 
+  it('uses the complete alphabet for each language', () => {
+    const englishLetters = buildPool('letters', 'en')
+    const vietnameseLetters = buildPool('letters', 'vi')
+
+    expect(englishLetters.map((item) => item.value)).toEqual('ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''))
+    expect(vietnameseLetters.map((item) => item.value)).toEqual(
+      'AĂÂBCDĐEÊGHIKLMNOÔƠPQRSTUƯVXY'.split(''),
+    )
+    expect(englishLetters).toHaveLength(26)
+    expect(vietnameseLetters).toHaveLength(29)
+    expect(new Set(vietnameseLetters.map((item) => item.id)).size).toBe(29)
+    expect(buildPool('all', 'vi')).toHaveLength(92)
+  })
+
   it('resets sequential navigation to the first item in a new category', () => {
-    const numbers = buildPool('numbers')
+    const numbers = buildPool('numbers', 'en')
     const afterReset = resetNavigation(numbers, 'sequential')
     const afterNext = advanceNavigation(numbers, 'sequential', afterReset)
 
@@ -39,7 +53,7 @@ describe('learning navigation', () => {
   })
 
   it('starts every newly selected category at its first item', () => {
-    const numbers = buildPool('numbers')
+    const numbers = buildPool('numbers', 'en')
 
     expect(resetNavigationToFirst(numbers)).toEqual({
       currentItemId: 'number:1',
@@ -48,7 +62,7 @@ describe('learning navigation', () => {
   })
 
   it('wraps sequential navigation at the end of a pool', () => {
-    const shapes = buildPool('shapes')
+    const shapes = buildPool('shapes', 'en')
     let state = resetNavigation(shapes, 'sequential')
 
     for (let index = 0; index < shapes.length; index += 1) {
@@ -60,7 +74,7 @@ describe('learning navigation', () => {
   })
 
   it('avoids the current item in random navigation and handles a previous item outside the pool', () => {
-    const letters = buildPool('letters')
+    const letters = buildPool('letters', 'en')
     const first = resetNavigation(letters, 'random', () => 0)
     const next = advanceNavigation(letters, 'random', first, () => 0)
     const afterCategoryChange = resetNavigation(letters, 'random', () => 0, 'number:1')
@@ -84,7 +98,7 @@ describe('learning navigation', () => {
   })
 
   it('keeps a single-item pool stable in sequential and random modes', () => {
-    const singleItem = buildPool('numbers').slice(0, 1)
+    const singleItem = buildPool('numbers', 'en').slice(0, 1)
 
     const sequential = resetNavigation(singleItem, 'sequential')
     expect(sequential).toEqual({ currentItemId: 'number:1', sequentialIndex: 0 })

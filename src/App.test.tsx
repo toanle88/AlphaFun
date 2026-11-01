@@ -30,7 +30,7 @@ describe('App Component', () => {
   it('shows progress for the active category and exposes settings state', () => {
     render(<App />)
 
-    expect(screen.getByTestId('progress')).toHaveTextContent(/\/ 89$/)
+    expect(screen.getByTestId('progress')).toHaveTextContent(/\/ 92$/)
 
     const settingsBtn = screen.getByRole('button', { name: 'Open settings' })
     expect(settingsBtn).toHaveAttribute('aria-expanded', 'false')
@@ -175,7 +175,7 @@ describe('App Component', () => {
 
     fireEvent.click(screen.getByRole('button', { name: 'Chữ cái' }))
 
-    expect(screen.getByTestId('progress')).toHaveTextContent(/\/ 26$/)
+    expect(screen.getByTestId('progress')).toHaveTextContent(/\/ 29$/)
     expect(screen.getByRole('button', { name: 'Chữ cái' })).toHaveAttribute('aria-pressed', 'true')
   })
 
@@ -183,8 +183,8 @@ describe('App Component', () => {
     render(<App />)
 
     const categoryTotals = [
-      ['Tất cả', 89],
-      ['Chữ cái', 26],
+      ['Tất cả', 92],
+      ['Chữ cái', 29],
       ['Chữ số', 9],
       ['Đồ vật', 20],
       ['Màu sắc', 11],
@@ -201,10 +201,24 @@ describe('App Component', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Normal' }))
     fireEvent.keyDown(document, { key: 'Escape' })
     fireEvent.click(screen.getByRole('button', { name: 'Chữ cái' }))
-    expect(screen.getByTestId('progress')).toHaveTextContent('1 / 26')
+    expect(screen.getByTestId('progress')).toHaveTextContent('1 / 29')
 
     fireEvent.click(screen.getByText('TIẾP THEO'))
-    expect(screen.getByTestId('progress')).toHaveTextContent('2 / 26')
+    expect(screen.getByTestId('progress')).toHaveTextContent('2 / 29')
+  })
+
+  it('updates the letters pool and total when the language changes', () => {
+    render(<App />)
+    fireEvent.click(screen.getByRole('button', { name: 'Chữ cái' }))
+
+    expect(screen.getByTestId('progress')).toHaveTextContent(/\/ 29$/)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Open settings' }))
+    fireEvent.click(screen.getByRole('button', { name: 'English' }))
+    fireEvent.keyDown(document, { key: 'Escape' })
+
+    expect(screen.getByRole('button', { name: 'Letters' })).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByTestId('progress')).toHaveTextContent(/\/ 26$/)
   })
 
   it('displays next item when next button is clicked', () => {
