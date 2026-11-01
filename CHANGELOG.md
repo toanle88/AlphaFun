@@ -4,6 +4,14 @@ All notable AlphaFun changes are recorded here. Entries are ordered newest
 first and use the version from `package.json`; the release workflow verifies
 that a published tag is exactly `v<version>`.
 
+## [0.1.7] - 2026-11-01
+
+### Fixed
+
+- Clarified that speech automatically selects the first matching browser voice
+  and that voice availability and speech behavior depend on the browser and
+  operating system.
+
 ## [0.1.6] - 2026-11-01
 
 ### Fixed
